@@ -68,6 +68,6 @@ if __name__ == '__main__':
     # data = win_read(r"D:\Downloads\android-studio-2021.2.1.15-windows.exe")
     # win_write(r"1.exe",data)
     import aiofile
-
-    aiofile.read_file(b"D:/Downloads/android-studio-2021.2.1.15-windows.exe")
+    for i in range(1):
+        aiofile.read_file(b"D:/Downloads/android-studio-2021.2.1.15-windows.exe")
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

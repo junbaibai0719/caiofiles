@@ -712,11 +712,12 @@ static CYTHON_INLINE float __PYX_NAN() {
 #define __PYX_HAVE__aiofile
 #define __PYX_HAVE_API__aiofile
 /* Early includes */
+#include "fileapi.h"
+#include "errhandlingapi.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "fileapi.h"
-#include "errhandlingapi.h"
+#include "synchapi.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -929,163 +930,110 @@ static const char *__pyx_f[] = {
   "aiofile.pyx",
 };
 
-/* "aiofile.pxd":157
- * cdef int TRUNCATE_EXISTING = 5
- * 
- * ctypedef int BOOL             # <<<<<<<<<<<<<<
- * ctypedef void *LPVOID
- * ctypedef const char *LPCSTR
- */
-typedef int __pyx_t_7aiofile_BOOL;
-
-/* "aiofile.pxd":160
- * ctypedef void *LPVOID
- * ctypedef const char *LPCSTR
- * ctypedef unsigned long DWORD             # <<<<<<<<<<<<<<
- * ctypedef DWORD *LPDWORD
- * 
- */
-typedef unsigned long __pyx_t_7aiofile_DWORD;
-
-/* "aiofile.pxd":165
- * ctypedef void *HANDLE
- * ctypedef void *PVOID;
- * ctypedef  unsigned long ULONG_PTR             # <<<<<<<<<<<<<<
- * 
- * ctypedef struct DUMMYSTRUCTNAME:
- */
-typedef unsigned long __pyx_t_7aiofile_ULONG_PTR;
-
 /*--- Type declarations ---*/
-struct __pyx_t_7aiofile_DUMMYSTRUCTNAME;
-typedef struct __pyx_t_7aiofile_DUMMYSTRUCTNAME __pyx_t_7aiofile_DUMMYSTRUCTNAME;
-union __pyx_t_7aiofile_DUMMYUNIONNAME;
-typedef union __pyx_t_7aiofile_DUMMYUNIONNAME __pyx_t_7aiofile_DUMMYUNIONNAME;
-struct __pyx_t_7aiofile__OVERLAPPED;
-struct __pyx_t_7aiofile__SECURITY_ATTRIBUTES;
 
-/* "aiofile.pxd":158
+/* "winbase.pxd":45
+ *     )
  * 
- * ctypedef int BOOL
- * ctypedef void *LPVOID             # <<<<<<<<<<<<<<
- * ctypedef const char *LPCSTR
- * ctypedef unsigned long DWORD
- */
-typedef void *__pyx_t_7aiofile_LPVOID;
-
-/* "aiofile.pxd":159
- * ctypedef int BOOL
- * ctypedef void *LPVOID
- * ctypedef const char *LPCSTR             # <<<<<<<<<<<<<<
- * ctypedef unsigned long DWORD
- * ctypedef DWORD *LPDWORD
- */
-typedef char const *__pyx_t_7aiofile_LPCSTR;
-
-/* "aiofile.pxd":161
- * ctypedef const char *LPCSTR
- * ctypedef unsigned long DWORD
- * ctypedef DWORD *LPDWORD             # <<<<<<<<<<<<<<
- * 
- * ctypedef void *HANDLE
- */
-typedef __pyx_t_7aiofile_DWORD *__pyx_t_7aiofile_LPDWORD;
-
-/* "aiofile.pxd":163
- * ctypedef DWORD *LPDWORD
- * 
- * ctypedef void *HANDLE             # <<<<<<<<<<<<<<
- * ctypedef void *PVOID;
- * ctypedef  unsigned long ULONG_PTR
- */
-typedef void *__pyx_t_7aiofile_HANDLE;
-
-/* "aiofile.pxd":164
- * 
- * ctypedef void *HANDLE
- * ctypedef void *PVOID;             # <<<<<<<<<<<<<<
- * ctypedef  unsigned long ULONG_PTR
+ * cdef enum:             # <<<<<<<<<<<<<<
+ *     ABOVE_NORMAL_PRIORITY_CLASS = 32768
  * 
  */
-typedef void *__pyx_t_7aiofile_PVOID;
-
-/* "aiofile.pxd":167
- * ctypedef  unsigned long ULONG_PTR
- * 
- * ctypedef struct DUMMYSTRUCTNAME:             # <<<<<<<<<<<<<<
- *     DWORD Offset
- *     DWORD OffsetHigh
- */
-struct __pyx_t_7aiofile_DUMMYSTRUCTNAME {
-  __pyx_t_7aiofile_DWORD Offset;
-  __pyx_t_7aiofile_DWORD OffsetHigh;
+enum  {
+  __pyx_e_7winbase_ABOVE_NORMAL_PRIORITY_CLASS = 0x8000,
+  __pyx_e_7winbase_CREATE_BREAKAWAY_FROM_JOB = 0x1000000,
+  __pyx_e_7winbase_CREATE_DEFAULT_ERROR_MODE = 0x4000000,
+  __pyx_e_7winbase_CREATE_NEW_CONSOLE = 16,
+  __pyx_e_7winbase_CREATE_NEW_PROCESS_GROUP = 0x200,
+  __pyx_e_7winbase_CREATE_NO_WINDOW = 0x8000000,
+  __pyx_e_7winbase_DETACHED_PROCESS = 8,
+  __pyx_e_7winbase_DUPLICATE_CLOSE_SOURCE = 1,
+  __pyx_e_7winbase_DUPLICATE_SAME_ACCESS = 2,
+  __pyx_e_7winbase_ERROR_ALREADY_EXISTS = 0xB7,
+  __pyx_e_7winbase_ERROR_BROKEN_PIPE = 0x6D,
+  __pyx_e_7winbase_ERROR_IO_PENDING = 0x3E5,
+  __pyx_e_7winbase_ERROR_MORE_DATA = 0xEA,
+  __pyx_e_7winbase_ERROR_NETNAME_DELETED = 64,
+  __pyx_e_7winbase_ERROR_NO_DATA = 0xE8,
+  __pyx_e_7winbase_ERROR_NO_SYSTEM_RESOURCES = 0x5AA,
+  __pyx_e_7winbase_ERROR_OPERATION_ABORTED = 0x3E3,
+  __pyx_e_7winbase_ERROR_PIPE_BUSY = 0xE7,
+  __pyx_e_7winbase_ERROR_PIPE_CONNECTED = 0x217,
+  __pyx_e_7winbase_ERROR_SEM_TIMEOUT = 0x79,
+  __pyx_e_7winbase_FILE_FLAG_FIRST_PIPE_INSTANCE = 0x80000,
+  __pyx_e_7winbase_FILE_ATTRIBUTE_NORMAL = 0x80,
+  __pyx_e_7winbase_FILE_FLAG_OVERLAPPED = 0x40000000,
+  __pyx_e_7winbase_FILE_GENERIC_READ = 0x120089,
+  __pyx_e_7winbase_FILE_GENERIC_WRITE = 0x120116,
+  __pyx_e_7winbase_FILE_MAP_ALL_ACCESS = 0xF001F,
+  __pyx_e_7winbase_FILE_MAP_COPY = 1,
+  __pyx_e_7winbase_FILE_MAP_EXECUTE = 32,
+  __pyx_e_7winbase_FILE_MAP_READ = 4,
+  __pyx_e_7winbase_FILE_MAP_WRITE = 2,
+  __pyx_e_7winbase_FILE_TYPE_CHAR = 2,
+  __pyx_e_7winbase_FILE_TYPE_DISK = 1,
+  __pyx_e_7winbase_FILE_TYPE_PIPE = 3,
+  __pyx_e_7winbase_FILE_TYPE_REMOTE = 0x8000,
+  __pyx_e_7winbase_FILE_TYPE_UNKNOWN = 0,
+  __pyx_e_7winbase_GENERIC_READ = 0x80000001,
+  __pyx_e_7winbase_GENERIC_WRITE = 0x40000000,
+  __pyx_e_7winbase_HIGH_PRIORITY_CLASS = 0x80,
+  __pyx_e_7winbase_IDLE_PRIORITY_CLASS = 64,
+  __pyx_e_7winbase_INFINITE = 0xFFFFFFFF,
+  __pyx_e_7winbase_INVALID_HANDLE_VALUE = 0xFFFFFFFFFFFFFFFF,
+  __pyx_e_7winbase_MEM_COMMIT = 0x1000,
+  __pyx_e_7winbase_MEM_FREE = 0x10000,
+  __pyx_e_7winbase_MEM_IMAGE = 0x1000000,
+  __pyx_e_7winbase_MEM_MAPPED = 0x40000,
+  __pyx_e_7winbase_MEM_PRIVATE = 0x20000,
+  __pyx_e_7winbase_MEM_RESERVE = 0x2000,
+  __pyx_e_7winbase_NMPWAIT_WAIT_FOREVER = 0xFFFFFFFF,
+  __pyx_e_7winbase_NORMAL_PRIORITY_CLASS = 32,
+  __pyx_e_7winbase_OPEN_EXISTING = 3,
+  __pyx_e_7winbase_PAGE_EXECUTE = 16,
+  __pyx_e_7winbase_PAGE_EXECUTE_READ = 32,
+  __pyx_e_7winbase_PAGE_EXECUTE_READWRITE = 64,
+  __pyx_e_7winbase_PAGE_EXECUTE_WRITECOPY = 0x80,
+  __pyx_e_7winbase_PAGE_GUARD = 0x100,
+  __pyx_e_7winbase_PAGE_NOACCESS = 1,
+  __pyx_e_7winbase_PAGE_NOCACHE = 0x200,
+  __pyx_e_7winbase_PAGE_READONLY = 2,
+  __pyx_e_7winbase_PAGE_READWRITE = 4,
+  __pyx_e_7winbase_PAGE_WRITECOMBINE = 0x400,
+  __pyx_e_7winbase_PAGE_WRITECOPY = 8,
+  __pyx_e_7winbase_PIPE_ACCESS_DUPLEX = 3,
+  __pyx_e_7winbase_PIPE_ACCESS_INBOUND = 1,
+  __pyx_e_7winbase_PIPE_READMODE_MESSAGE = 2,
+  __pyx_e_7winbase_PIPE_TYPE_MESSAGE = 4,
+  __pyx_e_7winbase_PIPE_UNLIMITED_INSTANCES = 0xFF,
+  __pyx_e_7winbase_PIPE_WAIT = 0,
+  __pyx_e_7winbase_PROCESS_ALL_ACCESS = 0x1FFFFF,
+  __pyx_e_7winbase_PROCESS_DUP_HANDLE = 64,
+  __pyx_e_7winbase_REALTIME_PRIORITY_CLASS = 0x100,
+  __pyx_e_7winbase_SEC_COMMIT = 0x8000000,
+  __pyx_e_7winbase_SEC_IMAGE = 0x1000000,
+  __pyx_e_7winbase_SEC_LARGE_PAGES = 0x80000000,
+  __pyx_e_7winbase_SEC_NOCACHE = 0x10000000,
+  __pyx_e_7winbase_SEC_RESERVE = 0x4000000,
+  __pyx_e_7winbase_SEC_WRITECOMBINE = 0x40000000,
+  __pyx_e_7winbase_STARTF_USESHOWWINDOW = 1,
+  __pyx_e_7winbase_STARTF_USESTDHANDLES = 0x100,
+  __pyx_e_7winbase_STD_ERROR_HANDLE = 0xFFFFFFF4,
+  __pyx_e_7winbase_STD_INPUT_HANDLE = 0xFFFFFFF6,
+  __pyx_e_7winbase_STD_OUTPUT_HANDLE = 0xFFFFFFF5,
+  __pyx_e_7winbase_STILL_ACTIVE = 0x103,
+  __pyx_e_7winbase_SW_HIDE = 0,
+  __pyx_e_7winbase_SYNCHRONIZE = 0x100000,
+  __pyx_e_7winbase_WAIT_ABANDONED_0 = 0x80,
+  __pyx_e_7winbase_WAIT_OBJECT_0 = 0,
+  __pyx_e_7winbase_WAIT_TIMEOUT = 0x102,
+  __pyx_e_7winbase_CREATE_NEW = 1,
+  __pyx_e_7winbase_CREATE_ALWAYS = 2,
+  __pyx_e_7winbase_OPEN_ALWAYS = 4,
+  __pyx_e_7winbase_TRUNCATE_EXISTING = 5,
+  __pyx_e_7winbase_WAIT_IO_COMPLETION = 0x000000C0L,
+  __pyx_e_7winbase_WAIT_ABANDONED = 0x00000080L
 };
-
-/* "aiofile.pxd":171
- *     DWORD OffsetHigh
- * 
- * ctypedef union DUMMYUNIONNAME:             # <<<<<<<<<<<<<<
- *     DUMMYSTRUCTNAME dummy_struct_name
- *     PVOID Pointer
- */
-union __pyx_t_7aiofile_DUMMYUNIONNAME {
-  __pyx_t_7aiofile_DUMMYSTRUCTNAME dummy_struct_name;
-  __pyx_t_7aiofile_PVOID Pointer;
-};
-
-/* "aiofile.pxd":175
- *     PVOID Pointer
- * 
- * cdef struct _OVERLAPPED:             # <<<<<<<<<<<<<<
- *     ULONG_PTR Internal
- *     ULONG_PTR InternalHigh
- */
-struct __pyx_t_7aiofile__OVERLAPPED {
-  __pyx_t_7aiofile_ULONG_PTR Internal;
-  __pyx_t_7aiofile_ULONG_PTR InternalHigh;
-  __pyx_t_7aiofile_DUMMYUNIONNAME dummy_union_name;
-  __pyx_t_7aiofile_HANDLE hEvent;
-};
-
-/* "aiofile.pxd":181
- *     HANDLE hEvent
- * 
- * ctypedef _OVERLAPPED *LPOVERLAPPED             # <<<<<<<<<<<<<<
- * 
- * ctypedef void (__stdcall *LPOVERLAPPED_COMPLETION_ROUTINE)(
- */
-typedef struct __pyx_t_7aiofile__OVERLAPPED *__pyx_t_7aiofile_LPOVERLAPPED;
-
-/* "aiofile.pxd":183
- * ctypedef _OVERLAPPED *LPOVERLAPPED
- * 
- * ctypedef void (__stdcall *LPOVERLAPPED_COMPLETION_ROUTINE)(             # <<<<<<<<<<<<<<
- *         DWORD dwErrorCode,
- *         DWORD dwNumberOfBytesTransfered,
- */
-typedef void (__stdcall *__pyx_t_7aiofile_LPOVERLAPPED_COMPLETION_ROUTINE)(__pyx_t_7aiofile_DWORD, __pyx_t_7aiofile_DWORD, __pyx_t_7aiofile_LPOVERLAPPED);
-
-/* "aiofile.pxd":189
- * );
- * 
- * cdef struct _SECURITY_ATTRIBUTES:             # <<<<<<<<<<<<<<
- *     DWORD nLength
- *     LPVOID lpSecurityDescriptor
- */
-struct __pyx_t_7aiofile__SECURITY_ATTRIBUTES {
-  __pyx_t_7aiofile_DWORD nLength;
-  __pyx_t_7aiofile_LPVOID lpSecurityDescriptor;
-  __pyx_t_7aiofile_BOOL bInheritHandle;
-};
-
-/* "aiofile.pxd":194
- *     BOOL bInheritHandle
- * 
- * ctypedef _SECURITY_ATTRIBUTES *LPSECURITY_ATTRIBUTES;             # <<<<<<<<<<<<<<
- * 
- * cdef extern from "fileapi.h":
- */
-typedef struct __pyx_t_7aiofile__SECURITY_ATTRIBUTES *__pyx_t_7aiofile_LPSECURITY_ATTRIBUTES;
 
 /* --- Runtime support code (head) --- */
 /* Refnanny.proto */
@@ -1151,6 +1099,16 @@ typedef struct __pyx_t_7aiofile__SECURITY_ATTRIBUTES *__pyx_t_7aiofile_LPSECURIT
 #define __Pyx_CLEAR(r)    do { PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);} while(0)
 #define __Pyx_XCLEAR(r)   do { if((r) != NULL) {PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);}} while(0)
 
+/* PyObjectGetAttrStr.proto */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name);
+#else
+#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
+#endif
+
+/* GetBuiltinName.proto */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name);
+
 /* PyDictVersioning.proto */
 #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
 #define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
@@ -1177,12 +1135,85 @@ static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UIN
 #define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
 #endif
 
-/* PyObjectGetAttrStr.proto */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name);
+/* GetModuleGlobalName.proto */
+#if CYTHON_USE_DICT_VERSIONS
+#define __Pyx_GetModuleGlobalName(var, name)  {\
+    static PY_UINT64_T __pyx_dict_version = 0;\
+    static PyObject *__pyx_dict_cached_value = NULL;\
+    (var) = (likely(__pyx_dict_version == __PYX_GET_DICT_VERSION(__pyx_d))) ?\
+        (likely(__pyx_dict_cached_value) ? __Pyx_NewRef(__pyx_dict_cached_value) : __Pyx_GetBuiltinName(name)) :\
+        __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+}
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  {\
+    PY_UINT64_T __pyx_dict_version;\
+    PyObject *__pyx_dict_cached_value;\
+    (var) = __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+}
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value);
 #else
-#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
+#define __Pyx_GetModuleGlobalName(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name);
 #endif
+
+/* PyCFunctionFastCall.proto */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
+#else
+#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
+#endif
+
+/* PyFunctionFastCall.proto */
+#if CYTHON_FAST_PYCALL
+#define __Pyx_PyFunction_FastCall(func, args, nargs)\
+    __Pyx_PyFunction_FastCallDict((func), (args), (nargs), NULL)
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs);
+#else
+#define __Pyx_PyFunction_FastCallDict(func, args, nargs, kwargs) _PyFunction_FastCallDict(func, args, nargs, kwargs)
+#endif
+#define __Pyx_BUILD_ASSERT_EXPR(cond)\
+    (sizeof(char [1 - 2*!(cond)]) - 1)
+#ifndef Py_MEMBER_SIZE
+#define Py_MEMBER_SIZE(type, member) sizeof(((type *)0)->member)
+#endif
+#if CYTHON_FAST_PYCALL
+  static size_t __pyx_pyframe_localsplus_offset = 0;
+  #include "frameobject.h"
+#if PY_VERSION_HEX >= 0x030b00a6
+  #ifndef Py_BUILD_CORE
+    #define Py_BUILD_CORE 1
+  #endif
+  #include "internal/pycore_frame.h"
+#endif
+  #define __Pxy_PyFrame_Initialize_Offsets()\
+    ((void)__Pyx_BUILD_ASSERT_EXPR(sizeof(PyFrameObject) == offsetof(PyFrameObject, f_localsplus) + Py_MEMBER_SIZE(PyFrameObject, f_localsplus)),\
+     (void)(__pyx_pyframe_localsplus_offset = ((size_t)PyFrame_Type.tp_basicsize) - Py_MEMBER_SIZE(PyFrameObject, f_localsplus)))
+  #define __Pyx_PyFrame_GetLocalsplus(frame)\
+    (assert(__pyx_pyframe_localsplus_offset), (PyObject **)(((char *)(frame)) + __pyx_pyframe_localsplus_offset))
+#endif // CYTHON_FAST_PYCALL
+#endif
+
+/* PyObjectCall.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw);
+#else
+#define __Pyx_PyObject_Call(func, arg, kw) PyObject_Call(func, arg, kw)
+#endif
+
+/* PyObjectCall2Args.proto */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
+
+/* PyObjectCallMethO.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg);
+#endif
+
+/* PyObjectCallOneArg.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
+
+/* Import.proto */
+static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
 /* PyThreadStateGet.proto */
 #if CYTHON_FAST_THREAD_STATE
@@ -1276,23 +1307,11 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 /* CheckBinaryVersion.proto */
 static int __Pyx_check_binary_version(void);
 
-/* PyObjectSetAttrStr.proto */
-#if CYTHON_USE_TYPE_SLOTS
-#define __Pyx_PyObject_DelAttrStr(o,n) __Pyx_PyObject_SetAttrStr(o, n, NULL)
-static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value);
-#else
-#define __Pyx_PyObject_DelAttrStr(o,n)   PyObject_DelAttr(o,n)
-#define __Pyx_PyObject_SetAttrStr(o,n,v) PyObject_SetAttr(o,n,v)
-#endif
-
-/* VoidPtrExport.proto */
-static int __Pyx_ExportVoidPtr(PyObject *name, void *p, const char *sig);
-
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from 'libc' */
+/* Module declarations from 'winbase' */
 
 /* Module declarations from 'libc.string' */
 
@@ -1300,101 +1319,12 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 /* Module declarations from 'libc.stdio' */
 
+/* Module declarations from 'synchapi' */
+
 /* Module declarations from 'aiofile' */
-static int __pyx_v_7aiofile_ABOVE_NORMAL_PRIORITY_CLASS;
-static int __pyx_v_7aiofile_BELOW_NORMAL_PRIORITY_CLASS;
-static int __pyx_v_7aiofile_CREATE_BREAKAWAY_FROM_JOB;
-static int __pyx_v_7aiofile_CREATE_DEFAULT_ERROR_MODE;
-static int __pyx_v_7aiofile_CREATE_NEW_CONSOLE;
-static int __pyx_v_7aiofile_CREATE_NEW_PROCESS_GROUP;
-static int __pyx_v_7aiofile_CREATE_NO_WINDOW;
-static int __pyx_v_7aiofile_DETACHED_PROCESS;
-static int __pyx_v_7aiofile_DUPLICATE_CLOSE_SOURCE;
-static int __pyx_v_7aiofile_DUPLICATE_SAME_ACCESS;
-static int __pyx_v_7aiofile_ERROR_ALREADY_EXISTS;
-static int __pyx_v_7aiofile_ERROR_BROKEN_PIPE;
-static int __pyx_v_7aiofile_ERROR_IO_PENDING;
-static int __pyx_v_7aiofile_ERROR_MORE_DATA;
-static int __pyx_v_7aiofile_ERROR_NETNAME_DELETED;
-static int __pyx_v_7aiofile_ERROR_NO_DATA;
-static int __pyx_v_7aiofile_ERROR_NO_SYSTEM_RESOURCES;
-static int __pyx_v_7aiofile_ERROR_OPERATION_ABORTED;
-static int __pyx_v_7aiofile_ERROR_PIPE_BUSY;
-static int __pyx_v_7aiofile_ERROR_PIPE_CONNECTED;
-static int __pyx_v_7aiofile_ERROR_SEM_TIMEOUT;
-static int __pyx_v_7aiofile_FILE_FLAG_FIRST_PIPE_INSTANCE;
-static int __pyx_v_7aiofile_FILE_ATTRIBUTE_NORMAL;
-static int __pyx_v_7aiofile_FILE_FLAG_OVERLAPPED;
-static int __pyx_v_7aiofile_FILE_GENERIC_READ;
-static int __pyx_v_7aiofile_FILE_GENERIC_WRITE;
-static int __pyx_v_7aiofile_FILE_MAP_ALL_ACCESS;
-static int __pyx_v_7aiofile_FILE_MAP_COPY;
-static int __pyx_v_7aiofile_FILE_MAP_EXECUTE;
-static int __pyx_v_7aiofile_FILE_MAP_READ;
-static int __pyx_v_7aiofile_FILE_MAP_WRITE;
-static int __pyx_v_7aiofile_FILE_TYPE_CHAR;
-static int __pyx_v_7aiofile_FILE_TYPE_DISK;
-static int __pyx_v_7aiofile_FILE_TYPE_PIPE;
-static int __pyx_v_7aiofile_FILE_TYPE_REMOTE;
-static int __pyx_v_7aiofile_FILE_TYPE_UNKNOWN;
-static int __pyx_v_7aiofile_GENERIC_READ;
-static int __pyx_v_7aiofile_GENERIC_WRITE;
-static int __pyx_v_7aiofile_HIGH_PRIORITY_CLASS;
-static int __pyx_v_7aiofile_IDLE_PRIORITY_CLASS;
-static int __pyx_v_7aiofile_INFINITE;
-static int __pyx_v_7aiofile_INVALID_HANDLE_VALUE;
-static int __pyx_v_7aiofile_MEM_COMMIT;
-static int __pyx_v_7aiofile_MEM_FREE;
-static int __pyx_v_7aiofile_MEM_IMAGE;
-static int __pyx_v_7aiofile_MEM_MAPPED;
-static int __pyx_v_7aiofile_MEM_PRIVATE;
-static int __pyx_v_7aiofile_MEM_RESERVE;
-static int __pyx_v_7aiofile_NMPWAIT_WAIT_FOREVER;
-static int __pyx_v_7aiofile_NORMAL_PRIORITY_CLASS;
-static int __pyx_v_7aiofile_OPEN_EXISTING;
-static int __pyx_v_7aiofile_PAGE_EXECUTE;
-static int __pyx_v_7aiofile_PAGE_EXECUTE_READ;
-static int __pyx_v_7aiofile_PAGE_EXECUTE_READWRITE;
-static int __pyx_v_7aiofile_PAGE_EXECUTE_WRITECOPY;
-static int __pyx_v_7aiofile_PAGE_GUARD;
-static int __pyx_v_7aiofile_PAGE_NOACCESS;
-static int __pyx_v_7aiofile_PAGE_NOCACHE;
-static int __pyx_v_7aiofile_PAGE_READONLY;
-static int __pyx_v_7aiofile_PAGE_READWRITE;
-static int __pyx_v_7aiofile_PAGE_WRITECOMBINE;
-static int __pyx_v_7aiofile_PAGE_WRITECOPY;
-static int __pyx_v_7aiofile_PIPE_ACCESS_DUPLEX;
-static int __pyx_v_7aiofile_PIPE_ACCESS_INBOUND;
-static int __pyx_v_7aiofile_PIPE_READMODE_MESSAGE;
-static int __pyx_v_7aiofile_PIPE_TYPE_MESSAGE;
-static int __pyx_v_7aiofile_PIPE_UNLIMITED_INSTANCES;
-static int __pyx_v_7aiofile_PIPE_WAIT;
-static int __pyx_v_7aiofile_PROCESS_ALL_ACCESS;
-static int __pyx_v_7aiofile_PROCESS_DUP_HANDLE;
-static int __pyx_v_7aiofile_REALTIME_PRIORITY_CLASS;
-static int __pyx_v_7aiofile_SEC_COMMIT;
-static int __pyx_v_7aiofile_SEC_IMAGE;
-static int __pyx_v_7aiofile_SEC_LARGE_PAGES;
-static int __pyx_v_7aiofile_SEC_NOCACHE;
-static int __pyx_v_7aiofile_SEC_RESERVE;
-static int __pyx_v_7aiofile_SEC_WRITECOMBINE;
-static int __pyx_v_7aiofile_STARTF_USESHOWWINDOW;
-static int __pyx_v_7aiofile_STARTF_USESTDHANDLES;
-static int __pyx_v_7aiofile_STD_ERROR_HANDLE;
-static int __pyx_v_7aiofile_STD_INPUT_HANDLE;
-static int __pyx_v_7aiofile_STD_OUTPUT_HANDLE;
-static int __pyx_v_7aiofile_STILL_ACTIVE;
-static int __pyx_v_7aiofile_SW_HIDE;
-static int __pyx_v_7aiofile_SYNCHRONIZE;
-static int __pyx_v_7aiofile_WAIT_ABANDONED_0;
-static int __pyx_v_7aiofile_WAIT_OBJECT_0;
-static int __pyx_v_7aiofile_WAIT_TIMEOUT;
-static int __pyx_v_7aiofile_CREATE_NEW;
-static int __pyx_v_7aiofile_CREATE_ALWAYS;
-static int __pyx_v_7aiofile_OPEN_ALWAYS;
-static int __pyx_v_7aiofile_TRUNCATE_EXISTING;
-static void __stdcall __pyx_f_7aiofile_func(__pyx_t_7aiofile_DWORD, __pyx_t_7aiofile_DWORD, __pyx_t_7aiofile_LPOVERLAPPED); /*proto*/
-static PyObject *__pyx_f_7aiofile_read_file(__pyx_t_7aiofile_LPCSTR, int __pyx_skip_dispatch); /*proto*/
+static int __pyx_v_7aiofile_called;
+static void __stdcall __pyx_f_7aiofile_CompletedReadRoutine(DWORD, DWORD, LPOVERLAPPED); /*proto*/
+static PyObject *__pyx_f_7aiofile_read_file(LPCSTR, int __pyx_skip_dispatch); /*proto*/
 #define __Pyx_MODULE_NAME "aiofile"
 extern int __pyx_module_is_main_aiofile;
 int __pyx_module_is_main_aiofile = 0;
@@ -1403,233 +1333,54 @@ int __pyx_module_is_main_aiofile = 0;
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
-static const char __pyx_k_SW_HIDE[] = "SW_HIDE";
-static const char __pyx_k_INFINITE[] = "INFINITE";
-static const char __pyx_k_MEM_FREE[] = "MEM_FREE";
-static const char __pyx_k_pyx_capi[] = "__pyx_capi__";
-static const char __pyx_k_MEM_IMAGE[] = "MEM_IMAGE";
-static const char __pyx_k_PIPE_WAIT[] = "PIPE_WAIT";
-static const char __pyx_k_SEC_IMAGE[] = "SEC_IMAGE";
-static const char __pyx_k_CREATE_NEW[] = "CREATE_NEW";
-static const char __pyx_k_MEM_COMMIT[] = "MEM_COMMIT";
-static const char __pyx_k_MEM_MAPPED[] = "MEM_MAPPED";
-static const char __pyx_k_PAGE_GUARD[] = "PAGE_GUARD";
-static const char __pyx_k_SEC_COMMIT[] = "SEC_COMMIT";
-static const char __pyx_k_MEM_PRIVATE[] = "MEM_PRIVATE";
-static const char __pyx_k_MEM_RESERVE[] = "MEM_RESERVE";
-static const char __pyx_k_OPEN_ALWAYS[] = "OPEN_ALWAYS";
-static const char __pyx_k_SEC_NOCACHE[] = "SEC_NOCACHE";
-static const char __pyx_k_SEC_RESERVE[] = "SEC_RESERVE";
-static const char __pyx_k_SYNCHRONIZE[] = "SYNCHRONIZE";
-static const char __pyx_k_GENERIC_READ[] = "GENERIC_READ";
-static const char __pyx_k_PAGE_EXECUTE[] = "PAGE_EXECUTE";
-static const char __pyx_k_PAGE_NOCACHE[] = "PAGE_NOCACHE";
-static const char __pyx_k_STILL_ACTIVE[] = "STILL_ACTIVE";
-static const char __pyx_k_WAIT_TIMEOUT[] = "WAIT_TIMEOUT";
-static const char __pyx_k_CREATE_ALWAYS[] = "CREATE_ALWAYS";
-static const char __pyx_k_ERROR_NO_DATA[] = "ERROR_NO_DATA";
-static const char __pyx_k_FILE_MAP_COPY[] = "FILE_MAP_COPY";
-static const char __pyx_k_FILE_MAP_READ[] = "FILE_MAP_READ";
-static const char __pyx_k_GENERIC_WRITE[] = "GENERIC_WRITE";
-static const char __pyx_k_OPEN_EXISTING[] = "OPEN_EXISTING";
-static const char __pyx_k_PAGE_NOACCESS[] = "PAGE_NOACCESS";
-static const char __pyx_k_PAGE_READONLY[] = "PAGE_READONLY";
-static const char __pyx_k_WAIT_OBJECT_0[] = "WAIT_OBJECT_0";
-static const char __pyx_k_FILE_MAP_WRITE[] = "FILE_MAP_WRITE";
-static const char __pyx_k_FILE_TYPE_CHAR[] = "FILE_TYPE_CHAR";
-static const char __pyx_k_FILE_TYPE_DISK[] = "FILE_TYPE_DISK";
-static const char __pyx_k_FILE_TYPE_PIPE[] = "FILE_TYPE_PIPE";
-static const char __pyx_k_PAGE_READWRITE[] = "PAGE_READWRITE";
-static const char __pyx_k_PAGE_WRITECOPY[] = "PAGE_WRITECOPY";
-static const char __pyx_k_ERROR_MORE_DATA[] = "ERROR_MORE_DATA";
-static const char __pyx_k_ERROR_PIPE_BUSY[] = "ERROR_PIPE_BUSY";
-static const char __pyx_k_SEC_LARGE_PAGES[] = "SEC_LARGE_PAGES";
-static const char __pyx_k_CREATE_NO_WINDOW[] = "CREATE_NO_WINDOW";
-static const char __pyx_k_DETACHED_PROCESS[] = "DETACHED_PROCESS";
-static const char __pyx_k_ERROR_IO_PENDING[] = "ERROR_IO_PENDING";
-static const char __pyx_k_FILE_MAP_EXECUTE[] = "FILE_MAP_EXECUTE";
-static const char __pyx_k_FILE_TYPE_REMOTE[] = "FILE_TYPE_REMOTE";
-static const char __pyx_k_SEC_WRITECOMBINE[] = "SEC_WRITECOMBINE";
-static const char __pyx_k_STD_ERROR_HANDLE[] = "STD_ERROR_HANDLE";
-static const char __pyx_k_STD_INPUT_HANDLE[] = "STD_INPUT_HANDLE";
-static const char __pyx_k_WAIT_ABANDONED_0[] = "WAIT_ABANDONED_0";
-static const char __pyx_k_ERROR_BROKEN_PIPE[] = "ERROR_BROKEN_PIPE";
-static const char __pyx_k_ERROR_SEM_TIMEOUT[] = "ERROR_SEM_TIMEOUT";
-static const char __pyx_k_FILE_GENERIC_READ[] = "FILE_GENERIC_READ";
-static const char __pyx_k_FILE_TYPE_UNKNOWN[] = "FILE_TYPE_UNKNOWN";
-static const char __pyx_k_PAGE_EXECUTE_READ[] = "PAGE_EXECUTE_READ";
-static const char __pyx_k_PAGE_WRITECOMBINE[] = "PAGE_WRITECOMBINE";
-static const char __pyx_k_PIPE_TYPE_MESSAGE[] = "PIPE_TYPE_MESSAGE";
-static const char __pyx_k_STD_OUTPUT_HANDLE[] = "STD_OUTPUT_HANDLE";
-static const char __pyx_k_TRUNCATE_EXISTING[] = "TRUNCATE_EXISTING";
-static const char __pyx_k_CREATE_NEW_CONSOLE[] = "CREATE_NEW_CONSOLE";
-static const char __pyx_k_FILE_GENERIC_WRITE[] = "FILE_GENERIC_WRITE";
-static const char __pyx_k_PIPE_ACCESS_DUPLEX[] = "PIPE_ACCESS_DUPLEX";
-static const char __pyx_k_PROCESS_ALL_ACCESS[] = "PROCESS_ALL_ACCESS";
-static const char __pyx_k_PROCESS_DUP_HANDLE[] = "PROCESS_DUP_HANDLE";
+static const char __pyx_k_time[] = "time";
+static const char __pyx_k_sleep[] = "sleep";
+static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_FILE_MAP_ALL_ACCESS[] = "FILE_MAP_ALL_ACCESS";
-static const char __pyx_k_HIGH_PRIORITY_CLASS[] = "HIGH_PRIORITY_CLASS";
-static const char __pyx_k_IDLE_PRIORITY_CLASS[] = "IDLE_PRIORITY_CLASS";
-static const char __pyx_k_PIPE_ACCESS_INBOUND[] = "PIPE_ACCESS_INBOUND";
-static const char __pyx_k_ERROR_ALREADY_EXISTS[] = "ERROR_ALREADY_EXISTS";
-static const char __pyx_k_ERROR_PIPE_CONNECTED[] = "ERROR_PIPE_CONNECTED";
-static const char __pyx_k_FILE_FLAG_OVERLAPPED[] = "FILE_FLAG_OVERLAPPED";
-static const char __pyx_k_INVALID_HANDLE_VALUE[] = "INVALID_HANDLE_VALUE";
-static const char __pyx_k_NMPWAIT_WAIT_FOREVER[] = "NMPWAIT_WAIT_FOREVER";
-static const char __pyx_k_STARTF_USESHOWWINDOW[] = "STARTF_USESHOWWINDOW";
-static const char __pyx_k_STARTF_USESTDHANDLES[] = "STARTF_USESTDHANDLES";
-static const char __pyx_k_DUPLICATE_SAME_ACCESS[] = "DUPLICATE_SAME_ACCESS";
-static const char __pyx_k_ERROR_NETNAME_DELETED[] = "ERROR_NETNAME_DELETED";
-static const char __pyx_k_FILE_ATTRIBUTE_NORMAL[] = "FILE_ATTRIBUTE_NORMAL";
-static const char __pyx_k_NORMAL_PRIORITY_CLASS[] = "NORMAL_PRIORITY_CLASS";
-static const char __pyx_k_PIPE_READMODE_MESSAGE[] = "PIPE_READMODE_MESSAGE";
-static const char __pyx_k_DUPLICATE_CLOSE_SOURCE[] = "DUPLICATE_CLOSE_SOURCE";
-static const char __pyx_k_PAGE_EXECUTE_READWRITE[] = "PAGE_EXECUTE_READWRITE";
-static const char __pyx_k_PAGE_EXECUTE_WRITECOPY[] = "PAGE_EXECUTE_WRITECOPY";
-static const char __pyx_k_ERROR_OPERATION_ABORTED[] = "ERROR_OPERATION_ABORTED";
-static const char __pyx_k_REALTIME_PRIORITY_CLASS[] = "REALTIME_PRIORITY_CLASS";
-static const char __pyx_k_CREATE_NEW_PROCESS_GROUP[] = "CREATE_NEW_PROCESS_GROUP";
-static const char __pyx_k_PIPE_UNLIMITED_INSTANCES[] = "PIPE_UNLIMITED_INSTANCES";
-static const char __pyx_k_CREATE_BREAKAWAY_FROM_JOB[] = "CREATE_BREAKAWAY_FROM_JOB";
-static const char __pyx_k_CREATE_DEFAULT_ERROR_MODE[] = "CREATE_DEFAULT_ERROR_MODE";
-static const char __pyx_k_ERROR_NO_SYSTEM_RESOURCES[] = "ERROR_NO_SYSTEM_RESOURCES";
-static const char __pyx_k_ABOVE_NORMAL_PRIORITY_CLASS[] = "ABOVE_NORMAL_PRIORITY_CLASS";
-static const char __pyx_k_BELOW_NORMAL_PRIORITY_CLASS[] = "BELOW_NORMAL_PRIORITY_CLASS";
-static const char __pyx_k_FILE_FLAG_FIRST_PIPE_INSTANCE[] = "FILE_FLAG_FIRST_PIPE_INSTANCE";
-static PyObject *__pyx_n_s_ABOVE_NORMAL_PRIORITY_CLASS;
-static PyObject *__pyx_n_s_BELOW_NORMAL_PRIORITY_CLASS;
-static PyObject *__pyx_n_s_CREATE_ALWAYS;
-static PyObject *__pyx_n_s_CREATE_BREAKAWAY_FROM_JOB;
-static PyObject *__pyx_n_s_CREATE_DEFAULT_ERROR_MODE;
-static PyObject *__pyx_n_s_CREATE_NEW;
-static PyObject *__pyx_n_s_CREATE_NEW_CONSOLE;
-static PyObject *__pyx_n_s_CREATE_NEW_PROCESS_GROUP;
-static PyObject *__pyx_n_s_CREATE_NO_WINDOW;
-static PyObject *__pyx_n_s_DETACHED_PROCESS;
-static PyObject *__pyx_n_s_DUPLICATE_CLOSE_SOURCE;
-static PyObject *__pyx_n_s_DUPLICATE_SAME_ACCESS;
-static PyObject *__pyx_n_s_ERROR_ALREADY_EXISTS;
-static PyObject *__pyx_n_s_ERROR_BROKEN_PIPE;
-static PyObject *__pyx_n_s_ERROR_IO_PENDING;
-static PyObject *__pyx_n_s_ERROR_MORE_DATA;
-static PyObject *__pyx_n_s_ERROR_NETNAME_DELETED;
-static PyObject *__pyx_n_s_ERROR_NO_DATA;
-static PyObject *__pyx_n_s_ERROR_NO_SYSTEM_RESOURCES;
-static PyObject *__pyx_n_s_ERROR_OPERATION_ABORTED;
-static PyObject *__pyx_n_s_ERROR_PIPE_BUSY;
-static PyObject *__pyx_n_s_ERROR_PIPE_CONNECTED;
-static PyObject *__pyx_n_s_ERROR_SEM_TIMEOUT;
-static PyObject *__pyx_n_s_FILE_ATTRIBUTE_NORMAL;
-static PyObject *__pyx_n_s_FILE_FLAG_FIRST_PIPE_INSTANCE;
-static PyObject *__pyx_n_s_FILE_FLAG_OVERLAPPED;
-static PyObject *__pyx_n_s_FILE_GENERIC_READ;
-static PyObject *__pyx_n_s_FILE_GENERIC_WRITE;
-static PyObject *__pyx_n_s_FILE_MAP_ALL_ACCESS;
-static PyObject *__pyx_n_s_FILE_MAP_COPY;
-static PyObject *__pyx_n_s_FILE_MAP_EXECUTE;
-static PyObject *__pyx_n_s_FILE_MAP_READ;
-static PyObject *__pyx_n_s_FILE_MAP_WRITE;
-static PyObject *__pyx_n_s_FILE_TYPE_CHAR;
-static PyObject *__pyx_n_s_FILE_TYPE_DISK;
-static PyObject *__pyx_n_s_FILE_TYPE_PIPE;
-static PyObject *__pyx_n_s_FILE_TYPE_REMOTE;
-static PyObject *__pyx_n_s_FILE_TYPE_UNKNOWN;
-static PyObject *__pyx_n_s_GENERIC_READ;
-static PyObject *__pyx_n_s_GENERIC_WRITE;
-static PyObject *__pyx_n_s_HIGH_PRIORITY_CLASS;
-static PyObject *__pyx_n_s_IDLE_PRIORITY_CLASS;
-static PyObject *__pyx_n_s_INFINITE;
-static PyObject *__pyx_n_s_INVALID_HANDLE_VALUE;
-static PyObject *__pyx_n_s_MEM_COMMIT;
-static PyObject *__pyx_n_s_MEM_FREE;
-static PyObject *__pyx_n_s_MEM_IMAGE;
-static PyObject *__pyx_n_s_MEM_MAPPED;
-static PyObject *__pyx_n_s_MEM_PRIVATE;
-static PyObject *__pyx_n_s_MEM_RESERVE;
-static PyObject *__pyx_n_s_NMPWAIT_WAIT_FOREVER;
-static PyObject *__pyx_n_s_NORMAL_PRIORITY_CLASS;
-static PyObject *__pyx_n_s_OPEN_ALWAYS;
-static PyObject *__pyx_n_s_OPEN_EXISTING;
-static PyObject *__pyx_n_s_PAGE_EXECUTE;
-static PyObject *__pyx_n_s_PAGE_EXECUTE_READ;
-static PyObject *__pyx_n_s_PAGE_EXECUTE_READWRITE;
-static PyObject *__pyx_n_s_PAGE_EXECUTE_WRITECOPY;
-static PyObject *__pyx_n_s_PAGE_GUARD;
-static PyObject *__pyx_n_s_PAGE_NOACCESS;
-static PyObject *__pyx_n_s_PAGE_NOCACHE;
-static PyObject *__pyx_n_s_PAGE_READONLY;
-static PyObject *__pyx_n_s_PAGE_READWRITE;
-static PyObject *__pyx_n_s_PAGE_WRITECOMBINE;
-static PyObject *__pyx_n_s_PAGE_WRITECOPY;
-static PyObject *__pyx_n_s_PIPE_ACCESS_DUPLEX;
-static PyObject *__pyx_n_s_PIPE_ACCESS_INBOUND;
-static PyObject *__pyx_n_s_PIPE_READMODE_MESSAGE;
-static PyObject *__pyx_n_s_PIPE_TYPE_MESSAGE;
-static PyObject *__pyx_n_s_PIPE_UNLIMITED_INSTANCES;
-static PyObject *__pyx_n_s_PIPE_WAIT;
-static PyObject *__pyx_n_s_PROCESS_ALL_ACCESS;
-static PyObject *__pyx_n_s_PROCESS_DUP_HANDLE;
-static PyObject *__pyx_n_s_REALTIME_PRIORITY_CLASS;
-static PyObject *__pyx_n_s_SEC_COMMIT;
-static PyObject *__pyx_n_s_SEC_IMAGE;
-static PyObject *__pyx_n_s_SEC_LARGE_PAGES;
-static PyObject *__pyx_n_s_SEC_NOCACHE;
-static PyObject *__pyx_n_s_SEC_RESERVE;
-static PyObject *__pyx_n_s_SEC_WRITECOMBINE;
-static PyObject *__pyx_n_s_STARTF_USESHOWWINDOW;
-static PyObject *__pyx_n_s_STARTF_USESTDHANDLES;
-static PyObject *__pyx_n_s_STD_ERROR_HANDLE;
-static PyObject *__pyx_n_s_STD_INPUT_HANDLE;
-static PyObject *__pyx_n_s_STD_OUTPUT_HANDLE;
-static PyObject *__pyx_n_s_STILL_ACTIVE;
-static PyObject *__pyx_n_s_SW_HIDE;
-static PyObject *__pyx_n_s_SYNCHRONIZE;
-static PyObject *__pyx_n_s_TRUNCATE_EXISTING;
-static PyObject *__pyx_n_s_WAIT_ABANDONED_0;
-static PyObject *__pyx_n_s_WAIT_OBJECT_0;
-static PyObject *__pyx_n_s_WAIT_TIMEOUT;
 static PyObject *__pyx_n_s_cline_in_traceback;
+static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
-static PyObject *__pyx_n_s_pyx_capi;
+static PyObject *__pyx_n_s_sleep;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_pf_7aiofile_read_file(CYTHON_UNUSED PyObject *__pyx_self, __pyx_t_7aiofile_LPCSTR __pyx_v_file_path); /* proto */
+static PyObject *__pyx_n_s_time;
+static PyObject *__pyx_pf_7aiofile_read_file(CYTHON_UNUSED PyObject *__pyx_self, LPCSTR __pyx_v_file_path); /* proto */
+static PyObject *__pyx_float_0_5;
 /* Late includes */
 
-/* "aiofile.pyx":6
- * from libc.stdio cimport printf
+/* "aiofile.pyx":10
+ * from synchapi cimport WaitForSingleObjectEx
  * 
  * cdef void __stdcall func(DWORD dwErrorCode,             # <<<<<<<<<<<<<<
  *                          DWORD dwNumberOfBytesTransfered,
  *                          LPOVERLAPPED lpOverlapped):
  */
 
-static void __stdcall __pyx_f_7aiofile_func(CYTHON_UNUSED __pyx_t_7aiofile_DWORD __pyx_v_dwErrorCode, CYTHON_UNUSED __pyx_t_7aiofile_DWORD __pyx_v_dwNumberOfBytesTransfered, CYTHON_UNUSED __pyx_t_7aiofile_LPOVERLAPPED __pyx_v_lpOverlapped) {
+static void __stdcall __pyx_f_7aiofile_func(CYTHON_UNUSED DWORD __pyx_v_dwErrorCode, CYTHON_UNUSED DWORD __pyx_v_dwNumberOfBytesTransfered, CYTHON_UNUSED LPOVERLAPPED __pyx_v_lpOverlapped) {
   int __pyx_v_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("func", 0);
 
-  /* "aiofile.pyx":9
+  /* "aiofile.pyx":13
  *                          DWORD dwNumberOfBytesTransfered,
  *                          LPOVERLAPPED lpOverlapped):
- *     cdef int r = 0             # <<<<<<<<<<<<<<
+ *     cdef int r = 112223330             # <<<<<<<<<<<<<<
  *     printf("call:%d", r)
  * 
  */
-  __pyx_v_r = 0;
+  __pyx_v_r = 0x6B06462;
 
-  /* "aiofile.pyx":10
+  /* "aiofile.pyx":14
  *                          LPOVERLAPPED lpOverlapped):
- *     cdef int r = 0
+ *     cdef int r = 112223330
  *     printf("call:%d", r)             # <<<<<<<<<<<<<<
  * 
- * cpdef read_file(LPCSTR file_path):
+ * cdef int called = 1
  */
   (void)(printf(((char const *)"call:%d"), __pyx_v_r));
 
-  /* "aiofile.pyx":6
- * from libc.stdio cimport printf
+  /* "aiofile.pyx":10
+ * from synchapi cimport WaitForSingleObjectEx
  * 
  * cdef void __stdcall func(DWORD dwErrorCode,             # <<<<<<<<<<<<<<
  *                          DWORD dwNumberOfBytesTransfered,
@@ -1640,134 +1391,370 @@ static void __stdcall __pyx_f_7aiofile_func(CYTHON_UNUSED __pyx_t_7aiofile_DWORD
   __Pyx_RefNannyFinishContext();
 }
 
-/* "aiofile.pyx":12
- *     printf("call:%d", r)
+/* "aiofile.pyx":19
+ * 
+ * 
+ * cdef void __stdcall CompletedReadRoutine(DWORD dwErr, DWORD cbBytesRead,             # <<<<<<<<<<<<<<
+ *                                          LPOVERLAPPED lpOverLap):
+ *     called = 0
+ */
+
+static void __stdcall __pyx_f_7aiofile_CompletedReadRoutine(DWORD __pyx_v_dwErr, DWORD __pyx_v_cbBytesRead, CYTHON_UNUSED LPOVERLAPPED __pyx_v_lpOverLap) {
+  CYTHON_UNUSED long __pyx_v_called;
+  int __pyx_v_r;
+  CYTHON_UNUSED HANDLE __pyx_v_h;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("CompletedReadRoutine", 0);
+
+  /* "aiofile.pyx":21
+ * cdef void __stdcall CompletedReadRoutine(DWORD dwErr, DWORD cbBytesRead,
+ *                                          LPOVERLAPPED lpOverLap):
+ *     called = 0             # <<<<<<<<<<<<<<
+ *     cdef int r = 0
+ *     cdef HANDLE h = <void *> r
+ */
+  __pyx_v_called = 0;
+
+  /* "aiofile.pyx":22
+ *                                          LPOVERLAPPED lpOverLap):
+ *     called = 0
+ *     cdef int r = 0             # <<<<<<<<<<<<<<
+ *     cdef HANDLE h = <void *> r
+ *     lpOverLap = NULL
+ */
+  __pyx_v_r = 0;
+
+  /* "aiofile.pyx":23
+ *     called = 0
+ *     cdef int r = 0
+ *     cdef HANDLE h = <void *> r             # <<<<<<<<<<<<<<
+ *     lpOverLap = NULL
+ *     printf("-----------call:%d,%d,%d\n", r,dwErr,cbBytesRead)
+ */
+  __pyx_v_h = ((void *)__pyx_v_r);
+
+  /* "aiofile.pyx":24
+ *     cdef int r = 0
+ *     cdef HANDLE h = <void *> r
+ *     lpOverLap = NULL             # <<<<<<<<<<<<<<
+ *     printf("-----------call:%d,%d,%d\n", r,dwErr,cbBytesRead)
+ * 
+ */
+  __pyx_v_lpOverLap = NULL;
+
+  /* "aiofile.pyx":25
+ *     cdef HANDLE h = <void *> r
+ *     lpOverLap = NULL
+ *     printf("-----------call:%d,%d,%d\n", r,dwErr,cbBytesRead)             # <<<<<<<<<<<<<<
+ * 
+ * cpdef read_file(LPCSTR file_path):
+ */
+  (void)(printf(((char const *)"-----------call:%d,%d,%d\n"), __pyx_v_r, __pyx_v_dwErr, __pyx_v_cbBytesRead));
+
+  /* "aiofile.pyx":19
+ * 
+ * 
+ * cdef void __stdcall CompletedReadRoutine(DWORD dwErr, DWORD cbBytesRead,             # <<<<<<<<<<<<<<
+ *                                          LPOVERLAPPED lpOverLap):
+ *     called = 0
+ */
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+}
+
+/* "aiofile.pyx":27
+ *     printf("-----------call:%d,%d,%d\n", r,dwErr,cbBytesRead)
  * 
  * cpdef read_file(LPCSTR file_path):             # <<<<<<<<<<<<<<
- *     cdef DWORD read_size = 1024
+ *     cdef DWORD read_size = 1024*1024
  * 
  */
 
 static PyObject *__pyx_pw_7aiofile_1read_file(PyObject *__pyx_self, PyObject *__pyx_arg_file_path); /*proto*/
-static PyObject *__pyx_f_7aiofile_read_file(__pyx_t_7aiofile_LPCSTR __pyx_v_file_path, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  __pyx_t_7aiofile_DWORD __pyx_v_read_size;
-  char __pyx_v_lp_buf[0x400];
-  __pyx_t_7aiofile_DWORD __pyx_v_num_read;
-  __pyx_t_7aiofile_LPOVERLAPPED __pyx_v_lpOverlapped;
-  CYTHON_UNUSED __pyx_t_7aiofile_LPOVERLAPPED_COMPLETION_ROUTINE __pyx_v_callback;
-  __pyx_t_7aiofile_HANDLE __pyx_v_handle;
-  __pyx_t_7aiofile_DWORD __pyx_v_error;
+static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNUSED int __pyx_skip_dispatch) {
+  DWORD __pyx_v_read_size;
+  char __pyx_v_lp_buf[(0x400 * 0x400)];
+  OVERLAPPED __pyx_v_overlapped;
+  HANDLE __pyx_v_handle;
+  int __pyx_v_error;
+  LPOVERLAPPED __pyx_v_lpOverlapped;
   int __pyx_v_r;
+  DWORD __pyx_v_wait;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("read_file", 0);
 
-  /* "aiofile.pyx":13
+  /* "aiofile.pyx":28
  * 
  * cpdef read_file(LPCSTR file_path):
- *     cdef DWORD read_size = 1024             # <<<<<<<<<<<<<<
+ *     cdef DWORD read_size = 1024*1024             # <<<<<<<<<<<<<<
  * 
  *     # cdef char *lp_buf = [0]*1024
  */
-  __pyx_v_read_size = 0x400;
+  __pyx_v_read_size = 0x100000;
 
-  /* "aiofile.pyx":18
- *     cdef char lp_buf[1024]
+  /* "aiofile.pyx":33
+ *     cdef char lp_buf[1024*1024]
  *     # lp_buf = <char*>malloc(sizeof(char *))
- *     printf("%s \n", lp_buf)             # <<<<<<<<<<<<<<
+ *     printf("lp_buf:%s \n", lp_buf)             # <<<<<<<<<<<<<<
  * 
  *     cdef DWORD num_read
  */
-  (void)(printf(((char const *)"%s \n"), __pyx_v_lp_buf));
+  (void)(printf(((char const *)"lp_buf:%s \n"), __pyx_v_lp_buf));
 
-  /* "aiofile.pyx":22
- *     cdef DWORD num_read
- *     cdef LPOVERLAPPED lpOverlapped
- *     cdef LPOVERLAPPED_COMPLETION_ROUTINE callback = func             # <<<<<<<<<<<<<<
+  /* "aiofile.pyx":39
+ *     # cdef LPOVERLAPPED_COMPLETION_ROUTINE callback = func
  * 
- *     handle = CreateFileA(file_path,
+ *     printf("%u %u %u \n", GENERIC_READ,             # <<<<<<<<<<<<<<
+ *            OPEN_EXISTING,
+ *            FILE_FLAG_OVERLAPPED
  */
-  __pyx_v_callback = __pyx_f_7aiofile_func;
+  (void)(printf(((char const *)"%u %u %u \n"), __pyx_e_7winbase_GENERIC_READ, __pyx_e_7winbase_OPEN_EXISTING, __pyx_e_7winbase_FILE_FLAG_OVERLAPPED));
 
-  /* "aiofile.pyx":24
- *     cdef LPOVERLAPPED_COMPLETION_ROUTINE callback = func
- * 
- *     handle = CreateFileA(file_path,             # <<<<<<<<<<<<<<
- *                          GENERIC_READ,
- *                          0,
+  /* "aiofile.pyx":43
+ *            FILE_FLAG_OVERLAPPED
+ *            )
+ *     memset(&overlapped, 0, sizeof(overlapped))             # <<<<<<<<<<<<<<
+ *     cdef HANDLE handle = CreateFileA(file_path,
+ *                                      GENERIC_READ,
  */
-  __pyx_v_handle = CreateFileA(__pyx_v_file_path, __pyx_v_7aiofile_GENERIC_READ, 0, NULL, __pyx_v_7aiofile_OPEN_EXISTING, __pyx_v_7aiofile_FILE_ATTRIBUTE_NORMAL, NULL);
+  (void)(memset((&__pyx_v_overlapped), 0, (sizeof(__pyx_v_overlapped))));
 
-  /* "aiofile.pyx":31
- *                          FILE_ATTRIBUTE_NORMAL,
- *                          NULL)
- *     error = GetLastError()             # <<<<<<<<<<<<<<
+  /* "aiofile.pyx":44
+ *            )
+ *     memset(&overlapped, 0, sizeof(overlapped))
+ *     cdef HANDLE handle = CreateFileA(file_path,             # <<<<<<<<<<<<<<
+ *                                      GENERIC_READ,
+ *                                      0,
+ */
+  __pyx_v_handle = CreateFileA(__pyx_v_file_path, __pyx_e_7winbase_GENERIC_READ, 0, NULL, __pyx_e_7winbase_OPEN_EXISTING, __pyx_e_7winbase_FILE_FLAG_OVERLAPPED, NULL);
+
+  /* "aiofile.pyx":51
+ *                                      FILE_FLAG_OVERLAPPED,
+ *                                      NULL)
+ *     cdef int error = GetLastError()             # <<<<<<<<<<<<<<
  *     printf("error:%d\n", error)
- *     memset(&lpOverlapped, 0, sizeof(lpOverlapped))
+ *     printf("%s\n", file_path)
  */
   __pyx_v_error = GetLastError();
 
-  /* "aiofile.pyx":32
- *                          NULL)
- *     error = GetLastError()
+  /* "aiofile.pyx":52
+ *                                      NULL)
+ *     cdef int error = GetLastError()
  *     printf("error:%d\n", error)             # <<<<<<<<<<<<<<
- *     memset(&lpOverlapped, 0, sizeof(lpOverlapped))
  *     printf("%s\n", file_path)
+ *     printf("handle:%d\n", handle)
  */
   (void)(printf(((char const *)"error:%d\n"), __pyx_v_error));
 
-  /* "aiofile.pyx":33
- *     error = GetLastError()
+  /* "aiofile.pyx":53
+ *     cdef int error = GetLastError()
  *     printf("error:%d\n", error)
- *     memset(&lpOverlapped, 0, sizeof(lpOverlapped))             # <<<<<<<<<<<<<<
- *     printf("%s\n", file_path)
- *     printf("handle:%d\n", handle)
- */
-  (void)(memset((&__pyx_v_lpOverlapped), 0, (sizeof(__pyx_v_lpOverlapped))));
-
-  /* "aiofile.pyx":34
- *     printf("error:%d\n", error)
- *     memset(&lpOverlapped, 0, sizeof(lpOverlapped))
  *     printf("%s\n", file_path)             # <<<<<<<<<<<<<<
  *     printf("handle:%d\n", handle)
- *     cdef int r = ReadFile(handle, lp_buf, read_size, &num_read, NULL)
+ *     # lpOverlapped.hEvent = handle
  */
   (void)(printf(((char const *)"%s\n"), __pyx_v_file_path));
 
-  /* "aiofile.pyx":35
- *     memset(&lpOverlapped, 0, sizeof(lpOverlapped))
+  /* "aiofile.pyx":54
+ *     printf("error:%d\n", error)
  *     printf("%s\n", file_path)
  *     printf("handle:%d\n", handle)             # <<<<<<<<<<<<<<
- *     cdef int r = ReadFile(handle, lp_buf, read_size, &num_read, NULL)
- *     printf("%d %d\n", r, num_read)
+ *     # lpOverlapped.hEvent = handle
+ *     cdef LPOVERLAPPED lpOverlapped = &overlapped
  */
   (void)(printf(((char const *)"handle:%d\n"), __pyx_v_handle));
 
-  /* "aiofile.pyx":36
- *     printf("%s\n", file_path)
+  /* "aiofile.pyx":56
  *     printf("handle:%d\n", handle)
- *     cdef int r = ReadFile(handle, lp_buf, read_size, &num_read, NULL)             # <<<<<<<<<<<<<<
- *     printf("%d %d\n", r, num_read)
+ *     # lpOverlapped.hEvent = handle
+ *     cdef LPOVERLAPPED lpOverlapped = &overlapped             # <<<<<<<<<<<<<<
+ *     cdef int r
+ *     # CompletedReadRoutine(read_size,read_size,lpOverlapped)
  */
-  __pyx_v_r = ReadFile(__pyx_v_handle, __pyx_v_lp_buf, __pyx_v_read_size, (&__pyx_v_num_read), NULL);
+  __pyx_v_lpOverlapped = (&__pyx_v_overlapped);
 
-  /* "aiofile.pyx":37
- *     printf("handle:%d\n", handle)
- *     cdef int r = ReadFile(handle, lp_buf, read_size, &num_read, NULL)
- *     printf("%d %d\n", r, num_read)             # <<<<<<<<<<<<<<
+  /* "aiofile.pyx":66
+ *     # printf("%d %d\n", r, num_read)
+ *     # printf("%d \n",callback)
+ *     r = ReadFileEx(handle, lp_buf, read_size, lpOverlapped, <LPOVERLAPPED_COMPLETION_ROUTINE> CompletedReadRoutine)             # <<<<<<<<<<<<<<
+ *     cdef DWORD wait = WaitForSingleObjectEx(handle,0 , True)
+ *     while True:
  */
-  (void)(printf(((char const *)"%d %d\n"), __pyx_v_r, __pyx_v_num_read));
+  __pyx_v_r = ReadFileEx(__pyx_v_handle, __pyx_v_lp_buf, __pyx_v_read_size, __pyx_v_lpOverlapped, ((LPOVERLAPPED_COMPLETION_ROUTINE)__pyx_f_7aiofile_CompletedReadRoutine));
 
-  /* "aiofile.pyx":12
- *     printf("call:%d", r)
+  /* "aiofile.pyx":67
+ *     # printf("%d \n",callback)
+ *     r = ReadFileEx(handle, lp_buf, read_size, lpOverlapped, <LPOVERLAPPED_COMPLETION_ROUTINE> CompletedReadRoutine)
+ *     cdef DWORD wait = WaitForSingleObjectEx(handle,0 , True)             # <<<<<<<<<<<<<<
+ *     while True:
+ *         if wait == WAIT_IO_COMPLETION:
+ */
+  __pyx_v_wait = WaitForSingleObjectEx(__pyx_v_handle, 0, 1);
+
+  /* "aiofile.pyx":68
+ *     r = ReadFileEx(handle, lp_buf, read_size, lpOverlapped, <LPOVERLAPPED_COMPLETION_ROUTINE> CompletedReadRoutine)
+ *     cdef DWORD wait = WaitForSingleObjectEx(handle,0 , True)
+ *     while True:             # <<<<<<<<<<<<<<
+ *         if wait == WAIT_IO_COMPLETION:
+ *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+ */
+  while (1) {
+
+    /* "aiofile.pyx":69
+ *     cdef DWORD wait = WaitForSingleObjectEx(handle,0 , True)
+ *     while True:
+ *         if wait == WAIT_IO_COMPLETION:             # <<<<<<<<<<<<<<
+ *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+ *         if wait == WAIT_ABANDONED:
+ */
+    __pyx_t_1 = ((__pyx_v_wait == __pyx_e_7winbase_WAIT_IO_COMPLETION) != 0);
+    if (__pyx_t_1) {
+
+      /* "aiofile.pyx":70
+ *     while True:
+ *         if wait == WAIT_IO_COMPLETION:
+ *             printf("WAIT_IO_COMPLETION:%d\n",wait)             # <<<<<<<<<<<<<<
+ *         if wait == WAIT_ABANDONED:
+ *             printf("WAIT_ABANDONED:%d\n",wait)
+ */
+      (void)(printf(((char const *)"WAIT_IO_COMPLETION:%d\n"), __pyx_v_wait));
+
+      /* "aiofile.pyx":69
+ *     cdef DWORD wait = WaitForSingleObjectEx(handle,0 , True)
+ *     while True:
+ *         if wait == WAIT_IO_COMPLETION:             # <<<<<<<<<<<<<<
+ *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+ *         if wait == WAIT_ABANDONED:
+ */
+    }
+
+    /* "aiofile.pyx":71
+ *         if wait == WAIT_IO_COMPLETION:
+ *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+ *         if wait == WAIT_ABANDONED:             # <<<<<<<<<<<<<<
+ *             printf("WAIT_ABANDONED:%d\n",wait)
+ *         error = GetLastError()
+ */
+    __pyx_t_1 = ((__pyx_v_wait == __pyx_e_7winbase_WAIT_ABANDONED) != 0);
+    if (__pyx_t_1) {
+
+      /* "aiofile.pyx":72
+ *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+ *         if wait == WAIT_ABANDONED:
+ *             printf("WAIT_ABANDONED:%d\n",wait)             # <<<<<<<<<<<<<<
+ *         error = GetLastError()
+ *         printf("error:%d\n", error)
+ */
+      (void)(printf(((char const *)"WAIT_ABANDONED:%d\n"), __pyx_v_wait));
+
+      /* "aiofile.pyx":71
+ *         if wait == WAIT_IO_COMPLETION:
+ *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+ *         if wait == WAIT_ABANDONED:             # <<<<<<<<<<<<<<
+ *             printf("WAIT_ABANDONED:%d\n",wait)
+ *         error = GetLastError()
+ */
+    }
+
+    /* "aiofile.pyx":73
+ *         if wait == WAIT_ABANDONED:
+ *             printf("WAIT_ABANDONED:%d\n",wait)
+ *         error = GetLastError()             # <<<<<<<<<<<<<<
+ *         printf("error:%d\n", error)
+ *         printf("r:%d, wait:%d, called:%d\n", r, wait, called)
+ */
+    __pyx_v_error = GetLastError();
+
+    /* "aiofile.pyx":74
+ *             printf("WAIT_ABANDONED:%d\n",wait)
+ *         error = GetLastError()
+ *         printf("error:%d\n", error)             # <<<<<<<<<<<<<<
+ *         printf("r:%d, wait:%d, called:%d\n", r, wait, called)
+ *         time.sleep(0.5)
+ */
+    (void)(printf(((char const *)"error:%d\n"), __pyx_v_error));
+
+    /* "aiofile.pyx":75
+ *         error = GetLastError()
+ *         printf("error:%d\n", error)
+ *         printf("r:%d, wait:%d, called:%d\n", r, wait, called)             # <<<<<<<<<<<<<<
+ *         time.sleep(0.5)
+ *         printf("lpOverlapped:%d\n", lpOverlapped.hEvent)
+ */
+    (void)(printf(((char const *)"r:%d, wait:%d, called:%d\n"), __pyx_v_r, __pyx_v_wait, __pyx_v_7aiofile_called));
+
+    /* "aiofile.pyx":76
+ *         printf("error:%d\n", error)
+ *         printf("r:%d, wait:%d, called:%d\n", r, wait, called)
+ *         time.sleep(0.5)             # <<<<<<<<<<<<<<
+ *         printf("lpOverlapped:%d\n", lpOverlapped.hEvent)
+ *         wait = WaitForSingleObjectEx(handle, 0, True)
+ */
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sleep); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 76, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_3)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_3);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
+      }
+    }
+    __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_float_0_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_float_0_5);
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+    /* "aiofile.pyx":77
+ *         printf("r:%d, wait:%d, called:%d\n", r, wait, called)
+ *         time.sleep(0.5)
+ *         printf("lpOverlapped:%d\n", lpOverlapped.hEvent)             # <<<<<<<<<<<<<<
+ *         wait = WaitForSingleObjectEx(handle, 0, True)
+ */
+    (void)(printf(((char const *)"lpOverlapped:%d\n"), __pyx_v_lpOverlapped->hEvent));
+
+    /* "aiofile.pyx":78
+ *         time.sleep(0.5)
+ *         printf("lpOverlapped:%d\n", lpOverlapped.hEvent)
+ *         wait = WaitForSingleObjectEx(handle, 0, True)             # <<<<<<<<<<<<<<
+ */
+    __pyx_v_wait = WaitForSingleObjectEx(__pyx_v_handle, 0, 1);
+  }
+
+  /* "aiofile.pyx":27
+ *     printf("-----------call:%d,%d,%d\n", r,dwErr,cbBytesRead)
  * 
  * cpdef read_file(LPCSTR file_path):             # <<<<<<<<<<<<<<
- *     cdef DWORD read_size = 1024
+ *     cdef DWORD read_size = 1024*1024
  * 
  */
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_AddTraceback("aiofile.read_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -1776,7 +1763,7 @@ static PyObject *__pyx_f_7aiofile_read_file(__pyx_t_7aiofile_LPCSTR __pyx_v_file
 /* Python wrapper */
 static PyObject *__pyx_pw_7aiofile_1read_file(PyObject *__pyx_self, PyObject *__pyx_arg_file_path); /*proto*/
 static PyObject *__pyx_pw_7aiofile_1read_file(PyObject *__pyx_self, PyObject *__pyx_arg_file_path) {
-  __pyx_t_7aiofile_LPCSTR __pyx_v_file_path;
+  LPCSTR __pyx_v_file_path;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1784,7 +1771,7 @@ static PyObject *__pyx_pw_7aiofile_1read_file(PyObject *__pyx_self, PyObject *__
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("read_file (wrapper)", 0);
   assert(__pyx_arg_file_path); {
-    __pyx_v_file_path = __Pyx_PyObject_AsString(__pyx_arg_file_path); if (unlikely((!__pyx_v_file_path) && PyErr_Occurred())) __PYX_ERR(0, 12, __pyx_L3_error)
+    __pyx_v_file_path = __Pyx_PyObject_AsString(__pyx_arg_file_path); if (unlikely((__pyx_v_file_path == ((LPCSTR)NULL)) && PyErr_Occurred())) __PYX_ERR(0, 27, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -1792,14 +1779,14 @@ static PyObject *__pyx_pw_7aiofile_1read_file(PyObject *__pyx_self, PyObject *__
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7aiofile_read_file(__pyx_self, ((__pyx_t_7aiofile_LPCSTR)__pyx_v_file_path));
+  __pyx_r = __pyx_pf_7aiofile_read_file(__pyx_self, ((LPCSTR)__pyx_v_file_path));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7aiofile_read_file(CYTHON_UNUSED PyObject *__pyx_self, __pyx_t_7aiofile_LPCSTR __pyx_v_file_path) {
+static PyObject *__pyx_pf_7aiofile_read_file(CYTHON_UNUSED PyObject *__pyx_self, LPCSTR __pyx_v_file_path) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -1808,7 +1795,7 @@ static PyObject *__pyx_pf_7aiofile_read_file(CYTHON_UNUSED PyObject *__pyx_self,
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("read_file", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_7aiofile_read_file(__pyx_v_file_path, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_7aiofile_read_file(__pyx_v_file_path, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -1872,103 +1859,13 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_s_ABOVE_NORMAL_PRIORITY_CLASS, __pyx_k_ABOVE_NORMAL_PRIORITY_CLASS, sizeof(__pyx_k_ABOVE_NORMAL_PRIORITY_CLASS), 0, 0, 1, 1},
-  {&__pyx_n_s_BELOW_NORMAL_PRIORITY_CLASS, __pyx_k_BELOW_NORMAL_PRIORITY_CLASS, sizeof(__pyx_k_BELOW_NORMAL_PRIORITY_CLASS), 0, 0, 1, 1},
-  {&__pyx_n_s_CREATE_ALWAYS, __pyx_k_CREATE_ALWAYS, sizeof(__pyx_k_CREATE_ALWAYS), 0, 0, 1, 1},
-  {&__pyx_n_s_CREATE_BREAKAWAY_FROM_JOB, __pyx_k_CREATE_BREAKAWAY_FROM_JOB, sizeof(__pyx_k_CREATE_BREAKAWAY_FROM_JOB), 0, 0, 1, 1},
-  {&__pyx_n_s_CREATE_DEFAULT_ERROR_MODE, __pyx_k_CREATE_DEFAULT_ERROR_MODE, sizeof(__pyx_k_CREATE_DEFAULT_ERROR_MODE), 0, 0, 1, 1},
-  {&__pyx_n_s_CREATE_NEW, __pyx_k_CREATE_NEW, sizeof(__pyx_k_CREATE_NEW), 0, 0, 1, 1},
-  {&__pyx_n_s_CREATE_NEW_CONSOLE, __pyx_k_CREATE_NEW_CONSOLE, sizeof(__pyx_k_CREATE_NEW_CONSOLE), 0, 0, 1, 1},
-  {&__pyx_n_s_CREATE_NEW_PROCESS_GROUP, __pyx_k_CREATE_NEW_PROCESS_GROUP, sizeof(__pyx_k_CREATE_NEW_PROCESS_GROUP), 0, 0, 1, 1},
-  {&__pyx_n_s_CREATE_NO_WINDOW, __pyx_k_CREATE_NO_WINDOW, sizeof(__pyx_k_CREATE_NO_WINDOW), 0, 0, 1, 1},
-  {&__pyx_n_s_DETACHED_PROCESS, __pyx_k_DETACHED_PROCESS, sizeof(__pyx_k_DETACHED_PROCESS), 0, 0, 1, 1},
-  {&__pyx_n_s_DUPLICATE_CLOSE_SOURCE, __pyx_k_DUPLICATE_CLOSE_SOURCE, sizeof(__pyx_k_DUPLICATE_CLOSE_SOURCE), 0, 0, 1, 1},
-  {&__pyx_n_s_DUPLICATE_SAME_ACCESS, __pyx_k_DUPLICATE_SAME_ACCESS, sizeof(__pyx_k_DUPLICATE_SAME_ACCESS), 0, 0, 1, 1},
-  {&__pyx_n_s_ERROR_ALREADY_EXISTS, __pyx_k_ERROR_ALREADY_EXISTS, sizeof(__pyx_k_ERROR_ALREADY_EXISTS), 0, 0, 1, 1},
-  {&__pyx_n_s_ERROR_BROKEN_PIPE, __pyx_k_ERROR_BROKEN_PIPE, sizeof(__pyx_k_ERROR_BROKEN_PIPE), 0, 0, 1, 1},
-  {&__pyx_n_s_ERROR_IO_PENDING, __pyx_k_ERROR_IO_PENDING, sizeof(__pyx_k_ERROR_IO_PENDING), 0, 0, 1, 1},
-  {&__pyx_n_s_ERROR_MORE_DATA, __pyx_k_ERROR_MORE_DATA, sizeof(__pyx_k_ERROR_MORE_DATA), 0, 0, 1, 1},
-  {&__pyx_n_s_ERROR_NETNAME_DELETED, __pyx_k_ERROR_NETNAME_DELETED, sizeof(__pyx_k_ERROR_NETNAME_DELETED), 0, 0, 1, 1},
-  {&__pyx_n_s_ERROR_NO_DATA, __pyx_k_ERROR_NO_DATA, sizeof(__pyx_k_ERROR_NO_DATA), 0, 0, 1, 1},
-  {&__pyx_n_s_ERROR_NO_SYSTEM_RESOURCES, __pyx_k_ERROR_NO_SYSTEM_RESOURCES, sizeof(__pyx_k_ERROR_NO_SYSTEM_RESOURCES), 0, 0, 1, 1},
-  {&__pyx_n_s_ERROR_OPERATION_ABORTED, __pyx_k_ERROR_OPERATION_ABORTED, sizeof(__pyx_k_ERROR_OPERATION_ABORTED), 0, 0, 1, 1},
-  {&__pyx_n_s_ERROR_PIPE_BUSY, __pyx_k_ERROR_PIPE_BUSY, sizeof(__pyx_k_ERROR_PIPE_BUSY), 0, 0, 1, 1},
-  {&__pyx_n_s_ERROR_PIPE_CONNECTED, __pyx_k_ERROR_PIPE_CONNECTED, sizeof(__pyx_k_ERROR_PIPE_CONNECTED), 0, 0, 1, 1},
-  {&__pyx_n_s_ERROR_SEM_TIMEOUT, __pyx_k_ERROR_SEM_TIMEOUT, sizeof(__pyx_k_ERROR_SEM_TIMEOUT), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_ATTRIBUTE_NORMAL, __pyx_k_FILE_ATTRIBUTE_NORMAL, sizeof(__pyx_k_FILE_ATTRIBUTE_NORMAL), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_FLAG_FIRST_PIPE_INSTANCE, __pyx_k_FILE_FLAG_FIRST_PIPE_INSTANCE, sizeof(__pyx_k_FILE_FLAG_FIRST_PIPE_INSTANCE), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_FLAG_OVERLAPPED, __pyx_k_FILE_FLAG_OVERLAPPED, sizeof(__pyx_k_FILE_FLAG_OVERLAPPED), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_GENERIC_READ, __pyx_k_FILE_GENERIC_READ, sizeof(__pyx_k_FILE_GENERIC_READ), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_GENERIC_WRITE, __pyx_k_FILE_GENERIC_WRITE, sizeof(__pyx_k_FILE_GENERIC_WRITE), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_MAP_ALL_ACCESS, __pyx_k_FILE_MAP_ALL_ACCESS, sizeof(__pyx_k_FILE_MAP_ALL_ACCESS), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_MAP_COPY, __pyx_k_FILE_MAP_COPY, sizeof(__pyx_k_FILE_MAP_COPY), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_MAP_EXECUTE, __pyx_k_FILE_MAP_EXECUTE, sizeof(__pyx_k_FILE_MAP_EXECUTE), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_MAP_READ, __pyx_k_FILE_MAP_READ, sizeof(__pyx_k_FILE_MAP_READ), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_MAP_WRITE, __pyx_k_FILE_MAP_WRITE, sizeof(__pyx_k_FILE_MAP_WRITE), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_TYPE_CHAR, __pyx_k_FILE_TYPE_CHAR, sizeof(__pyx_k_FILE_TYPE_CHAR), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_TYPE_DISK, __pyx_k_FILE_TYPE_DISK, sizeof(__pyx_k_FILE_TYPE_DISK), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_TYPE_PIPE, __pyx_k_FILE_TYPE_PIPE, sizeof(__pyx_k_FILE_TYPE_PIPE), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_TYPE_REMOTE, __pyx_k_FILE_TYPE_REMOTE, sizeof(__pyx_k_FILE_TYPE_REMOTE), 0, 0, 1, 1},
-  {&__pyx_n_s_FILE_TYPE_UNKNOWN, __pyx_k_FILE_TYPE_UNKNOWN, sizeof(__pyx_k_FILE_TYPE_UNKNOWN), 0, 0, 1, 1},
-  {&__pyx_n_s_GENERIC_READ, __pyx_k_GENERIC_READ, sizeof(__pyx_k_GENERIC_READ), 0, 0, 1, 1},
-  {&__pyx_n_s_GENERIC_WRITE, __pyx_k_GENERIC_WRITE, sizeof(__pyx_k_GENERIC_WRITE), 0, 0, 1, 1},
-  {&__pyx_n_s_HIGH_PRIORITY_CLASS, __pyx_k_HIGH_PRIORITY_CLASS, sizeof(__pyx_k_HIGH_PRIORITY_CLASS), 0, 0, 1, 1},
-  {&__pyx_n_s_IDLE_PRIORITY_CLASS, __pyx_k_IDLE_PRIORITY_CLASS, sizeof(__pyx_k_IDLE_PRIORITY_CLASS), 0, 0, 1, 1},
-  {&__pyx_n_s_INFINITE, __pyx_k_INFINITE, sizeof(__pyx_k_INFINITE), 0, 0, 1, 1},
-  {&__pyx_n_s_INVALID_HANDLE_VALUE, __pyx_k_INVALID_HANDLE_VALUE, sizeof(__pyx_k_INVALID_HANDLE_VALUE), 0, 0, 1, 1},
-  {&__pyx_n_s_MEM_COMMIT, __pyx_k_MEM_COMMIT, sizeof(__pyx_k_MEM_COMMIT), 0, 0, 1, 1},
-  {&__pyx_n_s_MEM_FREE, __pyx_k_MEM_FREE, sizeof(__pyx_k_MEM_FREE), 0, 0, 1, 1},
-  {&__pyx_n_s_MEM_IMAGE, __pyx_k_MEM_IMAGE, sizeof(__pyx_k_MEM_IMAGE), 0, 0, 1, 1},
-  {&__pyx_n_s_MEM_MAPPED, __pyx_k_MEM_MAPPED, sizeof(__pyx_k_MEM_MAPPED), 0, 0, 1, 1},
-  {&__pyx_n_s_MEM_PRIVATE, __pyx_k_MEM_PRIVATE, sizeof(__pyx_k_MEM_PRIVATE), 0, 0, 1, 1},
-  {&__pyx_n_s_MEM_RESERVE, __pyx_k_MEM_RESERVE, sizeof(__pyx_k_MEM_RESERVE), 0, 0, 1, 1},
-  {&__pyx_n_s_NMPWAIT_WAIT_FOREVER, __pyx_k_NMPWAIT_WAIT_FOREVER, sizeof(__pyx_k_NMPWAIT_WAIT_FOREVER), 0, 0, 1, 1},
-  {&__pyx_n_s_NORMAL_PRIORITY_CLASS, __pyx_k_NORMAL_PRIORITY_CLASS, sizeof(__pyx_k_NORMAL_PRIORITY_CLASS), 0, 0, 1, 1},
-  {&__pyx_n_s_OPEN_ALWAYS, __pyx_k_OPEN_ALWAYS, sizeof(__pyx_k_OPEN_ALWAYS), 0, 0, 1, 1},
-  {&__pyx_n_s_OPEN_EXISTING, __pyx_k_OPEN_EXISTING, sizeof(__pyx_k_OPEN_EXISTING), 0, 0, 1, 1},
-  {&__pyx_n_s_PAGE_EXECUTE, __pyx_k_PAGE_EXECUTE, sizeof(__pyx_k_PAGE_EXECUTE), 0, 0, 1, 1},
-  {&__pyx_n_s_PAGE_EXECUTE_READ, __pyx_k_PAGE_EXECUTE_READ, sizeof(__pyx_k_PAGE_EXECUTE_READ), 0, 0, 1, 1},
-  {&__pyx_n_s_PAGE_EXECUTE_READWRITE, __pyx_k_PAGE_EXECUTE_READWRITE, sizeof(__pyx_k_PAGE_EXECUTE_READWRITE), 0, 0, 1, 1},
-  {&__pyx_n_s_PAGE_EXECUTE_WRITECOPY, __pyx_k_PAGE_EXECUTE_WRITECOPY, sizeof(__pyx_k_PAGE_EXECUTE_WRITECOPY), 0, 0, 1, 1},
-  {&__pyx_n_s_PAGE_GUARD, __pyx_k_PAGE_GUARD, sizeof(__pyx_k_PAGE_GUARD), 0, 0, 1, 1},
-  {&__pyx_n_s_PAGE_NOACCESS, __pyx_k_PAGE_NOACCESS, sizeof(__pyx_k_PAGE_NOACCESS), 0, 0, 1, 1},
-  {&__pyx_n_s_PAGE_NOCACHE, __pyx_k_PAGE_NOCACHE, sizeof(__pyx_k_PAGE_NOCACHE), 0, 0, 1, 1},
-  {&__pyx_n_s_PAGE_READONLY, __pyx_k_PAGE_READONLY, sizeof(__pyx_k_PAGE_READONLY), 0, 0, 1, 1},
-  {&__pyx_n_s_PAGE_READWRITE, __pyx_k_PAGE_READWRITE, sizeof(__pyx_k_PAGE_READWRITE), 0, 0, 1, 1},
-  {&__pyx_n_s_PAGE_WRITECOMBINE, __pyx_k_PAGE_WRITECOMBINE, sizeof(__pyx_k_PAGE_WRITECOMBINE), 0, 0, 1, 1},
-  {&__pyx_n_s_PAGE_WRITECOPY, __pyx_k_PAGE_WRITECOPY, sizeof(__pyx_k_PAGE_WRITECOPY), 0, 0, 1, 1},
-  {&__pyx_n_s_PIPE_ACCESS_DUPLEX, __pyx_k_PIPE_ACCESS_DUPLEX, sizeof(__pyx_k_PIPE_ACCESS_DUPLEX), 0, 0, 1, 1},
-  {&__pyx_n_s_PIPE_ACCESS_INBOUND, __pyx_k_PIPE_ACCESS_INBOUND, sizeof(__pyx_k_PIPE_ACCESS_INBOUND), 0, 0, 1, 1},
-  {&__pyx_n_s_PIPE_READMODE_MESSAGE, __pyx_k_PIPE_READMODE_MESSAGE, sizeof(__pyx_k_PIPE_READMODE_MESSAGE), 0, 0, 1, 1},
-  {&__pyx_n_s_PIPE_TYPE_MESSAGE, __pyx_k_PIPE_TYPE_MESSAGE, sizeof(__pyx_k_PIPE_TYPE_MESSAGE), 0, 0, 1, 1},
-  {&__pyx_n_s_PIPE_UNLIMITED_INSTANCES, __pyx_k_PIPE_UNLIMITED_INSTANCES, sizeof(__pyx_k_PIPE_UNLIMITED_INSTANCES), 0, 0, 1, 1},
-  {&__pyx_n_s_PIPE_WAIT, __pyx_k_PIPE_WAIT, sizeof(__pyx_k_PIPE_WAIT), 0, 0, 1, 1},
-  {&__pyx_n_s_PROCESS_ALL_ACCESS, __pyx_k_PROCESS_ALL_ACCESS, sizeof(__pyx_k_PROCESS_ALL_ACCESS), 0, 0, 1, 1},
-  {&__pyx_n_s_PROCESS_DUP_HANDLE, __pyx_k_PROCESS_DUP_HANDLE, sizeof(__pyx_k_PROCESS_DUP_HANDLE), 0, 0, 1, 1},
-  {&__pyx_n_s_REALTIME_PRIORITY_CLASS, __pyx_k_REALTIME_PRIORITY_CLASS, sizeof(__pyx_k_REALTIME_PRIORITY_CLASS), 0, 0, 1, 1},
-  {&__pyx_n_s_SEC_COMMIT, __pyx_k_SEC_COMMIT, sizeof(__pyx_k_SEC_COMMIT), 0, 0, 1, 1},
-  {&__pyx_n_s_SEC_IMAGE, __pyx_k_SEC_IMAGE, sizeof(__pyx_k_SEC_IMAGE), 0, 0, 1, 1},
-  {&__pyx_n_s_SEC_LARGE_PAGES, __pyx_k_SEC_LARGE_PAGES, sizeof(__pyx_k_SEC_LARGE_PAGES), 0, 0, 1, 1},
-  {&__pyx_n_s_SEC_NOCACHE, __pyx_k_SEC_NOCACHE, sizeof(__pyx_k_SEC_NOCACHE), 0, 0, 1, 1},
-  {&__pyx_n_s_SEC_RESERVE, __pyx_k_SEC_RESERVE, sizeof(__pyx_k_SEC_RESERVE), 0, 0, 1, 1},
-  {&__pyx_n_s_SEC_WRITECOMBINE, __pyx_k_SEC_WRITECOMBINE, sizeof(__pyx_k_SEC_WRITECOMBINE), 0, 0, 1, 1},
-  {&__pyx_n_s_STARTF_USESHOWWINDOW, __pyx_k_STARTF_USESHOWWINDOW, sizeof(__pyx_k_STARTF_USESHOWWINDOW), 0, 0, 1, 1},
-  {&__pyx_n_s_STARTF_USESTDHANDLES, __pyx_k_STARTF_USESTDHANDLES, sizeof(__pyx_k_STARTF_USESTDHANDLES), 0, 0, 1, 1},
-  {&__pyx_n_s_STD_ERROR_HANDLE, __pyx_k_STD_ERROR_HANDLE, sizeof(__pyx_k_STD_ERROR_HANDLE), 0, 0, 1, 1},
-  {&__pyx_n_s_STD_INPUT_HANDLE, __pyx_k_STD_INPUT_HANDLE, sizeof(__pyx_k_STD_INPUT_HANDLE), 0, 0, 1, 1},
-  {&__pyx_n_s_STD_OUTPUT_HANDLE, __pyx_k_STD_OUTPUT_HANDLE, sizeof(__pyx_k_STD_OUTPUT_HANDLE), 0, 0, 1, 1},
-  {&__pyx_n_s_STILL_ACTIVE, __pyx_k_STILL_ACTIVE, sizeof(__pyx_k_STILL_ACTIVE), 0, 0, 1, 1},
-  {&__pyx_n_s_SW_HIDE, __pyx_k_SW_HIDE, sizeof(__pyx_k_SW_HIDE), 0, 0, 1, 1},
-  {&__pyx_n_s_SYNCHRONIZE, __pyx_k_SYNCHRONIZE, sizeof(__pyx_k_SYNCHRONIZE), 0, 0, 1, 1},
-  {&__pyx_n_s_TRUNCATE_EXISTING, __pyx_k_TRUNCATE_EXISTING, sizeof(__pyx_k_TRUNCATE_EXISTING), 0, 0, 1, 1},
-  {&__pyx_n_s_WAIT_ABANDONED_0, __pyx_k_WAIT_ABANDONED_0, sizeof(__pyx_k_WAIT_ABANDONED_0), 0, 0, 1, 1},
-  {&__pyx_n_s_WAIT_OBJECT_0, __pyx_k_WAIT_OBJECT_0, sizeof(__pyx_k_WAIT_OBJECT_0), 0, 0, 1, 1},
-  {&__pyx_n_s_WAIT_TIMEOUT, __pyx_k_WAIT_TIMEOUT, sizeof(__pyx_k_WAIT_TIMEOUT), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
+  {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
-  {&__pyx_n_s_pyx_capi, __pyx_k_pyx_capi, sizeof(__pyx_k_pyx_capi), 0, 0, 1, 1},
+  {&__pyx_n_s_sleep, __pyx_k_sleep, sizeof(__pyx_k_sleep), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
+  {&__pyx_n_s_time, __pyx_k_time, sizeof(__pyx_k_time), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
@@ -1984,6 +1881,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 
 static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
+  __pyx_float_0_5 = PyFloat_FromDouble(0.5); if (unlikely(!__pyx_float_0_5)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -2007,108 +1905,10 @@ static int __Pyx_modinit_global_init_code(void) {
 
 static int __Pyx_modinit_variable_export_code(void) {
   __Pyx_RefNannyDeclarations
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_variable_export_code", 0);
   /*--- Variable export code ---*/
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ABOVE_NORMAL_PRIORITY_CLASS, (void *)&__pyx_v_7aiofile_ABOVE_NORMAL_PRIORITY_CLASS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_BELOW_NORMAL_PRIORITY_CLASS, (void *)&__pyx_v_7aiofile_BELOW_NORMAL_PRIORITY_CLASS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_CREATE_BREAKAWAY_FROM_JOB, (void *)&__pyx_v_7aiofile_CREATE_BREAKAWAY_FROM_JOB, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_CREATE_DEFAULT_ERROR_MODE, (void *)&__pyx_v_7aiofile_CREATE_DEFAULT_ERROR_MODE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_CREATE_NEW_CONSOLE, (void *)&__pyx_v_7aiofile_CREATE_NEW_CONSOLE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_CREATE_NEW_PROCESS_GROUP, (void *)&__pyx_v_7aiofile_CREATE_NEW_PROCESS_GROUP, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_CREATE_NO_WINDOW, (void *)&__pyx_v_7aiofile_CREATE_NO_WINDOW, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_DETACHED_PROCESS, (void *)&__pyx_v_7aiofile_DETACHED_PROCESS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_DUPLICATE_CLOSE_SOURCE, (void *)&__pyx_v_7aiofile_DUPLICATE_CLOSE_SOURCE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_DUPLICATE_SAME_ACCESS, (void *)&__pyx_v_7aiofile_DUPLICATE_SAME_ACCESS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ERROR_ALREADY_EXISTS, (void *)&__pyx_v_7aiofile_ERROR_ALREADY_EXISTS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ERROR_BROKEN_PIPE, (void *)&__pyx_v_7aiofile_ERROR_BROKEN_PIPE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ERROR_IO_PENDING, (void *)&__pyx_v_7aiofile_ERROR_IO_PENDING, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ERROR_MORE_DATA, (void *)&__pyx_v_7aiofile_ERROR_MORE_DATA, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ERROR_NETNAME_DELETED, (void *)&__pyx_v_7aiofile_ERROR_NETNAME_DELETED, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ERROR_NO_DATA, (void *)&__pyx_v_7aiofile_ERROR_NO_DATA, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ERROR_NO_SYSTEM_RESOURCES, (void *)&__pyx_v_7aiofile_ERROR_NO_SYSTEM_RESOURCES, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ERROR_OPERATION_ABORTED, (void *)&__pyx_v_7aiofile_ERROR_OPERATION_ABORTED, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ERROR_PIPE_BUSY, (void *)&__pyx_v_7aiofile_ERROR_PIPE_BUSY, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ERROR_PIPE_CONNECTED, (void *)&__pyx_v_7aiofile_ERROR_PIPE_CONNECTED, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_ERROR_SEM_TIMEOUT, (void *)&__pyx_v_7aiofile_ERROR_SEM_TIMEOUT, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_FLAG_FIRST_PIPE_INSTANCE, (void *)&__pyx_v_7aiofile_FILE_FLAG_FIRST_PIPE_INSTANCE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_ATTRIBUTE_NORMAL, (void *)&__pyx_v_7aiofile_FILE_ATTRIBUTE_NORMAL, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_FLAG_OVERLAPPED, (void *)&__pyx_v_7aiofile_FILE_FLAG_OVERLAPPED, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_GENERIC_READ, (void *)&__pyx_v_7aiofile_FILE_GENERIC_READ, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_GENERIC_WRITE, (void *)&__pyx_v_7aiofile_FILE_GENERIC_WRITE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_MAP_ALL_ACCESS, (void *)&__pyx_v_7aiofile_FILE_MAP_ALL_ACCESS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_MAP_COPY, (void *)&__pyx_v_7aiofile_FILE_MAP_COPY, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_MAP_EXECUTE, (void *)&__pyx_v_7aiofile_FILE_MAP_EXECUTE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_MAP_READ, (void *)&__pyx_v_7aiofile_FILE_MAP_READ, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_MAP_WRITE, (void *)&__pyx_v_7aiofile_FILE_MAP_WRITE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_TYPE_CHAR, (void *)&__pyx_v_7aiofile_FILE_TYPE_CHAR, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_TYPE_DISK, (void *)&__pyx_v_7aiofile_FILE_TYPE_DISK, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_TYPE_PIPE, (void *)&__pyx_v_7aiofile_FILE_TYPE_PIPE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_TYPE_REMOTE, (void *)&__pyx_v_7aiofile_FILE_TYPE_REMOTE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_FILE_TYPE_UNKNOWN, (void *)&__pyx_v_7aiofile_FILE_TYPE_UNKNOWN, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_GENERIC_READ, (void *)&__pyx_v_7aiofile_GENERIC_READ, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_GENERIC_WRITE, (void *)&__pyx_v_7aiofile_GENERIC_WRITE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_HIGH_PRIORITY_CLASS, (void *)&__pyx_v_7aiofile_HIGH_PRIORITY_CLASS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_IDLE_PRIORITY_CLASS, (void *)&__pyx_v_7aiofile_IDLE_PRIORITY_CLASS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_INFINITE, (void *)&__pyx_v_7aiofile_INFINITE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_INVALID_HANDLE_VALUE, (void *)&__pyx_v_7aiofile_INVALID_HANDLE_VALUE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_MEM_COMMIT, (void *)&__pyx_v_7aiofile_MEM_COMMIT, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_MEM_FREE, (void *)&__pyx_v_7aiofile_MEM_FREE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_MEM_IMAGE, (void *)&__pyx_v_7aiofile_MEM_IMAGE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_MEM_MAPPED, (void *)&__pyx_v_7aiofile_MEM_MAPPED, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_MEM_PRIVATE, (void *)&__pyx_v_7aiofile_MEM_PRIVATE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_MEM_RESERVE, (void *)&__pyx_v_7aiofile_MEM_RESERVE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_NMPWAIT_WAIT_FOREVER, (void *)&__pyx_v_7aiofile_NMPWAIT_WAIT_FOREVER, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_NORMAL_PRIORITY_CLASS, (void *)&__pyx_v_7aiofile_NORMAL_PRIORITY_CLASS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_OPEN_EXISTING, (void *)&__pyx_v_7aiofile_OPEN_EXISTING, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PAGE_EXECUTE, (void *)&__pyx_v_7aiofile_PAGE_EXECUTE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PAGE_EXECUTE_READ, (void *)&__pyx_v_7aiofile_PAGE_EXECUTE_READ, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PAGE_EXECUTE_READWRITE, (void *)&__pyx_v_7aiofile_PAGE_EXECUTE_READWRITE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PAGE_EXECUTE_WRITECOPY, (void *)&__pyx_v_7aiofile_PAGE_EXECUTE_WRITECOPY, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PAGE_GUARD, (void *)&__pyx_v_7aiofile_PAGE_GUARD, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PAGE_NOACCESS, (void *)&__pyx_v_7aiofile_PAGE_NOACCESS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PAGE_NOCACHE, (void *)&__pyx_v_7aiofile_PAGE_NOCACHE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PAGE_READONLY, (void *)&__pyx_v_7aiofile_PAGE_READONLY, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PAGE_READWRITE, (void *)&__pyx_v_7aiofile_PAGE_READWRITE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PAGE_WRITECOMBINE, (void *)&__pyx_v_7aiofile_PAGE_WRITECOMBINE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PAGE_WRITECOPY, (void *)&__pyx_v_7aiofile_PAGE_WRITECOPY, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PIPE_ACCESS_DUPLEX, (void *)&__pyx_v_7aiofile_PIPE_ACCESS_DUPLEX, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PIPE_ACCESS_INBOUND, (void *)&__pyx_v_7aiofile_PIPE_ACCESS_INBOUND, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PIPE_READMODE_MESSAGE, (void *)&__pyx_v_7aiofile_PIPE_READMODE_MESSAGE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PIPE_TYPE_MESSAGE, (void *)&__pyx_v_7aiofile_PIPE_TYPE_MESSAGE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PIPE_UNLIMITED_INSTANCES, (void *)&__pyx_v_7aiofile_PIPE_UNLIMITED_INSTANCES, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PIPE_WAIT, (void *)&__pyx_v_7aiofile_PIPE_WAIT, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PROCESS_ALL_ACCESS, (void *)&__pyx_v_7aiofile_PROCESS_ALL_ACCESS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_PROCESS_DUP_HANDLE, (void *)&__pyx_v_7aiofile_PROCESS_DUP_HANDLE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_REALTIME_PRIORITY_CLASS, (void *)&__pyx_v_7aiofile_REALTIME_PRIORITY_CLASS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_SEC_COMMIT, (void *)&__pyx_v_7aiofile_SEC_COMMIT, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_SEC_IMAGE, (void *)&__pyx_v_7aiofile_SEC_IMAGE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_SEC_LARGE_PAGES, (void *)&__pyx_v_7aiofile_SEC_LARGE_PAGES, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_SEC_NOCACHE, (void *)&__pyx_v_7aiofile_SEC_NOCACHE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_SEC_RESERVE, (void *)&__pyx_v_7aiofile_SEC_RESERVE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_SEC_WRITECOMBINE, (void *)&__pyx_v_7aiofile_SEC_WRITECOMBINE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_STARTF_USESHOWWINDOW, (void *)&__pyx_v_7aiofile_STARTF_USESHOWWINDOW, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_STARTF_USESTDHANDLES, (void *)&__pyx_v_7aiofile_STARTF_USESTDHANDLES, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_STD_ERROR_HANDLE, (void *)&__pyx_v_7aiofile_STD_ERROR_HANDLE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_STD_INPUT_HANDLE, (void *)&__pyx_v_7aiofile_STD_INPUT_HANDLE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_STD_OUTPUT_HANDLE, (void *)&__pyx_v_7aiofile_STD_OUTPUT_HANDLE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_STILL_ACTIVE, (void *)&__pyx_v_7aiofile_STILL_ACTIVE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_SW_HIDE, (void *)&__pyx_v_7aiofile_SW_HIDE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_SYNCHRONIZE, (void *)&__pyx_v_7aiofile_SYNCHRONIZE, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_WAIT_ABANDONED_0, (void *)&__pyx_v_7aiofile_WAIT_ABANDONED_0, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_WAIT_OBJECT_0, (void *)&__pyx_v_7aiofile_WAIT_OBJECT_0, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_WAIT_TIMEOUT, (void *)&__pyx_v_7aiofile_WAIT_TIMEOUT, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_CREATE_NEW, (void *)&__pyx_v_7aiofile_CREATE_NEW, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_CREATE_ALWAYS, (void *)&__pyx_v_7aiofile_CREATE_ALWAYS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_OPEN_ALWAYS, (void *)&__pyx_v_7aiofile_OPEN_ALWAYS, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportVoidPtr(__pyx_n_s_TRUNCATE_EXISTING, (void *)&__pyx_v_7aiofile_TRUNCATE_EXISTING, "int") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
-  __pyx_L1_error:;
-  __Pyx_RefNannyFinishContext();
-  return -1;
 }
 
 static int __Pyx_modinit_function_export_code(void) {
@@ -2340,7 +2140,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_InitCachedConstants() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   /*--- Global type/function init code ---*/
   (void)__Pyx_modinit_global_init_code();
-  if (unlikely(__Pyx_modinit_variable_export_code() < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+  (void)__Pyx_modinit_variable_export_code();
   (void)__Pyx_modinit_function_export_code();
   (void)__Pyx_modinit_type_init_code();
   (void)__Pyx_modinit_type_import_code();
@@ -2351,10 +2151,30 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
+  /* "aiofile.pyx":2
+ * # cython: language_level=3
+ * import time             # <<<<<<<<<<<<<<
+ * 
+ * from libc.stdlib cimport malloc
+ */
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_time, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_time, __pyx_t_1) < 0) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "aiofile.pyx":16
+ *     printf("call:%d", r)
+ * 
+ * cdef int called = 1             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_v_7aiofile_called = 1;
+
   /* "aiofile.pyx":1
  * # cython: language_level=3             # <<<<<<<<<<<<<<
- * from libc.stdlib cimport malloc
- * from libc.string cimport memset
+ * import time
+ * 
  */
   __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2403,6 +2223,34 @@ end:
 }
 #endif
 
+/* PyObjectGetAttrStr */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
+    PyTypeObject* tp = Py_TYPE(obj);
+    if (likely(tp->tp_getattro))
+        return tp->tp_getattro(obj, attr_name);
+#if PY_MAJOR_VERSION < 3
+    if (likely(tp->tp_getattr))
+        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
+#endif
+    return PyObject_GetAttr(obj, attr_name);
+}
+#endif
+
+/* GetBuiltinName */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
+    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
+    if (unlikely(!result)) {
+        PyErr_Format(PyExc_NameError,
+#if PY_MAJOR_VERSION >= 3
+            "name '%U' is not defined", name);
+#else
+            "name '%.200s' is not defined", PyString_AS_STRING(name));
+#endif
+    }
+    return result;
+}
+
 /* PyDictVersioning */
 #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
 static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
@@ -2429,19 +2277,356 @@ static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UIN
 }
 #endif
 
-/* PyObjectGetAttrStr */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
-    PyTypeObject* tp = Py_TYPE(obj);
-    if (likely(tp->tp_getattro))
-        return tp->tp_getattro(obj, attr_name);
-#if PY_MAJOR_VERSION < 3
-    if (likely(tp->tp_getattr))
-        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
+/* GetModuleGlobalName */
+#if CYTHON_USE_DICT_VERSIONS
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
+#else
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
 #endif
-    return PyObject_GetAttr(obj, attr_name);
+{
+    PyObject *result;
+#if !CYTHON_AVOID_BORROWED_REFS
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
+    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    } else if (unlikely(PyErr_Occurred())) {
+        return NULL;
+    }
+#else
+    result = PyDict_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+#endif
+#else
+    result = PyObject_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+    PyErr_Clear();
+#endif
+    return __Pyx_GetBuiltinName(name);
+}
+
+/* PyCFunctionFastCall */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
+    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
+    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
+    PyObject *self = PyCFunction_GET_SELF(func);
+    int flags = PyCFunction_GET_FLAGS(func);
+    assert(PyCFunction_Check(func));
+    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
+    assert(nargs >= 0);
+    assert(nargs == 0 || args != NULL);
+    /* _PyCFunction_FastCallDict() must not be called with an exception set,
+       because it may clear it (directly or indirectly) and so the
+       caller loses its exception */
+    assert(!PyErr_Occurred());
+    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
+        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
+    } else {
+        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
+    }
 }
 #endif
+
+/* PyFunctionFastCall */
+#if CYTHON_FAST_PYCALL
+static PyObject* __Pyx_PyFunction_FastCallNoKw(PyCodeObject *co, PyObject **args, Py_ssize_t na,
+                                               PyObject *globals) {
+    PyFrameObject *f;
+    PyThreadState *tstate = __Pyx_PyThreadState_Current;
+    PyObject **fastlocals;
+    Py_ssize_t i;
+    PyObject *result;
+    assert(globals != NULL);
+    /* XXX Perhaps we should create a specialized
+       PyFrame_New() that doesn't take locals, but does
+       take builtins without sanity checking them.
+       */
+    assert(tstate != NULL);
+    f = PyFrame_New(tstate, co, globals, NULL);
+    if (f == NULL) {
+        return NULL;
+    }
+    fastlocals = __Pyx_PyFrame_GetLocalsplus(f);
+    for (i = 0; i < na; i++) {
+        Py_INCREF(*args);
+        fastlocals[i] = *args++;
+    }
+    result = PyEval_EvalFrameEx(f,0);
+    ++tstate->recursion_depth;
+    Py_DECREF(f);
+    --tstate->recursion_depth;
+    return result;
+}
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs) {
+    PyCodeObject *co = (PyCodeObject *)PyFunction_GET_CODE(func);
+    PyObject *globals = PyFunction_GET_GLOBALS(func);
+    PyObject *argdefs = PyFunction_GET_DEFAULTS(func);
+    PyObject *closure;
+#if PY_MAJOR_VERSION >= 3
+    PyObject *kwdefs;
+#endif
+    PyObject *kwtuple, **k;
+    PyObject **d;
+    Py_ssize_t nd;
+    Py_ssize_t nk;
+    PyObject *result;
+    assert(kwargs == NULL || PyDict_Check(kwargs));
+    nk = kwargs ? PyDict_Size(kwargs) : 0;
+    if (Py_EnterRecursiveCall((char*)" while calling a Python object")) {
+        return NULL;
+    }
+    if (
+#if PY_MAJOR_VERSION >= 3
+            co->co_kwonlyargcount == 0 &&
+#endif
+            likely(kwargs == NULL || nk == 0) &&
+            co->co_flags == (CO_OPTIMIZED | CO_NEWLOCALS | CO_NOFREE)) {
+        if (argdefs == NULL && co->co_argcount == nargs) {
+            result = __Pyx_PyFunction_FastCallNoKw(co, args, nargs, globals);
+            goto done;
+        }
+        else if (nargs == 0 && argdefs != NULL
+                 && co->co_argcount == Py_SIZE(argdefs)) {
+            /* function called with no arguments, but all parameters have
+               a default value: use default values as arguments .*/
+            args = &PyTuple_GET_ITEM(argdefs, 0);
+            result =__Pyx_PyFunction_FastCallNoKw(co, args, Py_SIZE(argdefs), globals);
+            goto done;
+        }
+    }
+    if (kwargs != NULL) {
+        Py_ssize_t pos, i;
+        kwtuple = PyTuple_New(2 * nk);
+        if (kwtuple == NULL) {
+            result = NULL;
+            goto done;
+        }
+        k = &PyTuple_GET_ITEM(kwtuple, 0);
+        pos = i = 0;
+        while (PyDict_Next(kwargs, &pos, &k[i], &k[i+1])) {
+            Py_INCREF(k[i]);
+            Py_INCREF(k[i+1]);
+            i += 2;
+        }
+        nk = i / 2;
+    }
+    else {
+        kwtuple = NULL;
+        k = NULL;
+    }
+    closure = PyFunction_GET_CLOSURE(func);
+#if PY_MAJOR_VERSION >= 3
+    kwdefs = PyFunction_GET_KW_DEFAULTS(func);
+#endif
+    if (argdefs != NULL) {
+        d = &PyTuple_GET_ITEM(argdefs, 0);
+        nd = Py_SIZE(argdefs);
+    }
+    else {
+        d = NULL;
+        nd = 0;
+    }
+#if PY_MAJOR_VERSION >= 3
+    result = PyEval_EvalCodeEx((PyObject*)co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, kwdefs, closure);
+#else
+    result = PyEval_EvalCodeEx(co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, closure);
+#endif
+    Py_XDECREF(kwtuple);
+done:
+    Py_LeaveRecursiveCall();
+    return result;
+}
+#endif
+#endif
+
+/* PyObjectCall */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw) {
+    PyObject *result;
+    ternaryfunc call = Py_TYPE(func)->tp_call;
+    if (unlikely(!call))
+        return PyObject_Call(func, arg, kw);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = (*call)(func, arg, kw);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
+    }
+    return result;
+}
+#endif
+
+/* PyObjectCall2Args */
+static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2) {
+    PyObject *args, *result = NULL;
+    #if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyFunction_FastCall(function, args, 2);
+    }
+    #endif
+    #if CYTHON_FAST_PYCCALL
+    if (__Pyx_PyFastCFunction_Check(function)) {
+        PyObject *args[2] = {arg1, arg2};
+        return __Pyx_PyCFunction_FastCall(function, args, 2);
+    }
+    #endif
+    args = PyTuple_New(2);
+    if (unlikely(!args)) goto done;
+    Py_INCREF(arg1);
+    PyTuple_SET_ITEM(args, 0, arg1);
+    Py_INCREF(arg2);
+    PyTuple_SET_ITEM(args, 1, arg2);
+    Py_INCREF(function);
+    result = __Pyx_PyObject_Call(function, args, NULL);
+    Py_DECREF(args);
+    Py_DECREF(function);
+done:
+    return result;
+}
+
+/* PyObjectCallMethO */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg) {
+    PyObject *self, *result;
+    PyCFunction cfunc;
+    cfunc = PyCFunction_GET_FUNCTION(func);
+    self = PyCFunction_GET_SELF(func);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = cfunc(self, arg);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
+    }
+    return result;
+}
+#endif
+
+/* PyObjectCallOneArg */
+#if CYTHON_COMPILING_IN_CPYTHON
+static PyObject* __Pyx__PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_New(1);
+    if (unlikely(!args)) return NULL;
+    Py_INCREF(arg);
+    PyTuple_SET_ITEM(args, 0, arg);
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
+}
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, &arg, 1);
+    }
+#endif
+    if (likely(PyCFunction_Check(func))) {
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_O)) {
+            return __Pyx_PyObject_CallMethO(func, arg);
+#if CYTHON_FAST_PYCCALL
+        } else if (__Pyx_PyFastCFunction_Check(func)) {
+            return __Pyx_PyCFunction_FastCall(func, &arg, 1);
+#endif
+        }
+    }
+    return __Pyx__PyObject_CallOneArg(func, arg);
+}
+#else
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_Pack(1, arg);
+    if (unlikely(!args)) return NULL;
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
+}
+#endif
+
+/* Import */
+static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
+    PyObject *empty_list = 0;
+    PyObject *module = 0;
+    PyObject *global_dict = 0;
+    PyObject *empty_dict = 0;
+    PyObject *list;
+    #if PY_MAJOR_VERSION < 3
+    PyObject *py_import;
+    py_import = __Pyx_PyObject_GetAttrStr(__pyx_b, __pyx_n_s_import);
+    if (!py_import)
+        goto bad;
+    #endif
+    if (from_list)
+        list = from_list;
+    else {
+        empty_list = PyList_New(0);
+        if (!empty_list)
+            goto bad;
+        list = empty_list;
+    }
+    global_dict = PyModule_GetDict(__pyx_m);
+    if (!global_dict)
+        goto bad;
+    empty_dict = PyDict_New();
+    if (!empty_dict)
+        goto bad;
+    {
+        #if PY_MAJOR_VERSION >= 3
+        if (level == -1) {
+            if ((1) && (strchr(__Pyx_MODULE_NAME, '.'))) {
+                module = PyImport_ImportModuleLevelObject(
+                    name, global_dict, empty_dict, list, 1);
+                if (!module) {
+                    if (!PyErr_ExceptionMatches(PyExc_ImportError))
+                        goto bad;
+                    PyErr_Clear();
+                }
+            }
+            level = 0;
+        }
+        #endif
+        if (!module) {
+            #if PY_MAJOR_VERSION < 3
+            PyObject *py_level = PyInt_FromLong(level);
+            if (!py_level)
+                goto bad;
+            module = PyObject_CallFunctionObjArgs(py_import,
+                name, global_dict, empty_dict, list, py_level, (PyObject *)NULL);
+            Py_DECREF(py_level);
+            #else
+            module = PyImport_ImportModuleLevelObject(
+                name, global_dict, empty_dict, list, level);
+            #endif
+        }
+    }
+bad:
+    #if PY_MAJOR_VERSION < 3
+    Py_XDECREF(py_import);
+    #endif
+    Py_XDECREF(empty_list);
+    Py_XDECREF(empty_dict);
+    return module;
+}
 
 /* PyErrFetchRestore */
 #if CYTHON_FAST_THREAD_STATE
@@ -3284,51 +3469,6 @@ static int __Pyx_check_binary_version(void) {
         return PyErr_WarnEx(NULL, message, 1);
     }
     return 0;
-}
-
-/* PyObjectSetAttrStr */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value) {
-    PyTypeObject* tp = Py_TYPE(obj);
-    if (likely(tp->tp_setattro))
-        return tp->tp_setattro(obj, attr_name, value);
-#if PY_MAJOR_VERSION < 3
-    if (likely(tp->tp_setattr))
-        return tp->tp_setattr(obj, PyString_AS_STRING(attr_name), value);
-#endif
-    return PyObject_SetAttr(obj, attr_name, value);
-}
-#endif
-
-/* VoidPtrExport */
-static int __Pyx_ExportVoidPtr(PyObject *name, void *p, const char *sig) {
-    PyObject *d;
-    PyObject *cobj = 0;
-    d = PyDict_GetItem(__pyx_d, __pyx_n_s_pyx_capi);
-    Py_XINCREF(d);
-    if (!d) {
-        d = PyDict_New();
-        if (!d)
-            goto bad;
-        if (__Pyx_PyObject_SetAttrStr(__pyx_m, __pyx_n_s_pyx_capi, d) < 0)
-            goto bad;
-    }
-#if PY_VERSION_HEX >= 0x02070000
-    cobj = PyCapsule_New(p, sig, 0);
-#else
-    cobj = PyCObject_FromVoidPtrAndDesc(p, (void *)sig, 0);
-#endif
-    if (!cobj)
-        goto bad;
-    if (PyDict_SetItem(d, name, cobj) < 0)
-        goto bad;
-    Py_DECREF(cobj);
-    Py_DECREF(d);
-    return 0;
-bad:
-    Py_XDECREF(cobj);
-    Py_XDECREF(d);
-    return -1;
 }
 
 /* InitStrings */

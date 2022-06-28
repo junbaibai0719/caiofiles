@@ -2,7 +2,7 @@ from setuptools import Extension, setup
 from Cython.Build import cythonize
 
 extensions = [
-    Extension("aiofile", ["aiofile.pyx"], define_macros=[("_AMD64_",None)])
+    Extension("aiofile", ["aiofile.pyx"], define_macros=[("_AMD64_",None)]),
 ]
 
 setup(
