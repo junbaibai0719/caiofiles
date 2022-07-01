@@ -5,7 +5,7 @@ from libc.stdlib cimport malloc
 from libc.string cimport memset
 from libc.stdio cimport printf
 
-from synchapi cimport WaitForSingleObjectEx
+
 
 cdef void __stdcall func(DWORD dwErrorCode,
                          DWORD dwNumberOfBytesTransfered,

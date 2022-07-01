@@ -714,10 +714,10 @@ static CYTHON_INLINE float __PYX_NAN() {
 /* Early includes */
 #include "fileapi.h"
 #include "errhandlingapi.h"
+#include "synchapi.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "synchapi.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -1212,6 +1212,18 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject
 /* PyObjectCallOneArg.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
 
+/* RaiseArgTupleInvalid.proto */
+static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
+    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
+
+/* RaiseDoubleKeywords.proto */
+static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
+
+/* ParseKeywords.proto */
+static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
+    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
+    const char* function_name);
+
 /* Import.proto */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
@@ -1313,43 +1325,50 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 /* Module declarations from 'winbase' */
 
+/* Module declarations from 'fileapi' */
+
+/* Module declarations from 'errhandlingapi' */
+
+/* Module declarations from 'synchapi' */
+
 /* Module declarations from 'libc.string' */
 
 /* Module declarations from 'libc.stdlib' */
 
 /* Module declarations from 'libc.stdio' */
 
-/* Module declarations from 'synchapi' */
-
 /* Module declarations from 'aiofile' */
 static int __pyx_v_7aiofile_called;
-static void __stdcall __pyx_f_7aiofile_CompletedReadRoutine(DWORD, DWORD, LPOVERLAPPED); /*proto*/
-static PyObject *__pyx_f_7aiofile_read_file(LPCSTR, int __pyx_skip_dispatch); /*proto*/
+static PyObject *__pyx_f_7aiofile_read_file(LPCSTR, char *, int __pyx_skip_dispatch); /*proto*/
 #define __Pyx_MODULE_NAME "aiofile"
 extern int __pyx_module_is_main_aiofile;
 int __pyx_module_is_main_aiofile = 0;
 
 /* Implementation of 'aiofile' */
+static const char __pyx_k_cb[] = "cb";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_time[] = "time";
 static const char __pyx_k_sleep[] = "sleep";
 static const char __pyx_k_import[] = "__import__";
+static const char __pyx_k_file_path[] = "file_path";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static PyObject *__pyx_n_s_cb;
 static PyObject *__pyx_n_s_cline_in_traceback;
+static PyObject *__pyx_n_s_file_path;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_sleep;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_time;
-static PyObject *__pyx_pf_7aiofile_read_file(CYTHON_UNUSED PyObject *__pyx_self, LPCSTR __pyx_v_file_path); /* proto */
+static PyObject *__pyx_pf_7aiofile_read_file(CYTHON_UNUSED PyObject *__pyx_self, LPCSTR __pyx_v_file_path, char *__pyx_v_cb); /* proto */
 static PyObject *__pyx_float_0_5;
 /* Late includes */
 
-/* "aiofile.pyx":10
- * from synchapi cimport WaitForSingleObjectEx
+/* "aiofile.pyx":8
+ * from libc.stdio cimport printf
  * 
  * cdef void __stdcall func(DWORD dwErrorCode,             # <<<<<<<<<<<<<<
  *                          DWORD dwNumberOfBytesTransfered,
@@ -1361,7 +1380,7 @@ static void __stdcall __pyx_f_7aiofile_func(CYTHON_UNUSED DWORD __pyx_v_dwErrorC
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("func", 0);
 
-  /* "aiofile.pyx":13
+  /* "aiofile.pyx":11
  *                          DWORD dwNumberOfBytesTransfered,
  *                          LPOVERLAPPED lpOverlapped):
  *     cdef int r = 112223330             # <<<<<<<<<<<<<<
@@ -1370,7 +1389,7 @@ static void __stdcall __pyx_f_7aiofile_func(CYTHON_UNUSED DWORD __pyx_v_dwErrorC
  */
   __pyx_v_r = 0x6B06462;
 
-  /* "aiofile.pyx":14
+  /* "aiofile.pyx":12
  *                          LPOVERLAPPED lpOverlapped):
  *     cdef int r = 112223330
  *     printf("call:%d", r)             # <<<<<<<<<<<<<<
@@ -1379,8 +1398,8 @@ static void __stdcall __pyx_f_7aiofile_func(CYTHON_UNUSED DWORD __pyx_v_dwErrorC
  */
   (void)(printf(((char const *)"call:%d"), __pyx_v_r));
 
-  /* "aiofile.pyx":10
- * from synchapi cimport WaitForSingleObjectEx
+  /* "aiofile.pyx":8
+ * from libc.stdio cimport printf
  * 
  * cdef void __stdcall func(DWORD dwErrorCode,             # <<<<<<<<<<<<<<
  *                          DWORD dwNumberOfBytesTransfered,
@@ -1391,8 +1410,8 @@ static void __stdcall __pyx_f_7aiofile_func(CYTHON_UNUSED DWORD __pyx_v_dwErrorC
   __Pyx_RefNannyFinishContext();
 }
 
-/* "aiofile.pyx":19
- * 
+/* "aiofile.pyx":16
+ * cdef int called = 1
  * 
  * cdef void __stdcall CompletedReadRoutine(DWORD dwErr, DWORD cbBytesRead,             # <<<<<<<<<<<<<<
  *                                          LPOVERLAPPED lpOverLap):
@@ -1406,7 +1425,7 @@ static void __stdcall __pyx_f_7aiofile_CompletedReadRoutine(DWORD __pyx_v_dwErr,
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("CompletedReadRoutine", 0);
 
-  /* "aiofile.pyx":21
+  /* "aiofile.pyx":18
  * cdef void __stdcall CompletedReadRoutine(DWORD dwErr, DWORD cbBytesRead,
  *                                          LPOVERLAPPED lpOverLap):
  *     called = 0             # <<<<<<<<<<<<<<
@@ -1415,7 +1434,7 @@ static void __stdcall __pyx_f_7aiofile_CompletedReadRoutine(DWORD __pyx_v_dwErr,
  */
   __pyx_v_called = 0;
 
-  /* "aiofile.pyx":22
+  /* "aiofile.pyx":19
  *                                          LPOVERLAPPED lpOverLap):
  *     called = 0
  *     cdef int r = 0             # <<<<<<<<<<<<<<
@@ -1424,35 +1443,35 @@ static void __stdcall __pyx_f_7aiofile_CompletedReadRoutine(DWORD __pyx_v_dwErr,
  */
   __pyx_v_r = 0;
 
-  /* "aiofile.pyx":23
+  /* "aiofile.pyx":20
  *     called = 0
  *     cdef int r = 0
  *     cdef HANDLE h = <void *> r             # <<<<<<<<<<<<<<
  *     lpOverLap = NULL
- *     printf("-----------call:%d,%d,%d\n", r,dwErr,cbBytesRead)
+ *     printf("-----------call:%d,%d,%d\n", r, dwErr, cbBytesRead)
  */
   __pyx_v_h = ((void *)__pyx_v_r);
 
-  /* "aiofile.pyx":24
+  /* "aiofile.pyx":21
  *     cdef int r = 0
  *     cdef HANDLE h = <void *> r
  *     lpOverLap = NULL             # <<<<<<<<<<<<<<
- *     printf("-----------call:%d,%d,%d\n", r,dwErr,cbBytesRead)
+ *     printf("-----------call:%d,%d,%d\n", r, dwErr, cbBytesRead)
  * 
  */
   __pyx_v_lpOverLap = NULL;
 
-  /* "aiofile.pyx":25
+  /* "aiofile.pyx":22
  *     cdef HANDLE h = <void *> r
  *     lpOverLap = NULL
- *     printf("-----------call:%d,%d,%d\n", r,dwErr,cbBytesRead)             # <<<<<<<<<<<<<<
+ *     printf("-----------call:%d,%d,%d\n", r, dwErr, cbBytesRead)             # <<<<<<<<<<<<<<
  * 
- * cpdef read_file(LPCSTR file_path):
+ * cpdef read_file(LPCSTR file_path, char * cb):
  */
   (void)(printf(((char const *)"-----------call:%d,%d,%d\n"), __pyx_v_r, __pyx_v_dwErr, __pyx_v_cbBytesRead));
 
-  /* "aiofile.pyx":19
- * 
+  /* "aiofile.pyx":16
+ * cdef int called = 1
  * 
  * cdef void __stdcall CompletedReadRoutine(DWORD dwErr, DWORD cbBytesRead,             # <<<<<<<<<<<<<<
  *                                          LPOVERLAPPED lpOverLap):
@@ -1463,19 +1482,20 @@ static void __stdcall __pyx_f_7aiofile_CompletedReadRoutine(DWORD __pyx_v_dwErr,
   __Pyx_RefNannyFinishContext();
 }
 
-/* "aiofile.pyx":27
- *     printf("-----------call:%d,%d,%d\n", r,dwErr,cbBytesRead)
+/* "aiofile.pyx":24
+ *     printf("-----------call:%d,%d,%d\n", r, dwErr, cbBytesRead)
  * 
- * cpdef read_file(LPCSTR file_path):             # <<<<<<<<<<<<<<
- *     cdef DWORD read_size = 1024*1024
+ * cpdef read_file(LPCSTR file_path, char * cb):             # <<<<<<<<<<<<<<
+ *     cdef DWORD read_size = 1024 * 1024
  * 
  */
 
-static PyObject *__pyx_pw_7aiofile_1read_file(PyObject *__pyx_self, PyObject *__pyx_arg_file_path); /*proto*/
-static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_pw_7aiofile_1read_file(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, char *__pyx_v_cb, CYTHON_UNUSED int __pyx_skip_dispatch) {
   DWORD __pyx_v_read_size;
   char __pyx_v_lp_buf[(0x400 * 0x400)];
   OVERLAPPED __pyx_v_overlapped;
+  LPOVERLAPPED_COMPLETION_ROUTINE __pyx_v_callback;
   HANDLE __pyx_v_handle;
   int __pyx_v_error;
   LPOVERLAPPED __pyx_v_lpOverlapped;
@@ -1492,17 +1512,17 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("read_file", 0);
 
-  /* "aiofile.pyx":28
+  /* "aiofile.pyx":25
  * 
- * cpdef read_file(LPCSTR file_path):
- *     cdef DWORD read_size = 1024*1024             # <<<<<<<<<<<<<<
+ * cpdef read_file(LPCSTR file_path, char * cb):
+ *     cdef DWORD read_size = 1024 * 1024             # <<<<<<<<<<<<<<
  * 
  *     # cdef char *lp_buf = [0]*1024
  */
   __pyx_v_read_size = 0x100000;
 
-  /* "aiofile.pyx":33
- *     cdef char lp_buf[1024*1024]
+  /* "aiofile.pyx":30
+ *     cdef char lp_buf[1024 * 1024]
  *     # lp_buf = <char*>malloc(sizeof(char *))
  *     printf("lp_buf:%s \n", lp_buf)             # <<<<<<<<<<<<<<
  * 
@@ -1510,8 +1530,17 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
   (void)(printf(((char const *)"lp_buf:%s \n"), __pyx_v_lp_buf));
 
-  /* "aiofile.pyx":39
- *     # cdef LPOVERLAPPED_COMPLETION_ROUTINE callback = func
+  /* "aiofile.pyx":34
+ *     cdef DWORD num_read
+ *     cdef OVERLAPPED overlapped
+ *     cdef LPOVERLAPPED_COMPLETION_ROUTINE callback = <LPOVERLAPPED_COMPLETION_ROUTINE> cb             # <<<<<<<<<<<<<<
+ * 
+ *     printf("%u %u %u \n", GENERIC_READ,
+ */
+  __pyx_v_callback = ((LPOVERLAPPED_COMPLETION_ROUTINE)__pyx_v_cb);
+
+  /* "aiofile.pyx":36
+ *     cdef LPOVERLAPPED_COMPLETION_ROUTINE callback = <LPOVERLAPPED_COMPLETION_ROUTINE> cb
  * 
  *     printf("%u %u %u \n", GENERIC_READ,             # <<<<<<<<<<<<<<
  *            OPEN_EXISTING,
@@ -1519,7 +1548,7 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
   (void)(printf(((char const *)"%u %u %u \n"), __pyx_e_7winbase_GENERIC_READ, __pyx_e_7winbase_OPEN_EXISTING, __pyx_e_7winbase_FILE_FLAG_OVERLAPPED));
 
-  /* "aiofile.pyx":43
+  /* "aiofile.pyx":40
  *            FILE_FLAG_OVERLAPPED
  *            )
  *     memset(&overlapped, 0, sizeof(overlapped))             # <<<<<<<<<<<<<<
@@ -1528,7 +1557,7 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
   (void)(memset((&__pyx_v_overlapped), 0, (sizeof(__pyx_v_overlapped))));
 
-  /* "aiofile.pyx":44
+  /* "aiofile.pyx":41
  *            )
  *     memset(&overlapped, 0, sizeof(overlapped))
  *     cdef HANDLE handle = CreateFileA(file_path,             # <<<<<<<<<<<<<<
@@ -1537,7 +1566,7 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
   __pyx_v_handle = CreateFileA(__pyx_v_file_path, __pyx_e_7winbase_GENERIC_READ, 0, NULL, __pyx_e_7winbase_OPEN_EXISTING, __pyx_e_7winbase_FILE_FLAG_OVERLAPPED, NULL);
 
-  /* "aiofile.pyx":51
+  /* "aiofile.pyx":48
  *                                      FILE_FLAG_OVERLAPPED,
  *                                      NULL)
  *     cdef int error = GetLastError()             # <<<<<<<<<<<<<<
@@ -1546,7 +1575,7 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
   __pyx_v_error = GetLastError();
 
-  /* "aiofile.pyx":52
+  /* "aiofile.pyx":49
  *                                      NULL)
  *     cdef int error = GetLastError()
  *     printf("error:%d\n", error)             # <<<<<<<<<<<<<<
@@ -1555,7 +1584,7 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
   (void)(printf(((char const *)"error:%d\n"), __pyx_v_error));
 
-  /* "aiofile.pyx":53
+  /* "aiofile.pyx":50
  *     cdef int error = GetLastError()
  *     printf("error:%d\n", error)
  *     printf("%s\n", file_path)             # <<<<<<<<<<<<<<
@@ -1564,7 +1593,7 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
   (void)(printf(((char const *)"%s\n"), __pyx_v_file_path));
 
-  /* "aiofile.pyx":54
+  /* "aiofile.pyx":51
  *     printf("error:%d\n", error)
  *     printf("%s\n", file_path)
  *     printf("handle:%d\n", handle)             # <<<<<<<<<<<<<<
@@ -1573,7 +1602,7 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
   (void)(printf(((char const *)"handle:%d\n"), __pyx_v_handle));
 
-  /* "aiofile.pyx":56
+  /* "aiofile.pyx":53
  *     printf("handle:%d\n", handle)
  *     # lpOverlapped.hEvent = handle
  *     cdef LPOVERLAPPED lpOverlapped = &overlapped             # <<<<<<<<<<<<<<
@@ -1582,100 +1611,100 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
   __pyx_v_lpOverlapped = (&__pyx_v_overlapped);
 
-  /* "aiofile.pyx":66
+  /* "aiofile.pyx":63
  *     # printf("%d %d\n", r, num_read)
  *     # printf("%d \n",callback)
- *     r = ReadFileEx(handle, lp_buf, read_size, lpOverlapped, <LPOVERLAPPED_COMPLETION_ROUTINE> CompletedReadRoutine)             # <<<<<<<<<<<<<<
- *     cdef DWORD wait = WaitForSingleObjectEx(handle,0 , True)
+ *     r = ReadFileEx(handle, lp_buf, read_size, lpOverlapped, <LPOVERLAPPED_COMPLETION_ROUTINE> callback)             # <<<<<<<<<<<<<<
+ *     cdef DWORD wait = WaitForSingleObjectEx(handle, 0, True)
  *     while True:
  */
-  __pyx_v_r = ReadFileEx(__pyx_v_handle, __pyx_v_lp_buf, __pyx_v_read_size, __pyx_v_lpOverlapped, ((LPOVERLAPPED_COMPLETION_ROUTINE)__pyx_f_7aiofile_CompletedReadRoutine));
+  __pyx_v_r = ReadFileEx(__pyx_v_handle, __pyx_v_lp_buf, __pyx_v_read_size, __pyx_v_lpOverlapped, ((LPOVERLAPPED_COMPLETION_ROUTINE)__pyx_v_callback));
 
-  /* "aiofile.pyx":67
+  /* "aiofile.pyx":64
  *     # printf("%d \n",callback)
- *     r = ReadFileEx(handle, lp_buf, read_size, lpOverlapped, <LPOVERLAPPED_COMPLETION_ROUTINE> CompletedReadRoutine)
- *     cdef DWORD wait = WaitForSingleObjectEx(handle,0 , True)             # <<<<<<<<<<<<<<
+ *     r = ReadFileEx(handle, lp_buf, read_size, lpOverlapped, <LPOVERLAPPED_COMPLETION_ROUTINE> callback)
+ *     cdef DWORD wait = WaitForSingleObjectEx(handle, 0, True)             # <<<<<<<<<<<<<<
  *     while True:
  *         if wait == WAIT_IO_COMPLETION:
  */
   __pyx_v_wait = WaitForSingleObjectEx(__pyx_v_handle, 0, 1);
 
-  /* "aiofile.pyx":68
- *     r = ReadFileEx(handle, lp_buf, read_size, lpOverlapped, <LPOVERLAPPED_COMPLETION_ROUTINE> CompletedReadRoutine)
- *     cdef DWORD wait = WaitForSingleObjectEx(handle,0 , True)
+  /* "aiofile.pyx":65
+ *     r = ReadFileEx(handle, lp_buf, read_size, lpOverlapped, <LPOVERLAPPED_COMPLETION_ROUTINE> callback)
+ *     cdef DWORD wait = WaitForSingleObjectEx(handle, 0, True)
  *     while True:             # <<<<<<<<<<<<<<
  *         if wait == WAIT_IO_COMPLETION:
- *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+ *             printf("WAIT_IO_COMPLETION:%d\n", wait)
  */
   while (1) {
 
-    /* "aiofile.pyx":69
- *     cdef DWORD wait = WaitForSingleObjectEx(handle,0 , True)
+    /* "aiofile.pyx":66
+ *     cdef DWORD wait = WaitForSingleObjectEx(handle, 0, True)
  *     while True:
  *         if wait == WAIT_IO_COMPLETION:             # <<<<<<<<<<<<<<
- *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+ *             printf("WAIT_IO_COMPLETION:%d\n", wait)
  *         if wait == WAIT_ABANDONED:
  */
     __pyx_t_1 = ((__pyx_v_wait == __pyx_e_7winbase_WAIT_IO_COMPLETION) != 0);
     if (__pyx_t_1) {
 
-      /* "aiofile.pyx":70
+      /* "aiofile.pyx":67
  *     while True:
  *         if wait == WAIT_IO_COMPLETION:
- *             printf("WAIT_IO_COMPLETION:%d\n",wait)             # <<<<<<<<<<<<<<
+ *             printf("WAIT_IO_COMPLETION:%d\n", wait)             # <<<<<<<<<<<<<<
  *         if wait == WAIT_ABANDONED:
- *             printf("WAIT_ABANDONED:%d\n",wait)
+ *             printf("WAIT_ABANDONED:%d\n", wait)
  */
       (void)(printf(((char const *)"WAIT_IO_COMPLETION:%d\n"), __pyx_v_wait));
 
-      /* "aiofile.pyx":69
- *     cdef DWORD wait = WaitForSingleObjectEx(handle,0 , True)
+      /* "aiofile.pyx":66
+ *     cdef DWORD wait = WaitForSingleObjectEx(handle, 0, True)
  *     while True:
  *         if wait == WAIT_IO_COMPLETION:             # <<<<<<<<<<<<<<
- *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+ *             printf("WAIT_IO_COMPLETION:%d\n", wait)
  *         if wait == WAIT_ABANDONED:
  */
     }
 
-    /* "aiofile.pyx":71
+    /* "aiofile.pyx":68
  *         if wait == WAIT_IO_COMPLETION:
- *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+ *             printf("WAIT_IO_COMPLETION:%d\n", wait)
  *         if wait == WAIT_ABANDONED:             # <<<<<<<<<<<<<<
- *             printf("WAIT_ABANDONED:%d\n",wait)
+ *             printf("WAIT_ABANDONED:%d\n", wait)
  *         error = GetLastError()
  */
     __pyx_t_1 = ((__pyx_v_wait == __pyx_e_7winbase_WAIT_ABANDONED) != 0);
     if (__pyx_t_1) {
 
-      /* "aiofile.pyx":72
- *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+      /* "aiofile.pyx":69
+ *             printf("WAIT_IO_COMPLETION:%d\n", wait)
  *         if wait == WAIT_ABANDONED:
- *             printf("WAIT_ABANDONED:%d\n",wait)             # <<<<<<<<<<<<<<
+ *             printf("WAIT_ABANDONED:%d\n", wait)             # <<<<<<<<<<<<<<
  *         error = GetLastError()
  *         printf("error:%d\n", error)
  */
       (void)(printf(((char const *)"WAIT_ABANDONED:%d\n"), __pyx_v_wait));
 
-      /* "aiofile.pyx":71
+      /* "aiofile.pyx":68
  *         if wait == WAIT_IO_COMPLETION:
- *             printf("WAIT_IO_COMPLETION:%d\n",wait)
+ *             printf("WAIT_IO_COMPLETION:%d\n", wait)
  *         if wait == WAIT_ABANDONED:             # <<<<<<<<<<<<<<
- *             printf("WAIT_ABANDONED:%d\n",wait)
+ *             printf("WAIT_ABANDONED:%d\n", wait)
  *         error = GetLastError()
  */
     }
 
-    /* "aiofile.pyx":73
+    /* "aiofile.pyx":70
  *         if wait == WAIT_ABANDONED:
- *             printf("WAIT_ABANDONED:%d\n",wait)
+ *             printf("WAIT_ABANDONED:%d\n", wait)
  *         error = GetLastError()             # <<<<<<<<<<<<<<
  *         printf("error:%d\n", error)
  *         printf("r:%d, wait:%d, called:%d\n", r, wait, called)
  */
     __pyx_v_error = GetLastError();
 
-    /* "aiofile.pyx":74
- *             printf("WAIT_ABANDONED:%d\n",wait)
+    /* "aiofile.pyx":71
+ *             printf("WAIT_ABANDONED:%d\n", wait)
  *         error = GetLastError()
  *         printf("error:%d\n", error)             # <<<<<<<<<<<<<<
  *         printf("r:%d, wait:%d, called:%d\n", r, wait, called)
@@ -1683,7 +1712,7 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
     (void)(printf(((char const *)"error:%d\n"), __pyx_v_error));
 
-    /* "aiofile.pyx":75
+    /* "aiofile.pyx":72
  *         error = GetLastError()
  *         printf("error:%d\n", error)
  *         printf("r:%d, wait:%d, called:%d\n", r, wait, called)             # <<<<<<<<<<<<<<
@@ -1692,16 +1721,16 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
     (void)(printf(((char const *)"r:%d, wait:%d, called:%d\n"), __pyx_v_r, __pyx_v_wait, __pyx_v_7aiofile_called));
 
-    /* "aiofile.pyx":76
+    /* "aiofile.pyx":73
  *         printf("error:%d\n", error)
  *         printf("r:%d, wait:%d, called:%d\n", r, wait, called)
  *         time.sleep(0.5)             # <<<<<<<<<<<<<<
  *         printf("lpOverlapped:%d\n", lpOverlapped.hEvent)
  *         wait = WaitForSingleObjectEx(handle, 0, True)
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_time); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 73, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sleep); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 76, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sleep); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 73, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_3 = NULL;
@@ -1716,12 +1745,12 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
     }
     __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_float_0_5) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_float_0_5);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 76, __pyx_L1_error)
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 73, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "aiofile.pyx":77
+    /* "aiofile.pyx":74
  *         printf("r:%d, wait:%d, called:%d\n", r, wait, called)
  *         time.sleep(0.5)
  *         printf("lpOverlapped:%d\n", lpOverlapped.hEvent)             # <<<<<<<<<<<<<<
@@ -1729,7 +1758,7 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
  */
     (void)(printf(((char const *)"lpOverlapped:%d\n"), __pyx_v_lpOverlapped->hEvent));
 
-    /* "aiofile.pyx":78
+    /* "aiofile.pyx":75
  *         time.sleep(0.5)
  *         printf("lpOverlapped:%d\n", lpOverlapped.hEvent)
  *         wait = WaitForSingleObjectEx(handle, 0, True)             # <<<<<<<<<<<<<<
@@ -1737,11 +1766,11 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
     __pyx_v_wait = WaitForSingleObjectEx(__pyx_v_handle, 0, 1);
   }
 
-  /* "aiofile.pyx":27
- *     printf("-----------call:%d,%d,%d\n", r,dwErr,cbBytesRead)
+  /* "aiofile.pyx":24
+ *     printf("-----------call:%d,%d,%d\n", r, dwErr, cbBytesRead)
  * 
- * cpdef read_file(LPCSTR file_path):             # <<<<<<<<<<<<<<
- *     cdef DWORD read_size = 1024*1024
+ * cpdef read_file(LPCSTR file_path, char * cb):             # <<<<<<<<<<<<<<
+ *     cdef DWORD read_size = 1024 * 1024
  * 
  */
 
@@ -1761,32 +1790,70 @@ static PyObject *__pyx_f_7aiofile_read_file(LPCSTR __pyx_v_file_path, CYTHON_UNU
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7aiofile_1read_file(PyObject *__pyx_self, PyObject *__pyx_arg_file_path); /*proto*/
-static PyObject *__pyx_pw_7aiofile_1read_file(PyObject *__pyx_self, PyObject *__pyx_arg_file_path) {
+static PyObject *__pyx_pw_7aiofile_1read_file(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_7aiofile_1read_file(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   LPCSTR __pyx_v_file_path;
+  char *__pyx_v_cb;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("read_file (wrapper)", 0);
-  assert(__pyx_arg_file_path); {
-    __pyx_v_file_path = __Pyx_PyObject_AsString(__pyx_arg_file_path); if (unlikely((__pyx_v_file_path == ((LPCSTR)NULL)) && PyErr_Occurred())) __PYX_ERR(0, 27, __pyx_L3_error)
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_file_path,&__pyx_n_s_cb,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_file_path)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_cb)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("read_file", 1, 2, 2, 1); __PYX_ERR(0, 24, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "read_file") < 0)) __PYX_ERR(0, 24, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_file_path = __Pyx_PyObject_AsString(values[0]); if (unlikely((__pyx_v_file_path == ((LPCSTR)NULL)) && PyErr_Occurred())) __PYX_ERR(0, 24, __pyx_L3_error)
+    __pyx_v_cb = __Pyx_PyObject_AsWritableString(values[1]); if (unlikely((!__pyx_v_cb) && PyErr_Occurred())) __PYX_ERR(0, 24, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("read_file", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 24, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("aiofile.read_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7aiofile_read_file(__pyx_self, ((LPCSTR)__pyx_v_file_path));
+  __pyx_r = __pyx_pf_7aiofile_read_file(__pyx_self, __pyx_v_file_path, __pyx_v_cb);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7aiofile_read_file(CYTHON_UNUSED PyObject *__pyx_self, LPCSTR __pyx_v_file_path) {
+static PyObject *__pyx_pf_7aiofile_read_file(CYTHON_UNUSED PyObject *__pyx_self, LPCSTR __pyx_v_file_path, char *__pyx_v_cb) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -1795,7 +1862,7 @@ static PyObject *__pyx_pf_7aiofile_read_file(CYTHON_UNUSED PyObject *__pyx_self,
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("read_file", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_7aiofile_read_file(__pyx_v_file_path, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_7aiofile_read_file(__pyx_v_file_path, __pyx_v_cb, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -1813,7 +1880,7 @@ static PyObject *__pyx_pf_7aiofile_read_file(CYTHON_UNUSED PyObject *__pyx_self,
 }
 
 static PyMethodDef __pyx_methods[] = {
-  {"read_file", (PyCFunction)__pyx_pw_7aiofile_1read_file, METH_O, 0},
+  {"read_file", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_7aiofile_1read_file, METH_VARARGS|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 
@@ -1859,7 +1926,9 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_s_cb, __pyx_k_cb, sizeof(__pyx_k_cb), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
+  {&__pyx_n_s_file_path, __pyx_k_file_path, sizeof(__pyx_k_file_path), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
@@ -2162,12 +2231,12 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_time, __pyx_t_1) < 0) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "aiofile.pyx":16
+  /* "aiofile.pyx":14
  *     printf("call:%d", r)
  * 
  * cdef int called = 1             # <<<<<<<<<<<<<<
  * 
- * 
+ * cdef void __stdcall CompletedReadRoutine(DWORD dwErr, DWORD cbBytesRead,
  */
   __pyx_v_7aiofile_called = 1;
 
@@ -2562,6 +2631,148 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObjec
     return result;
 }
 #endif
+
+/* RaiseArgTupleInvalid */
+static void __Pyx_RaiseArgtupleInvalid(
+    const char* func_name,
+    int exact,
+    Py_ssize_t num_min,
+    Py_ssize_t num_max,
+    Py_ssize_t num_found)
+{
+    Py_ssize_t num_expected;
+    const char *more_or_less;
+    if (num_found < num_min) {
+        num_expected = num_min;
+        more_or_less = "at least";
+    } else {
+        num_expected = num_max;
+        more_or_less = "at most";
+    }
+    if (exact) {
+        more_or_less = "exactly";
+    }
+    PyErr_Format(PyExc_TypeError,
+                 "%.200s() takes %.8s %" CYTHON_FORMAT_SSIZE_T "d positional argument%.1s (%" CYTHON_FORMAT_SSIZE_T "d given)",
+                 func_name, more_or_less, num_expected,
+                 (num_expected == 1) ? "" : "s", num_found);
+}
+
+/* RaiseDoubleKeywords */
+static void __Pyx_RaiseDoubleKeywordsError(
+    const char* func_name,
+    PyObject* kw_name)
+{
+    PyErr_Format(PyExc_TypeError,
+        #if PY_MAJOR_VERSION >= 3
+        "%s() got multiple values for keyword argument '%U'", func_name, kw_name);
+        #else
+        "%s() got multiple values for keyword argument '%s'", func_name,
+        PyString_AsString(kw_name));
+        #endif
+}
+
+/* ParseKeywords */
+static int __Pyx_ParseOptionalKeywords(
+    PyObject *kwds,
+    PyObject **argnames[],
+    PyObject *kwds2,
+    PyObject *values[],
+    Py_ssize_t num_pos_args,
+    const char* function_name)
+{
+    PyObject *key = 0, *value = 0;
+    Py_ssize_t pos = 0;
+    PyObject*** name;
+    PyObject*** first_kw_arg = argnames + num_pos_args;
+    while (PyDict_Next(kwds, &pos, &key, &value)) {
+        name = first_kw_arg;
+        while (*name && (**name != key)) name++;
+        if (*name) {
+            values[name-argnames] = value;
+            continue;
+        }
+        name = first_kw_arg;
+        #if PY_MAJOR_VERSION < 3
+        if (likely(PyString_Check(key))) {
+            while (*name) {
+                if ((CYTHON_COMPILING_IN_PYPY || PyString_GET_SIZE(**name) == PyString_GET_SIZE(key))
+                        && _PyString_Eq(**name, key)) {
+                    values[name-argnames] = value;
+                    break;
+                }
+                name++;
+            }
+            if (*name) continue;
+            else {
+                PyObject*** argname = argnames;
+                while (argname != first_kw_arg) {
+                    if ((**argname == key) || (
+                            (CYTHON_COMPILING_IN_PYPY || PyString_GET_SIZE(**argname) == PyString_GET_SIZE(key))
+                             && _PyString_Eq(**argname, key))) {
+                        goto arg_passed_twice;
+                    }
+                    argname++;
+                }
+            }
+        } else
+        #endif
+        if (likely(PyUnicode_Check(key))) {
+            while (*name) {
+                int cmp = (**name == key) ? 0 :
+                #if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION >= 3
+                    (__Pyx_PyUnicode_GET_LENGTH(**name) != __Pyx_PyUnicode_GET_LENGTH(key)) ? 1 :
+                #endif
+                    PyUnicode_Compare(**name, key);
+                if (cmp < 0 && unlikely(PyErr_Occurred())) goto bad;
+                if (cmp == 0) {
+                    values[name-argnames] = value;
+                    break;
+                }
+                name++;
+            }
+            if (*name) continue;
+            else {
+                PyObject*** argname = argnames;
+                while (argname != first_kw_arg) {
+                    int cmp = (**argname == key) ? 0 :
+                    #if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION >= 3
+                        (__Pyx_PyUnicode_GET_LENGTH(**argname) != __Pyx_PyUnicode_GET_LENGTH(key)) ? 1 :
+                    #endif
+                        PyUnicode_Compare(**argname, key);
+                    if (cmp < 0 && unlikely(PyErr_Occurred())) goto bad;
+                    if (cmp == 0) goto arg_passed_twice;
+                    argname++;
+                }
+            }
+        } else
+            goto invalid_keyword_type;
+        if (kwds2) {
+            if (unlikely(PyDict_SetItem(kwds2, key, value))) goto bad;
+        } else {
+            goto invalid_keyword;
+        }
+    }
+    return 0;
+arg_passed_twice:
+    __Pyx_RaiseDoubleKeywordsError(function_name, key);
+    goto bad;
+invalid_keyword_type:
+    PyErr_Format(PyExc_TypeError,
+        "%.200s() keywords must be strings", function_name);
+    goto bad;
+invalid_keyword:
+    PyErr_Format(PyExc_TypeError,
+    #if PY_MAJOR_VERSION < 3
+        "%.200s() got an unexpected keyword argument '%.200s'",
+        function_name, PyString_AsString(key));
+    #else
+        "%s() got an unexpected keyword argument '%U'",
+        function_name, key);
+    #endif
+bad:
+    return -1;
+}
 
 /* Import */
 static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
