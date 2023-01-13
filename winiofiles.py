@@ -34,6 +34,7 @@ def open(
         loop=None,
         executor=None
 ):
+    ov = Overlapped()
     file_handler = CreateFile(file, GENERIC_READ, 0, NULL, OPEN_ALWAYS,
                               FILE_FLAG_OVERLAPPED, NULL)
     if file_handler is INVALID_HANDLE_VALUE:

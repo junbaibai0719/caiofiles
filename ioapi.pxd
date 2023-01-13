@@ -1,0 +1,18 @@
+# cython: language_level=3
+# distutils: language = c++
+from winbase cimport *
+
+cdef extern from "ioapiset.h":
+    cdef HANDLE CreateIoCompletionPort(
+            HANDLE    FileHandle,
+            HANDLE    ExistingCompletionPort,
+            ULONG_PTR CompletionKey,
+            DWORD     NumberOfConcurrentThreads
+    );
+    cdef BOOL GetQueuedCompletionStatus(
+            HANDLE       CompletionPort,
+            LPDWORD      lpNumberOfBytesTransferred,
+            PULONG_PTR   lpCompletionKey,
+            LPOVERLAPPED *lpOverlapped,
+            DWORD        dwMilliseconds
+    );

@@ -1,7 +1,10 @@
 # cython: language_level=3
 
+from libc.stddef cimport wchar_t
 
 cdef extern from *:
+    ctypedef char * va_list
+
     ctypedef unsigned long DWORD
     ctypedef int BOOL
     ctypedef void *LPVOID
@@ -11,19 +14,16 @@ cdef extern from *:
     ctypedef void *HANDLE
     ctypedef void *PVOID;
     ctypedef unsigned long ULONG_PTR
+    ctypedef ULONG_PTR *PULONG_PTR;
 
-    ctypedef struct DUMMYSTRUCTNAME:
-        DWORD Offset
-        DWORD OffsetHigh
-
-    ctypedef union DUMMYUNIONNAME:
-        DUMMYSTRUCTNAME dummy_struct_name
-        PVOID Pointer
+    ctypedef ULONG_PTR SIZE_T
 
     cdef struct _OVERLAPPED:
         ULONG_PTR Internal
         ULONG_PTR InternalHigh
-        DUMMYUNIONNAME dummy_union_name
+        DWORD Offset
+        DWORD OffsetHigh
+        PVOID Pointer
         HANDLE hEvent
 
     ctypedef _OVERLAPPED OVERLAPPED
@@ -42,7 +42,85 @@ cdef extern from *:
             LPOVERLAPPED lpOverlapped
     )
 
+
+
+cdef extern from "windows.h":
+    ctypedef const void *LPCVOID
+    ctypedef unsigned int UINT
+    ctypedef HANDLE HGLOBAL
+
+
+    ctypedef char *LPSTR
+    ctypedef LPSTR LPTSTR
+    ctypedef long LONG
+    ctypedef long long LONGLONG
+
+    ctypedef struct LowPart_HighPart:
+        DWORD LowPart
+        LONG HighPart
+    ctypedef union LARGE_INTEGER:
+        DWORD LowPart
+        LONG HighPart
+        LowPart_HighPart u
+        LONGLONG QuadPart
+    ctypedef LARGE_INTEGER *PLARGE_INTEGER
+
+    cdef int SUBLANG_NEUTRAL = 0x00
+    cdef int SUBLANG_DEFAULT = 0x01
+    cdef int SUBLANG_SYS_DEFAULT = 0X02
+
+    cdef int FORMAT_MESSAGE_ALLOCATE_BUFFER = 0x00000100
+    cdef int FORMAT_MESSAGE_IGNORE_INSERTS = 0x00000200
+    cdef int FORMAT_MESSAGE_FROM_STRING = 0x00000400
+    cdef int FORMAT_MESSAGE_FROM_HMODULE = 0x00000800
+    cdef int FORMAT_MESSAGE_FROM_SYSTEM = 0x00001000
+    cdef int FORMAT_MESSAGE_ARGUMENT_ARRAY = 0x00002000
+    cdef int FORMAT_MESSAGE_MAX_WIDTH_MASK = 0x000000FF
+
+    ctypedef wchar_t WCHAR
+    ctypedef WCHAR *LPWSTR
+    DWORD FormatMessage(
+            DWORD dwFlags,
+            LPCVOID lpSource,
+            DWORD dwMessageId,
+            DWORD dwLanguageId,
+            LPTSTR   lpBuffer,
+            DWORD nSize,
+            va_list *Arguments)
+    DWORD FormatMessageW(
+            DWORD dwFlags,
+            LPCVOID lpSource,
+            DWORD dwMessageId,
+            DWORD dwLanguageId,
+            LPWSTR   lpBuffer,
+            DWORD nSize,
+            va_list *Arguments)
+    cdef int GMEM_FIXED = 0x0000
+    cdef int GMEM_MOVEABLE = 0x0002
+    cdef int GMEM_NOCOMPACT = 0x0010
+    cdef int GMEM_NODISCARD = 0x0020
+    cdef int GMEM_ZEROINIT = 0x0040
+    cdef int GMEM_MODIFY = 0x0080
+    cdef int GMEM_DISCARDABLE = 0x0100
+    cdef int GMEM_NOT_BANKED = 0x1000
+    cdef int GMEM_SHARE = 0x2000
+    cdef int GMEM_DDESHARE = 0x2000
+    cdef int GMEM_NOTIFY = 0x4000
+    cdef int GMEM_LOWER = GMEM_NOT_BANKED
+    cdef int GMEM_VALID_FLAGS = 0x7F72
+    cdef int GMEM_INVALID_HANDLE = 0x8000
+    cdef int GPTR
+    HGLOBAL GlobalAlloc(
+            UINT    uFlags,
+            SIZE_T dwBytes
+    )
+
 cdef enum:
+    FILE_LOCK = 0
+    FILE_SHARE_DELETE = 0x00000004
+    FILE_SHARE_READ = 0x00000001
+    FILE_SHARE_WRITE = 0x00000001
+
     ABOVE_NORMAL_PRIORITY_CLASS = 32768
 
     CREATE_BREAKAWAY_FROM_JOB = 16777216

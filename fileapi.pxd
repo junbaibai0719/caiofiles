@@ -37,3 +37,15 @@ cdef extern from "fileapi.h":
             LPOVERLAPPED lpOverlapped,
             LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
     )
+
+    cdef BOOL GetFileSizeEx(HANDLE hFile,
+                            PLARGE_INTEGER lpFileSize)
+
+    cdef HANDLE  CreateIoCompletionPort(
+            HANDLE    FileHandle,
+            HANDLE    ExistingCompletionPort,
+            ULONG_PTR CompletionKey,
+            DWORD     NumberOfConcurrentThreads
+    )
+
+    cdef BOOL  CancelIo(HANDLE hFile)
