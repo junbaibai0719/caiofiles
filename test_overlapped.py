@@ -55,14 +55,19 @@ async def test_aiofiles():
 
 @timer
 def sync_test_read_file():
-    with open("C:\\Users\\lin\\Downloads\\MHXY-JD-3.0.393.exe", "rb") as fp:
-        with open("tmp.exe", "wb") as wp:
-            while data := fp.read(1024 * 1024 * 20):
-                wp.write(data)
+    data = b''
+    with open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as fp:
+        while chunk := fp.read(1024):
+            data += chunk
+        # with open("tmp.exe", "wb") as wp:
+        #     while data := fp.read(1024):
+        #         wp.write(data)
     # print(fp.read(1024))
-
+    with open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as f:
+        data1 = f.read()
+        print(data1 == data, len(data), len(data1))
 
 if __name__ == '__main__':
     asyncio.run(test_read_file())
     asyncio.run(test_aiofiles())
-    # sync_test_read_file()
+    sync_test_read_file()
