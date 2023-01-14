@@ -10,7 +10,7 @@ include_directories(./include)
 
 
 
-add_library(caiofiles aiofile.cpp source/futuremap.cpp include/futuremap.h)
+add_library(caiofiles src/aiofile.cpp source/futuremap.cpp include/futuremap.h)
 
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
