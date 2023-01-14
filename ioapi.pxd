@@ -16,3 +16,9 @@ cdef extern from "ioapiset.h":
             LPOVERLAPPED *lpOverlapped,
             DWORD        dwMilliseconds
     );
+    cdef BOOL GetOverlappedResult(
+            HANDLE hFile,
+            LPOVERLAPPED lpOverlapped,
+            LPDWORD lpNumberOfBytesTransferred,
+            BOOL bWait
+    )

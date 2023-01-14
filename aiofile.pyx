@@ -4,11 +4,14 @@ import asyncio
 import concurrent.futures
 import io
 import time
-from asyncio import ProactorEventLoop
+from asyncio import ProactorEventLoop, IocpProactor
+from typing import Callable
+
 import _overlapped
+from libc.string cimport memset
 
 from fileapi cimport ReadFileEx, CreateFileA, GetFileSizeEx, ReadFile, CancelIo
-from ioapi cimport CreateIoCompletionPort, GetQueuedCompletionStatus
+from ioapi cimport CreateIoCompletionPort, GetQueuedCompletionStatus, GetOverlappedResult
 from errhandlingapi cimport GetLastError
 from synchapi cimport WaitForSingleObjectEx
 from futuremap cimport FutureMap
@@ -74,68 +77,89 @@ cpdef open(str fn, str mode="r"):
         fp = AsyncFile()
         fp._handle = handle
         fp._lpFileSize = lpFileSize
+        fp.register()
         return fp
 
 cdef class Overlapped:
-    cdef LPOVERLAPPED _ov
+    cdef LPOVERLAPPED _lpov
     cdef char * _buffer
-    cdef LPDWORD _size
+
+    _pending: bool
 
     def __cinit__(self):
         _ov = <LPOVERLAPPED> GlobalAlloc(GPTR, sizeof(LPOVERLAPPED))
 
+    def __init__(self):
+        self._pending = False
+
+    @property
+    def pending(self):
+        return <DWORD> (self._lpov.Internal) == STATUS_PENDING
+
+    @property
+    def address(self):
+        return <unsigned long long> self._lpov
+
     def getresult(self):
-        return self._buffer
+        cdef HANDLE handle = self._lpov.hEvent
+        cdef DWORD transferred = 0;
+        cdef BOOL ret;
+        ret = GetOverlappedResult(handle, self._lpov, &transferred, 1)
+        return self._buffer[0:self._lpov.InternalHigh]
+
+def finish_recv(trans, key, ov):
+    try:
+        return ov.getresult()
+    except OSError as exc:
+        if exc.winerror in (_overlapped.ERROR_NETNAME_DELETED,
+                            _overlapped.ERROR_OPERATION_ABORTED):
+            raise ConnectionResetError(*exc.args)
+        else:
+            raise
+
+
+class WrapperAsyncFile:
+    _fp: AsyncFile
+
+    def __init__(self, fp):
+        self._fp = fp
+
+    def fileno(self):
+        return self._fp.fileno()
+
 
 cdef class AsyncFile:
     cdef HANDLE _handle
     cdef PLARGE_INTEGER _lpFileSize
     cdef long long _cursor
 
+    _register: Callable
+
+    def register(self):
+        loop: ProactorEventLoop = asyncio.get_event_loop()
+        proactor: IocpProactor = loop._proactor
+        proactor._register_with_iocp(WrapperAsyncFile(self))
+        self._register = proactor._register
+
     def fileno(self) -> int:
         return <long> self._handle
 
     def read_async(self, long long size = -1):
-        # print(loop._proactor._iocp)
-        # CreateIoCompletionPort(self._handle, <HANDLE> loop._proactor._iocp, 0, 0)
-        # print(get_error_msg(GetLastError()))
-        # _overlapped.CreateIoCompletionPort(<int> self._handle, loop._proactor._iocp, 0, 0)
-        # print(get_error_msg(GetLastError()))
-        import threading
-        print(threading.current_thread().ident)
-        cdef HANDLE handle =  CreateFileA(b"C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe",
-                             GENERIC_READ,
-                             FILE_SHARE_READ | FILE_SHARE_WRITE,
-                             NULL,
-                             OPEN_EXISTING,
-                             FILE_FLAG_OVERLAPPED,
-                             NULL)
+        cdef long long file_size = self._lpFileSize.QuadPart
+        if size == -1:
+            size = file_size - self._cursor
+
         cdef LPOVERLAPPED lpov = <LPOVERLAPPED> GlobalAlloc(
             GPTR, sizeof(OVERLAPPED))
-        cdef LPDWORD p_size = <LPDWORD> malloc(sizeof(DWORD))
+        lpov.Offset = self._cursor
+        self._cursor += size
         cdef char *read = <char *> malloc(size * sizeof(char))
-        CancelIo(self._handle)
-        print(get_error_msg(GetLastError()))
-        # cdef int r = ReadFile(<HANDLE> handle, read, size, p_size, <LPOVERLAPPED> lpov)
-        # print("r,", r)
-        # print(GetLastError())
-        ov = _overlapped.Overlapped(0)
-        print(GetLastError())
-        print(ov.ReadFile(<int>self.fileno(), <int>1024))
-        print(GetLastError())
-
-        cdef DWORD NumberOfBytes = 0
-        cdef ULONG_PTR CompletionKey = 0
-        cdef OVERLAPPED *pov = NULL
-        cdef DWORD err
-        cdef BOOL ret
-
-        loop: ProactorEventLoop = asyncio.get_event_loop()
-        print(loop._proactor._iocp)
-        ret = GetQueuedCompletionStatus(<HANDLE> loop._proactor._iocp, &NumberOfBytes,
-                                        &CompletionKey, &pov, 10)
-        print(get_error_msg(GetLastError()))
-        print(ret, NumberOfBytes, CompletionKey)
+        ov = Overlapped()
+        ov._lpov = lpov
+        ov._buffer = read
+        cdef int r = ReadFile(self._handle, read, size * sizeof(char), NULL, lpov)
+        f = self._register(ov, <long> self._handle, finish_recv)
+        return f
 
     def read(self, long long size=-1):
         cdef long long file_size = self._lpFileSize.QuadPart
@@ -159,13 +183,14 @@ cdef class AsyncFile:
         return fut
 
 cpdef read_file(long handle, long long size):
-    cdef LPOVBUFFER lpPipeInst = <LPOVBUFFER> GlobalAlloc(
-        GPTR, sizeof(OVBUFFER))
-    cdef LPDWORD p_size
-    lpPipeInst.read = <char *> malloc(size * sizeof(char))
-    cdef int r = ReadFile(<HANDLE> handle, lpPipeInst.read, size * sizeof(char), p_size, <LPOVERLAPPED> lpPipeInst)
-    print("r,", r)
-    print(GetLastError())
+    cdef LPOVERLAPPED lpov = <LPOVERLAPPED> GlobalAlloc(
+        GPTR, sizeof(OVERLAPPED))
+    cdef char *read = <char *> malloc(size * sizeof(char))
+    ov = Overlapped()
+    ov._lpov = lpov
+    ov._buffer = read
+    cdef int r = ReadFile(<HANDLE> handle, read, size * sizeof(char), NULL, lpov)
+    return ov
 
 # cpdef read_file(LPCSTR file_path):
 #     fut: concurrent.futures.Future = concurrent.futures.Future()

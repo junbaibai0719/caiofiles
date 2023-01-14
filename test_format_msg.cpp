@@ -29,6 +29,8 @@ HANDLE hPipe;
  
 int _tmain(VOID) 
 { 
+   PLARGE_INTEGER p;
+   GetQueuedCompletionStatus()
    HANDLE hConnectEvent; 
    OVERLAPPED oConnect; 
    LPPIPEINST lpPipeInst; 

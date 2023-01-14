@@ -49,7 +49,6 @@ cdef extern from "windows.h":
     ctypedef unsigned int UINT
     ctypedef HANDLE HGLOBAL
 
-
     ctypedef char *LPSTR
     ctypedef LPSTR LPTSTR
     ctypedef long LONG
@@ -76,6 +75,12 @@ cdef extern from "windows.h":
     cdef int FORMAT_MESSAGE_FROM_SYSTEM = 0x00001000
     cdef int FORMAT_MESSAGE_ARGUMENT_ARRAY = 0x00002000
     cdef int FORMAT_MESSAGE_MAX_WIDTH_MASK = 0x000000FF
+
+    cdef long STATUS_WAIT_0 = 0x00000000
+    cdef long STATUS_ABANDONED_WAIT_0 = 0x00000080
+    cdef long STATUS_USER_APC = 0x000000C0
+    cdef long STATUS_TIMEOUT = 0x00000102
+    cdef long STATUS_PENDING = 0x00000103
 
     ctypedef wchar_t WCHAR
     ctypedef WCHAR *LPWSTR
