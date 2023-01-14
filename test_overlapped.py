@@ -1,17 +1,11 @@
 import asyncio
 import threading
-import traceback
-from asyncio import ProactorEventLoop
-
-import _overlapped
-from _overlapped import NULL, INFINITE
 
 # ov = _overlapped.Overlapped(NULL)
 # try:
 #     ov.ReadFile(0, 1024)
 # except BrokenPipeError:
 #     traceback.print_exc()
-import aiofile
 from utils.timer import atimer, timer
 
 
@@ -53,6 +47,10 @@ async def test_aiofiles():
     with open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as f:
         data1 = f.read()
         print(data1 == data, len(data), len(data1))
+    # for index, (i, j) in enumerate(zip(data, data1)):
+    #     print(index, i, j)
+    #     if i != j:
+    #         break
 
 
 @timer

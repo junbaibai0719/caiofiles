@@ -5,10 +5,8 @@
 from __future__ import annotations
 
 import io
-import time
-from _winapi import CreateFile, GENERIC_READ, FILE_GENERIC_READ, FILE_GENERIC_WRITE, GENERIC_WRITE, \
-    FILE_FLAG_OVERLAPPED, NULL, CloseHandle, INVALID_HANDLE_VALUE, ReadFile, Overlapped, GetLastError, \
-    ERROR_IO_PENDING, WaitForSingleObject, INFINITE, WriteFile
+from _winapi import CreateFile, GENERIC_READ, GENERIC_WRITE, \
+    FILE_FLAG_OVERLAPPED, NULL, CloseHandle, INVALID_HANDLE_VALUE, ReadFile, Overlapped, ERROR_IO_PENDING, WriteFile
 
 import asyncio
 from asyncio import IocpProactor

@@ -145,6 +145,10 @@ cdef class AsyncFile:
         return <long> self._handle
 
     def read_async(self, long long size = -1):
+        """
+        :param size: int
+        :return: bytes
+        """
         cdef long long file_size = self._lpFileSize.QuadPart
         if size == -1:
             size = file_size - self._cursor
