@@ -1,20 +1,19 @@
 # caiofiles
-## 尝试不使用多线程而是调用Windows的 `fileapi`实现在事件循环内的文件异步IO。
-## Try to use Windows' `fileapi` to  achieve asynchronous file IO in event loop, instead of using multithreading.
 
+尝试不使用多线程而是调用Windows的 `fileapi`实现在事件循环内的文件异步IO。
+Try to use Windows' `fileapi` to  achieve asynchronous file IO in event loop, instead of using multithreading.
+重新封装支持偏移量的ReadFile和Overlapped结构体，借用IocpProactor注册文件句柄实现异步文件读取。
 
-## 不需要封装`fileapi.h`，只需要实现一个`io.BufferedIOBase`的类，然后使用事件循环的sock_recv方法就能实现异步读取。但是无法实现文件指针和偏移量，事件循环内封装的overlapped对象不支持偏移量属性。
-
-# 用法 Usage
+## 用法 Usage
 
     import aiofile
     fp = aiofile.open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe")
     data = []
-
+    
     async def coro(fp):
         nonlocal data
         data.append(await fp.read_async(1024))
-
+    
     await asyncio.gather(*[coro(fp) for i in range(30000)])
     data = b"".join(data)
     with open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as f:
