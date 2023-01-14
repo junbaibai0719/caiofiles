@@ -4,6 +4,9 @@
 Try to use Windows' `fileapi` to  achieve asynchronous file IO in event loop, instead of using multithreading.
 重新封装支持偏移量的ReadFile和Overlapped结构体，借用IocpProactor注册文件句柄实现异步文件读取。
 
+## 安装 install
+    python setup.py install
+
 ## 用法 Usage
     import asyncio
     async def test_read_file():
