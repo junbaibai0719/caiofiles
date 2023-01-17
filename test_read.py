@@ -17,7 +17,7 @@ async def test_read_file():
 
     async def coro(fp):
         nonlocal data
-        data.append(await fp.read_async(1024))
+        data.append(await fp.read(1024))
 
     await asyncio.gather(*[coro(fp) for i in range(30000)])
     data = b"".join(data)
@@ -55,17 +55,20 @@ async def test_aiofiles():
 
 @timer
 def sync_test_read_file():
-    data = b''
+    data = []
     with open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as fp:
         while chunk := fp.read(1024):
-            data += chunk
+            data.append(chunk)
+            ...
         # with open("tmp.exe", "wb") as wp:
         #     while data := fp.read(1024):
         #         wp.write(data)
     # print(fp.read(1024))
+    data = b''.join(data)
     with open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as f:
         data1 = f.read()
         print(data1 == data, len(data), len(data1))
+
 
 if __name__ == '__main__':
     asyncio.run(test_read_file())
