@@ -1,5 +1,6 @@
-*aiofile.cpp
-*aiofile.html
+src/*.cpp
+src/*.html
+write.txt
 .vscode
 .idea
 1.exe

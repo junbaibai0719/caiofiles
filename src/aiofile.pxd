@@ -11,7 +11,7 @@ ctypedef struct OVBUFFER:
 ctypedef OVBUFFER *LPOVBUFFER
 
 cdef enum :
-    BUFFER_SIZE = 1024 * 1024
+    BUFFER_SIZE = 1024
 
 
 cdef extern from "Python.h":

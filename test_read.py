@@ -70,7 +70,46 @@ def sync_test_read_file():
         print(data1 == data, len(data), len(data1))
 
 
+@atimer
+async def test_readline():
+    import aiofile
+    fp = aiofile.open("write.txt")
+    count = 0
+    while await fp.readline():
+        count += 1
+    print(count)
+
+@atimer
+async def test_aiofiles_readline():
+    import aiofiles
+    async with aiofiles.open("write.txt", "rb") as afp:
+        async for line in afp:
+            ...
+
+
+@timer
+def test_python_readline():
+    with open("write.txt", "rb") as fp:
+        # print(fp.readlines())
+        # for line in fp:
+        #     ...
+        count = 0
+        while fp.readline():
+            count += 1
+        print(count)
+@atimer
+async def test_readlines():
+    import aiofile
+    fp = aiofile.open("write.txt")
+    lines = await fp.readlines()
+    with open("write.txt", "rb") as fp:
+        print(fp.readlines() == lines)
+        fp.readlines()
+
 if __name__ == '__main__':
-    asyncio.run(test_read_file())
-    asyncio.run(test_aiofiles())
-    sync_test_read_file()
+    # asyncio.run(test_read_file())
+    # asyncio.run(test_aiofiles())
+    # sync_test_read_file()
+    asyncio.run(test_readline())
+    asyncio.run(test_aiofiles_readline())
+    test_python_readline()
