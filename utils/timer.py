@@ -8,20 +8,20 @@ log = Logger(__name__)
 def timer(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        start = time.time()
+        start = time.time_ns()
         res = func(*args,**kwargs)
-        end = time.time()
-        log.info(f"函数【{func.__name__}】 运行耗时 {end - start} 秒")
+        end = time.time_ns()
+        log.info(f"异步函数【{func.__name__}】 运行耗时 {(end - start)/10**6} ms")
         return res
     return wrapper
 
 def atimer(func):
     @functools.wraps(func)
     async def wrapper(*args, **kwargs):
-        start = time.time()
+        start = time.time_ns()
         res = await func(*args,**kwargs)
-        end = time.time()
-        log.info(f"异步函数【{func.__name__}】 运行耗时 {end - start} 秒")
+        end = time.time_ns()
+        log.info(f"异步函数【{func.__name__}】 运行耗时 {(end - start)/10**6} ms")
         return res
     return wrapper
 
