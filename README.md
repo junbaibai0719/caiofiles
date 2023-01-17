@@ -25,5 +25,23 @@ windows
         data = b"".join(data)
         with open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as f:
             print(f.read() == data, len(data))
+    
+    async def test_readline():
+        import aiofile
+        fp = aiofile.open("write.txt")
+        count = 0
+        while await fp.readline():
+            count += 1
+        print(count)
+
+    async def test_readlines():
+        import aiofile
+        fp = aiofile.open("write.txt")
+        lines = await fp.readlines()
+        with open("write.txt", "rb") as fp:
+            print(fp.readlines() == lines)
+
     if __name__ == '__main__':
         asyncio.run(test_read_file())
+        asyncio.run(test_readline())
+        asyncio.run(test_readlines())
