@@ -4,6 +4,7 @@
 # import py
 import asyncio
 import concurrent.futures
+from _winapi import CloseHandle
 from asyncio import ProactorEventLoop, IocpProactor
 from typing import Callable
 
