@@ -7,5 +7,4 @@ cdef class Overlapped:
     cdef LPOVERLAPPED _lpov
     cdef char * _buffer
 
-    cdef char * getresult_char(self)
     cpdef bytes getresult(self)
