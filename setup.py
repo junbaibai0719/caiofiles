@@ -1,6 +1,4 @@
-import pathlib
-
-from setuptools import Extension, setup, find_packages
+from setuptools import Extension, setup
 from Cython.Build import cythonize
 
 extensions = [
@@ -19,7 +17,4 @@ setup(
     version="1.0.0",
     ext_modules=cythonize(extensions, language="c++", annotate=True, language_level='3'),
     zip_safe=False,
-    # data_files=[
-    #     ("", ["src/__init__.py"])
-    # ],
 )
