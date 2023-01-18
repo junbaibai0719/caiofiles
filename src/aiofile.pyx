@@ -109,7 +109,7 @@ cdef class AsyncFile:
     def fileno(self) -> int:
         return <long> self._handle
 
-    cdef _read(self, long long size = -1):
+    cdef Overlapped _read(self, long long size = -1):
         cdef long long file_size = self._lpFileSize.QuadPart
         if size == -1:
             size = file_size - self._cursor
@@ -144,19 +144,23 @@ cdef class AsyncFile:
         cdef list data_list = []
         cdef bytes chunk
         cdef unsigned long long index
+        cdef unsigned long long res_length = 0
         chunk = await self.read(BUFFER_SIZE)
 
         while chunk:
             index = chunk.find(b'\n')
             if index != -1:
                 self._cursor = self._cursor - BUFFER_SIZE + index + 1
-                chunk = chunk[0:index + 1]
+                # chunk = chunk[0:index + 1]
+                res_length += index + 1
                 data_list.append(chunk)
                 break
             else:
                 data_list.append(chunk)
+                res_length += BUFFER_SIZE
             chunk = await self.read(BUFFER_SIZE)
-        return b''.join(data_list)
+
+        return b''.join(data_list)[0:res_length]
 
     def readlines(self):
         """
