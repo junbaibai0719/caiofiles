@@ -4,6 +4,7 @@
 # import py
 import asyncio
 import concurrent.futures
+from _winapi import CloseHandle
 from asyncio import ProactorEventLoop, IocpProactor
 from typing import Callable
 
@@ -89,6 +90,12 @@ cdef class AsyncFile:
     cdef unsigned long long _cursor
 
     _register_callback: Callable
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        CloseHandle(<unsigned long long>self._handle)
 
     def __aiter__(self):
         return self
