@@ -73,12 +73,14 @@ def test_python_read_file():
 @atimer
 async def test_readline():
     import aiofile
-    fp = aiofile.open("write.txt")
-    count = 0
     lines = []
-    while line := await fp.readline():
-        count += 1
-        lines.append(line)
+    count = 0
+
+    async with aiofile.open("write.txt") as fp:
+        async for line in fp:
+            lines.append(line)
+            count += 1
+
     with open("write.txt", "rb") as fp:
         print(fp.readlines() == lines)
     print(count)
