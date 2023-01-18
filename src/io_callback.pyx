@@ -5,10 +5,10 @@ from overlapped cimport Overlapped
 
 import re
 
-def read_callback(int trans, int key, Overlapped ov):
+def read_callback(trans, key, Overlapped ov):
     return ov.getresult_char()[0:ov._lpov.InternalHigh]
 
-def readlines_callback(int trans, int key, Overlapped ov):
+def readlines_callback(trans, key, Overlapped ov):
     cdef char* res = ov.getresult_char()
     cdef list lines = []
     cdef unsigned long long length = ov._lpov.InternalHigh
