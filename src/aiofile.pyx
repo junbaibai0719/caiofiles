@@ -18,8 +18,6 @@ from overlapped cimport Overlapped
 
 from io_callback import read_callback, readlines_callback
 
-from utils import timer
-
 cpdef get_last_error():
     return GetLastError()
 
@@ -54,6 +52,11 @@ cdef void __stdcall CompletedReadRoutine(DWORD dwErr, DWORD cbBytesRead,
     free(lpPipeInst)
 
 cpdef open(str fn, str mode="r"):
+    """
+    :param fn: str
+    :param mode: str
+    :return: 
+    """
     cdef HANDLE handle
     cdef PLARGE_INTEGER  lpFileSize
     if mode == "r":
