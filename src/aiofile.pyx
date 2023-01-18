@@ -4,7 +4,6 @@
 # import py
 import asyncio
 import concurrent.futures
-from _winapi import CloseHandle
 from asyncio import ProactorEventLoop, IocpProactor
 from typing import Callable
 
@@ -17,6 +16,7 @@ from errhandlingapi cimport GetLastError
 from overlapped cimport Overlapped
 
 from io_callback import read_callback, readlines_callback
+
 
 cpdef get_last_error():
     return GetLastError()

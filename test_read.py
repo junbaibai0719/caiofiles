@@ -86,6 +86,7 @@ async def test_readline():
     print(count)
 
 
+
 @atimer
 async def test_aiofiles_readline():
     import aiofiles
@@ -104,7 +105,6 @@ def test_python_readline():
         while fp.readline():
             count += 1
         print(count)
-
 
 @atimer
 async def test_readlines():

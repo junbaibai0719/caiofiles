@@ -23,6 +23,7 @@ cdef class Overlapped:
         ret = GetOverlappedResult(handle, self._lpov, &transferred, 1)
         return self._buffer
 
+
     cpdef bytes getresult(self):
         cdef HANDLE handle = self._lpov.hEvent
         cdef DWORD transferred = 0;
