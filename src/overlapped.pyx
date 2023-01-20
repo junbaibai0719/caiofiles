@@ -2,7 +2,6 @@
 # distutils: language = c++
 
 from ioapi cimport GetOverlappedResult
-cimport cython
 
 cdef class Overlapped:
     def __cinit__(self):
