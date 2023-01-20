@@ -12,12 +12,12 @@ from typing import Callable
 from libc.stdlib cimport malloc, free
 
 from fileapi cimport CreateFileA, GetFileSizeEx, ReadFile
+from ioapi cimport CancelIo, CloseHandle
 from errhandlingapi cimport GetLastError
 
 from overlapped cimport Overlapped
 
 from io_callback import read_callback, readlines_callback
-
 
 cpdef get_last_error():
     return GetLastError()
@@ -99,7 +99,7 @@ cdef class AsyncFile:
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        CloseHandle(<unsigned long long>self._handle)
+        self.close()
 
     def __aiter__(self):
         return self
@@ -119,6 +119,10 @@ cdef class AsyncFile:
 
     def fileno(self) -> int:
         return <long> self._handle
+
+    cpdef close(self):
+        CancelIo(self._handle)
+        CloseHandle(self._handle)
 
     cdef Overlapped _read(self, long long size = -1):
         cdef long long file_size = self._lpFileSize.QuadPart

@@ -41,11 +41,3 @@ cdef extern from "fileapi.h":
     cdef BOOL GetFileSizeEx(HANDLE hFile,
                             PLARGE_INTEGER lpFileSize)
 
-    cdef HANDLE  CreateIoCompletionPort(
-            HANDLE    FileHandle,
-            HANDLE    ExistingCompletionPort,
-            ULONG_PTR CompletionKey,
-            DWORD     NumberOfConcurrentThreads
-    )
-
-    cdef BOOL  CancelIo(HANDLE hFile)
