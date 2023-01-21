@@ -15,12 +15,12 @@ cdef class Overlapped:
     def address(self):
         return <unsigned long long> self._lpov
 
-    cdef char * getresult_char(self):
+    cdef uchar * getresult_char(self):
         cdef HANDLE handle = self._lpov.hEvent
         cdef DWORD transferred = 0;
         cdef BOOL ret;
         ret = GetOverlappedResult(handle, self._lpov, &transferred, 1)
-        return self._buffer
+        return self._read_buffer
 
 
     cpdef bytes getresult(self):
@@ -28,4 +28,4 @@ cdef class Overlapped:
         cdef DWORD transferred = 0;
         cdef BOOL ret;
         ret = GetOverlappedResult(handle, self._lpov, &transferred, 1)
-        return self._buffer[0:self._lpov.InternalHigh]
+        return self._read_buffer[0:self._lpov.InternalHigh]

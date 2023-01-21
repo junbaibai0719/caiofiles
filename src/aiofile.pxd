@@ -10,11 +10,9 @@ ctypedef struct OVBUFFER:
 
 ctypedef OVBUFFER *LPOVBUFFER
 
-cdef enum :
+cdef enum:
     BUFFER_SIZE = 1024
 
 
 cdef extern from "Python.h":
     str PyUnicode_FromWideChar(wchar_t *w, int size)
-
-

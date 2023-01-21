@@ -30,6 +30,13 @@ cdef extern from "fileapi.h":
             LPDWORD lpNumberOfBytesRead,
             LPOVERLAPPED lpOverlapped
     )
+    cdef BOOL WriteFile(
+            HANDLE       hFile,
+            LPCVOID      lpBuffer,
+            DWORD        nNumberOfBytesToWrite,
+            LPDWORD      lpNumberOfBytesWritten,
+            LPOVERLAPPED lpOverlapped
+    )
     cdef BOOL ReadFileEx(
             HANDLE hFile,
             LPVOID lpBuffer,
@@ -40,4 +47,3 @@ cdef extern from "fileapi.h":
 
     cdef BOOL GetFileSizeEx(HANDLE hFile,
                             PLARGE_INTEGER lpFileSize)
-

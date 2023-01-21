@@ -12,7 +12,7 @@ from utils.timer import atimer, timer
 @atimer
 async def test_read_file():
     import aiofile
-    async with aiofile.open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe") as fp:
+    async with aiofile.open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as fp:
         data = []
 
         async def coro(fp):
@@ -75,8 +75,8 @@ async def test_readline():
     import aiofile
     lines = []
     count = 0
-
-    async with aiofile.open("write.txt") as fp:
+    read_tasks = []
+    async with aiofile.open("write.txt", "rb") as fp:
         async for line in fp:
             lines.append(line)
             count += 1
@@ -109,7 +109,7 @@ def test_python_readline():
 @atimer
 async def test_readlines():
     import aiofile
-    fp = aiofile.open("write.txt")
+    fp = aiofile.open("write.txt", "rb")
     lines = await fp.readlines()
     # with open("write.txt", "rb") as fp:
     #     print(fp.readlines() == lines)
@@ -124,10 +124,10 @@ def test_python_readlines():
 
 if __name__ == '__main__':
     asyncio.run(test_read_file())
-    asyncio.run(test_aiofiles())
+    # asyncio.run(test_aiofiles())
     test_python_read_file()
     asyncio.run(test_readline())
-    asyncio.run(test_aiofiles_readline())
+    # asyncio.run(test_aiofiles_readline())
     test_python_readline()
     asyncio.run(test_readlines())
     test_python_readlines()
