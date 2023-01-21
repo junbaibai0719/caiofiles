@@ -2,6 +2,9 @@
 
 from libc.stddef cimport wchar_t
 
+ctypedef  unsigned char uchar
+
+
 cdef extern from *:
     ctypedef char * va_list
 

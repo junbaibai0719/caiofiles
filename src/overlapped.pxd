@@ -5,7 +5,8 @@ from winbase cimport *
 
 cdef class Overlapped:
     cdef LPOVERLAPPED _lpov
-    cdef char * _buffer
+    cdef uchar * _read_buffer
+    cdef const uchar * _write_buffer
 
-    cdef char * getresult_char(self)
+    cdef uchar * getresult_char(self)
     cpdef bytes getresult(self)
