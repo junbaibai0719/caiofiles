@@ -55,8 +55,57 @@ def valid():
         print(fp1_read[:1024])
 
 
+@timer.atimer
+async def test_write_correct():
+    import aiofile
+    write_lines = []
+    async with aiofile.open("write1.txt", "wb") as fp:
+        for i in range(10):
+            s = f"{i}" * 100
+            line = f"中{i}:{s}\n".encode("gbk")
+            await fp.write(line)
+            write_lines.append(line)
+    with open("write1.txt", "rb") as fp:
+        assert fp.read() == b''.join(write_lines)
+
+
+async def test_write_correct_repeat():
+    for i in range(10 ** 5):
+        await test_write_correct()
+
+
+@timer.atimer
+async def test_write_lines():
+    import aiofile
+    async with aiofile.open("write1.txt", "wb") as fp:
+        lines = []
+        for i in range(10 ** 6):
+            s = f"{i}" * 100
+            line = f"中{i}:{s}\n".encode("gbk")
+            lines.append(line)
+            # @timer.atimer
+            # async def _write(fp, data):
+            #     await fp.write(data)
+            #
+            # await _write(fp, f"中{i}:{s}\n")
+        await fp.write_lines(lines)
+
+@timer.timer
+def test_python_write_lines():
+    with open("write.txt", "wb") as fp:
+        lines = []
+        for i in range(10 ** 6):
+            s = f"{i}" * 100
+            line = f"中{i}:{s}\n".encode("gbk")
+            lines.append(line)
+        fp.writelines(lines)
+
+
 if __name__ == '__main__':
-    asyncio.run(test_write_file())
-    # asyncio.run(test_aiofiles_write_file())
-    test_python_write_file()
+    # asyncio.run(test_write_correct_repeat())
+    # asyncio.run(test_write_file())
+    # # asyncio.run(test_aiofiles_write_file())
+    # test_python_write_file()
+    asyncio.run(test_write_lines())
+    test_python_write_lines()
     valid()
