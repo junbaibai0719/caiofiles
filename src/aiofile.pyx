@@ -233,6 +233,24 @@ cdef class AsyncFile:
         f = self._register_callback(ov, <long> self._handle, write_callback)
         return f
 
+    cpdef write_lines(self, list lines):
+        """
+        
+        :param lines: List[bytes] 
+        :return: 
+        """
+        # cdef bytes buffer_bytes
+        # if isinstance(s, str):
+        #     buffer_bytes = s.encode("gbk")
+        # elif isinstance(s, bytes):
+        #     buffer_bytes = s
+        # else:
+        #     raise
+        ov = self._write(b''.join(lines))
+        f = self._register_callback(ov, <long> self._handle, write_callback)
+        return f
+
+
     # def read_ex(self, long long size=-1):
     #     cdef long long file_size = self._lpFileSize.QuadPart
     #     cdef long long need_size = size if size != -1 else file_size
