@@ -12,21 +12,13 @@ from utils.timer import atimer, timer
 @atimer
 async def test_read_file():
     import aiofile
-    async with aiofile.open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as fp:
+    async with aiofile.open("write.txt", "rb") as fp:
         data = []
-
-        async def coro(fp):
-            nonlocal data
-            data.append(await fp.read(1024))
-
-        await asyncio.gather(*[coro(fp) for i in range(30000)])
+        while chunk := await fp.read(1024):
+            data.append(chunk)
         data = b"".join(data)
-    with open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as f:
+    with open("write.txt", "rb") as f:
         print(f.read() == data, len(data))
-    # fp = aiofile.open("C:\\Users\\lin\\Downloads\\MHXY-JD-3.0.393.exe")
-    # with open("tmp1.exe", "wb") as wp:
-    #     while data := await fp.read_async(1024):
-    #         wp.write(data)
 
 
 @atimer
@@ -34,7 +26,7 @@ async def test_aiofiles():
     import aiofiles
     lock = threading.Lock()
     data = []
-    async with aiofiles.open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as afp:
+    async with aiofiles.open("write.txt", "rb") as afp:
         async def coro(fp):
             nonlocal data
             d = await fp.read(1024)
@@ -44,7 +36,7 @@ async def test_aiofiles():
         await asyncio.gather(*[coro(afp) for i in range(30000)])
 
     data = b"".join(data)
-    with open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as f:
+    with open("write.txt", "rb") as f:
         data1 = f.read()
         print(data1 == data, len(data), len(data1))
     # for index, (i, j) in enumerate(zip(data, data1)):
@@ -56,7 +48,7 @@ async def test_aiofiles():
 @timer
 def test_python_read_file():
     data = []
-    with open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as fp:
+    with open("write.txt", "rb") as fp:
         while chunk := fp.read(1024):
             data.append(chunk)
             ...
@@ -65,7 +57,7 @@ def test_python_read_file():
         #         wp.write(data)
     # print(fp.read(1024))
     data = b''.join(data)
-    with open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe", "rb") as f:
+    with open("write.txt", "rb") as f:
         data1 = f.read()
         print(data1 == data, len(data), len(data1))
 
