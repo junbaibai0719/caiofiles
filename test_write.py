@@ -120,8 +120,8 @@ def test_python_write_lines():
 
 if __name__ == '__main__':
     # asyncio.run(test_write_correct_repeat())
-    asyncio.run(test_write_file())
-    asyncio.run(test_aiofiles_write_file())
+    # asyncio.run(test_write_file())
+    # asyncio.run(test_aiofiles_write_file())
     asyncio.run(test_caio_write_file())
     test_python_write_file()
     # asyncio.run(test_write_lines())
