@@ -95,20 +95,13 @@ cpdef open(str fn, str mode):
         return fp
 
 
-class WrapperAsyncFile:
-    _fp: AsyncFile
-
-    def __init__(self, fp):
-        self._fp = fp
-
-    def fileno(self):
-        return self._fp.fileno()
-
 
 cdef class AsyncFile:
     cdef HANDLE _handle
     cdef PLARGE_INTEGER _lpFileSize
     cdef unsigned long long _cursor
+
+    cdef object __weakref__
 
     _register_callback: Callable
 
@@ -131,7 +124,7 @@ cdef class AsyncFile:
     def register(self):
         loop: ProactorEventLoop = asyncio.get_event_loop()
         proactor: IocpProactor = loop._proactor
-        proactor._register_with_iocp(WrapperAsyncFile(self))
+        proactor._register_with_iocp(self)
         self._register_callback = proactor._register
 
     def fileno(self) -> int:
