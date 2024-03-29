@@ -1,5 +1,9 @@
 import asyncio
 
+import pathlib
+import sys
+sys.path.append(pathlib.Path(__file__).parent.parent.absolute().as_posix( ) )
+
 from utils import timer
 
 
@@ -120,9 +124,9 @@ def test_python_write_lines():
 
 if __name__ == '__main__':
     # asyncio.run(test_write_correct_repeat())
-    # asyncio.run(test_write_file())
+    asyncio.run(test_write_file())
     # asyncio.run(test_aiofiles_write_file())
-    asyncio.run(test_caio_write_file())
+    # asyncio.run(test_caio_write_file())
     test_python_write_file()
     # asyncio.run(test_write_lines())
     # test_python_write_lines()
