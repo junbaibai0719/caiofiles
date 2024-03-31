@@ -21,7 +21,8 @@ async def test_read_file():
             data.append(chunk)
         data = b"".join(data)
     with open("write.txt", "rb") as f:
-        print(f.read() == data, len(data))
+        data1 = f.read()
+        print("valid:", data1 == data, len(data), len(data1))
 
 
 @atimer
