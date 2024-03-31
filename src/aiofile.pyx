@@ -162,12 +162,13 @@ cdef class AsyncFile:
         read_size = min(read_size, file_size - self._cursor)
         if read_size <= 0:
             return None
-        cdef Overlapped ov = self._do_read(<uchar*> &self._read_buffer[0], read_size)
+        cdef Overlapped ov = self._do_read(read_size)
 
+        @cython.boundscheck(False)
         def read_callback(int trans, key, Overlapped ov):
-            # print(trans)
             self._read_buffer_readable_cursor = trans
             self._read_buffer_read_cursor = 0
+            memcpy(&self._read_buffer[0], &ov.getresult_char()[0], trans)
             return ov.getresult_char()[0:trans]
 
         f = self._register_callback(ov, <ulonglong> self._handle, read_callback)
@@ -180,9 +181,10 @@ cdef class AsyncFile:
                 await f
                 
 
-    cdef Overlapped _do_read(self, uchar *read, long long size):
+    cdef Overlapped _do_read(self, long long size):
         cdef LPOVERLAPPED lpov = <LPOVERLAPPED> GlobalAlloc(
             GPTR, sizeof(OVERLAPPED))
+        cdef uchar *read = <uchar *> malloc(size * sizeof(uchar))
         lpov.Offset = self._cursor
         self._cursor += size
         cdef Overlapped ov = Overlapped()
@@ -191,6 +193,7 @@ cdef class AsyncFile:
         cdef int r = ReadFile(self._handle, read, size, NULL, lpov)
         return ov
 
+    @cython.boundscheck(False)
     async def read(self, long long size = -1):
         """
 
@@ -224,7 +227,13 @@ cdef class AsyncFile:
             ret = bytearray(size)
             ret[:readable_size] = self._read_buffer[self._read_buffer_read_cursor:self._read_buffer_read_cursor + readable_size]
             self._read_buffer_read_cursor = self._read_buffer_readable_cursor
-            ov = self._do_read(&ret[readable_size], size-readable_size)
+            ov = self._do_read(size-readable_size)
+
+            @cython.boundscheck(False)
+            def read_callback(int trans, key, Overlapped ov):
+                memcpy(&ret[readable_size], ov.getresult_char(), trans)
+                # ret[readable_size:size] = (<uchar[:trans]>ov.getresult_char())[0:trans]
+                return ov.getresult_char()[0:trans]
             f = self._register_callback(ov, <ulonglong> self._handle, read_callback)
             await f
             return bytes(ret)

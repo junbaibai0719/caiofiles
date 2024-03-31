@@ -11,9 +11,7 @@ cdef class Overlapped:
         pass
 
     def __dealloc__(self):
-        # print("free")
-        # free(<void *> self._read_buffer)
-        # print(GetLastError())
+        free(<void *> self._read_buffer)
         free(<void *> self._write_buffer)
         free(<void *> self._lpov)
 
