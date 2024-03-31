@@ -158,7 +158,7 @@ cdef class AsyncFile:
         cdef Overlapped ov = Overlapped()
         ov._lpov = lpov
         ov._read_buffer = read
-        cdef int r = ReadFile(self._handle, read, size * sizeof(uchar), NULL, lpov)
+        cdef int r = ReadFile(self._handle, read, size, NULL, lpov)
         return ov
 
     cpdef read(self, long long size = -1):
@@ -210,14 +210,15 @@ cdef class AsyncFile:
     cdef Overlapped _flush_write_buffer(self):
         if not self._write_cursor:
             return
-        cdef uchar[:] buffer = bytearray(self._write_cursor)
+        cdef uchar[:] buffer = <uchar[:self._write_cursor]>GlobalAlloc(
+                GPTR, self._write_cursor)
 
         memcpy(&buffer[0], &self.write_buffer[0], self._write_cursor)
         self._write_cursor = 0
         return self._do_write(buffer)
 
     cdef Overlapped _do_write(self, const uchar[:] buffer):
-        cdef DWORD size = buffer.shape[0]
+        cdef longlong size = buffer.shape[0]
         cdef LPOVERLAPPED lpov = <LPOVERLAPPED> GlobalAlloc(
                 GPTR, sizeof(OVERLAPPED))
         lpov.Offset = self._cursor
@@ -226,7 +227,7 @@ cdef class AsyncFile:
         ov._lpov = lpov
         ov._write_buffer = &buffer[0]
         start = time.time_ns()
-        cdef int r = WriteFile(self._handle, ov._write_buffer, size * sizeof(uchar), NULL, lpov)
+        cdef int r = WriteFile(self._handle, ov._write_buffer, size, NULL, lpov)
         end = time.time_ns()
         global write_cost_sum
         write_cost_sum += end - start
@@ -234,7 +235,7 @@ cdef class AsyncFile:
 
     @cython.boundscheck(False)
     cdef Overlapped _write(self, const uchar[:] buffer):
-        cdef DWORD size = buffer.shape[0]
+        cdef longlong size = buffer.shape[0]
         cdef Overlapped ov = None
         if self._write_cursor + size > BUFFER_SIZE:
             ov = self._flush_write_buffer()

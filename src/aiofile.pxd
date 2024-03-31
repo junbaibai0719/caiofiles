@@ -18,4 +18,7 @@ cdef enum:
 
 
 cdef extern from "Python.h":
+    cdef int PyBUF_WRITE
+    cdef int PyBUF_READ
     str PyUnicode_FromWideChar(wchar_t *w, int size)
+    object PyMemoryView_FromMemory(char *memory, ssize_t size, int flags)
