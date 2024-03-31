@@ -2,10 +2,17 @@
 # distutils: language = c++
 
 from ioapi cimport GetOverlappedResult
+from libc.stdlib cimport free
+
 
 cdef class Overlapped:
     def __cinit__(self):
-        _ov = <LPOVERLAPPED> GlobalAlloc(GPTR, sizeof(LPOVERLAPPED))
+        pass
+
+    def __dealloc__(self):
+        free(<void *> self._lpov)
+        free(<void *> self._read_buffer)
+        free(<void *> self._write_buffer)
 
     @property
     def pending(self):
