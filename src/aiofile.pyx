@@ -140,8 +140,6 @@ cdef class AsyncFile:
             await f
         CancelIo(self._handle)
         CloseHandle(self._handle)
-        printf("write_cost_sum %fms\n", write_cost_sum/1000/1000)
-        printf("register_cost_sum %fms\n", register_cost_sum/1000/1000)
 
     cdef Overlapped _read(self, long long size = -1):
         if size >= 0xffffffff:
@@ -226,11 +224,7 @@ cdef class AsyncFile:
         cdef Overlapped ov = Overlapped()
         ov._lpov = lpov
         ov._write_buffer = &buffer[0]
-        start = time.time_ns()
         cdef int r = WriteFile(self._handle, ov._write_buffer, size, NULL, lpov)
-        end = time.time_ns()
-        global write_cost_sum
-        write_cost_sum += end - start
         return ov
 
     @cython.boundscheck(False)
@@ -264,11 +258,7 @@ cdef class AsyncFile:
             f = asyncio.futures.Future()
             f.set_result(True)
             return f
-        start = time.time_ns()
         f = self._register_callback(ov, <ulonglong> self._handle, write_callback)
-        end = time.time_ns()
-        global register_cost_sum
-        register_cost_sum += end - start
         return f
 
     cpdef write_lines(self, list lines):
