@@ -63,13 +63,21 @@ async def test_caio_write_file():
 
 @timer.timer
 def valid():
-    with open("write.txt", "rb") as fp0, open("write1.txt", "rb") as fp1, open("write2.txt", "rb") as fp2:
+    with open("write.txt", "rb") as fp0, open("write1.txt", "rb") as fp1:
         fp0_read = fp0.read()
         fp1_read = fp1.read()
         try:
             fp2_read = fp2.read()
         except:
             fp2_read = ""
+        # idx = 0
+        # for i, j in zip(fp0_read, fp1_read):
+        #     if i != j:
+        #         print(i, j, idx)
+        #         print(fp0_read[idx-1000:idx + 100])
+        #         print(fp1_read[idx-1000:idx + 100])
+        #         raise
+        #     idx+=1
         print(fp0_read == fp1_read, fp0_read == fp2_read, len(fp0_read), len(fp1_read))
         print(fp0_read[:1024])
         print(fp1_read[:1024])

@@ -1,12 +1,15 @@
 import asyncio
 import threading
-
+import pathlib
+import sys
+sys.path.append(pathlib.Path(__file__).parent.parent.absolute().as_posix( ) )
 # ov = _overlapped.Overlapped(NULL)
 # try:
 #     ov.ReadFile(0, 1024)
 # except BrokenPipeError:
 #     traceback.print_exc()
 from utils.timer import atimer, timer
+
 
 
 @atimer
@@ -118,8 +121,8 @@ if __name__ == '__main__':
     asyncio.run(test_read_file())
     # asyncio.run(test_aiofiles())
     test_python_read_file()
-    asyncio.run(test_readline())
+    # asyncio.run(test_readline())
     # asyncio.run(test_aiofiles_readline())
-    test_python_readline()
-    asyncio.run(test_readlines())
-    test_python_readlines()
+    # test_python_readline()
+    # asyncio.run(test_readlines())
+    # test_python_readlines()
