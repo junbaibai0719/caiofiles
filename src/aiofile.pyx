@@ -11,6 +11,8 @@ from typing import Callable, Union
 # import cython
 cimport cython
 from libc.stdlib cimport malloc, free
+from libc.stdio cimport printf
+from libc.string cimport memcpy
 
 from fileapi cimport CreateFileA, GetFileSizeEx, ReadFile, WriteFile
 from ioapi cimport CancelIo, CloseHandle
@@ -19,6 +21,11 @@ from errhandlingapi cimport GetLastError
 from overlapped cimport Overlapped
 
 from io_callback import read_callback, readlines_callback, write_callback
+
+import time
+
+cdef double write_cost_sum = 0
+cdef double register_cost_sum = 0
 
 cpdef get_last_error():
     return GetLastError()
@@ -40,18 +47,6 @@ cpdef get_error_msg(DWORD error):
     cdef char * msg = <char *> lpMsgBuf
     cdef bytes b = msg
     return b.decode(encoding="gbk")
-
-cdef void __stdcall CompletedReadRoutine(DWORD dwErr, DWORD cbBytesRead,
-                                         LPOVERLAPPED lpOverLap) except +:
-    cdef LPOVBUFFER lpPipeInst = <LPOVBUFFER> lpOverLap
-    cdef bytes res
-    file: AsyncFile = <object> lpPipeInst.file
-    file._cursor += cbBytesRead
-    res = lpPipeInst.read[0:cbBytesRead]
-    fut: concurrent.futures.Future = <object> lpPipeInst.fut
-    fut.set_result(res)
-    free(lpPipeInst.read)
-    free(lpPipeInst)
 
 cpdef open(str fn, str mode):
     """
@@ -95,28 +90,42 @@ cpdef open(str fn, str mode):
         return fp
 
 
-class WrapperAsyncFile:
-    _fp: AsyncFile
-
-    def __init__(self, fp):
-        self._fp = fp
-
-    def fileno(self):
-        return self._fp.fileno()
-
 
 cdef class AsyncFile:
     cdef HANDLE _handle
     cdef PLARGE_INTEGER _lpFileSize
-    cdef unsigned long long _cursor
+    cdef LONGLONG _cursor
+    cdef uchar[:] _write_buffer
+    cdef LONGLONG _write_cursor
+    cdef uchar[:] _read_buffer
+    cdef LONGLONG _read_buffer_read_cursor
+    cdef LONGLONG _read_buffer_readable_cursor
+
+    cdef object __weakref__
 
     _register_callback: Callable
+    _fill_read_buffer_lock: asyncio.Lock
+
+    def __cinit__(self):
+        self._cursor = 0
+        self._write_cursor = 0
+        self._write_buffer = bytearray(BUFFER_SIZE)
+        self._read_buffer = bytearray(BUFFER_SIZE)
+        self._read_buffer_read_cursor = 0
+        self._read_buffer_readable_cursor = 0
+
+    # def __dealloc__(self):
+    #     free(<void*> &self._write_buffer[0])
+    #     free(<void*> &self._read_buffer[0])
+
+    def __init__(self) -> None:
+        self._fill_read_buffer_lock = asyncio.Lock()
 
     async def __aenter__(self):
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        self.close()
+        await self.close()
 
     def __aiter__(self):
         return self
@@ -131,41 +140,103 @@ cdef class AsyncFile:
     def register(self):
         loop: ProactorEventLoop = asyncio.get_event_loop()
         proactor: IocpProactor = loop._proactor
-        proactor._register_with_iocp(WrapperAsyncFile(self))
+        proactor._register_with_iocp(self)
         self._register_callback = proactor._register
 
     def fileno(self) -> int:
-        return <long> self._handle
+        return <ulonglong> self._handle
 
-    cpdef close(self):
+    async def close(self):
+        cdef Overlapped ov = self._flush_write_buffer()
+        if ov: 
+            f = self._register_callback(ov, <ulonglong> self._handle, write_callback)
+            await f
         CancelIo(self._handle)
         CloseHandle(self._handle)
 
-    cdef Overlapped _read(self, long long size = -1):
-        cdef long long file_size = self._lpFileSize.QuadPart
-        if size == -1:
-            size = file_size - self._cursor
+    cdef object _fill_read_buffer(self):
+        cdef longlong read_size = 0
+        if self._read_buffer_read_cursor == self._read_buffer_readable_cursor:
+            read_size = BUFFER_SIZE
+        cdef LONGLONG file_size = self._lpFileSize.QuadPart
+        read_size = min(read_size, file_size - self._cursor)
+        if read_size <= 0:
+            return None
+        cdef Overlapped ov = self._do_read(read_size)
 
+        @cython.boundscheck(False)
+        def read_callback(int trans, key, Overlapped ov):
+            self._read_buffer_readable_cursor = trans
+            self._read_buffer_read_cursor = 0
+            memcpy(&self._read_buffer[0], &ov.getresult_char()[0], trans)
+            return ov.getresult_char()[0:trans]
+
+        f = self._register_callback(ov, <ulonglong> self._handle, read_callback)
+        return f
+
+    async def _fill_read_buffer_async(self):
+        async with self._fill_read_buffer_lock:
+            f = self._fill_read_buffer()
+            if f:
+                await f
+                
+
+    cdef Overlapped _do_read(self, long long size):
         cdef LPOVERLAPPED lpov = <LPOVERLAPPED> GlobalAlloc(
             GPTR, sizeof(OVERLAPPED))
+        cdef uchar *read = <uchar *> malloc(size * sizeof(uchar))
         lpov.Offset = self._cursor
         self._cursor += size
-        cdef uchar *read = <uchar *> malloc(size * sizeof(uchar))
         cdef Overlapped ov = Overlapped()
         ov._lpov = lpov
         ov._read_buffer = read
-        cdef int r = ReadFile(self._handle, read, size * sizeof(uchar), NULL, lpov)
+        cdef int r = ReadFile(self._handle, read, size, NULL, lpov)
         return ov
 
-    cpdef read(self, long long size = -1):
+    @cython.boundscheck(False)
+    async def read(self, long long size = -1):
         """
 
         :param size: int
         :return: bytes
         """
-        ov = self._read(size)
-        f = self._register_callback(ov, <long> self._handle, read_callback)
-        return f
+        cdef LONGLONG file_size = self._lpFileSize.QuadPart
+        if size == -1:
+            size = file_size - self._cursor
+        if size >= 0xffffffff:
+            raise Exception("size too large")
+
+        cdef readable_size = self._read_buffer_readable_cursor - self._read_buffer_read_cursor
+
+        if self._cursor >= file_size:
+            if readable_size == 0:
+                return b''
+            size = readable_size
+        
+        if readable_size == 0:
+            await self._fill_read_buffer_async()
+        
+        readable_size = self._read_buffer_readable_cursor - self._read_buffer_read_cursor
+        cdef uchar[:] ret
+        cdef Overlapped ov
+        if size <= readable_size:
+            ret = self._read_buffer[self._read_buffer_read_cursor:self._read_buffer_read_cursor + size]
+            self._read_buffer_read_cursor += size
+            return bytes(ret)
+        else:
+            ret = bytearray(size)
+            ret[:readable_size] = self._read_buffer[self._read_buffer_read_cursor:self._read_buffer_read_cursor + readable_size]
+            self._read_buffer_read_cursor = self._read_buffer_readable_cursor
+            ov = self._do_read(size-readable_size)
+
+            @cython.boundscheck(False)
+            def read_callback(int trans, key, Overlapped ov):
+                memcpy(&ret[readable_size], ov.getresult_char(), trans)
+                # ret[readable_size:size] = (<uchar[:trans]>ov.getresult_char())[0:trans]
+                return ov.getresult_char()[0:trans]
+            f = self._register_callback(ov, <ulonglong> self._handle, read_callback)
+            await f
+            return bytes(ret)
 
     # @timer.atimer
     async def readline(self):
@@ -200,22 +271,44 @@ cdef class AsyncFile:
         :return: bytes
         """
         ov = self._read()
-        f = self._register_callback(ov, <long> self._handle, readlines_callback)
+        f = self._register_callback(ov, <ulonglong> self._handle, readlines_callback)
         return f
 
-    @cython.boundscheck(False)
-    cdef Overlapped _write(self, const uchar[:] buffer):
-        cdef unsigned long long size = buffer.shape[0]
+    cdef Overlapped _flush_write_buffer(self):
+        if not self._write_cursor:
+            return
+        cdef uchar[:] buffer = <uchar[:self._write_cursor]>GlobalAlloc(
+                GPTR, self._write_cursor)
 
+        memcpy(&buffer[0], &self._write_buffer[0], self._write_cursor)
+        self._write_cursor = 0
+        return self._do_write(buffer)
+
+    cdef Overlapped _do_write(self, const uchar[:] buffer):
+        cdef longlong size = buffer.shape[0]
         cdef LPOVERLAPPED lpov = <LPOVERLAPPED> GlobalAlloc(
-            GPTR, sizeof(OVERLAPPED))
+                GPTR, sizeof(OVERLAPPED))
         lpov.Offset = self._cursor
         self._cursor += size
         cdef Overlapped ov = Overlapped()
         ov._lpov = lpov
         ov._write_buffer = &buffer[0]
-        cdef int r = WriteFile(self._handle, ov._write_buffer, size * sizeof(uchar), NULL, lpov)
+        cdef int r = WriteFile(self._handle, ov._write_buffer, size, NULL, lpov)
         return ov
+
+    @cython.boundscheck(False)
+    cdef Overlapped _write(self, const uchar[:] buffer):
+        cdef longlong size = buffer.shape[0]
+        cdef Overlapped ov = None
+        if self._write_cursor + size > BUFFER_SIZE:
+            ov = self._flush_write_buffer()
+        if size > BUFFER_SIZE:
+            return self._do_write(buffer)
+        self._write_buffer[self._write_cursor:self._write_cursor + size] = buffer[:]
+        # memcpy(&self.write_buffer[self._write_cursor], &buffer[0], size)
+        self._write_cursor += size
+        return ov
+
 
     cpdef write(self, const uchar[:] s):
         """
@@ -230,7 +323,11 @@ cdef class AsyncFile:
         # else:
         #     raise
         ov = self._write(s)
-        f = self._register_callback(ov, <long> self._handle, write_callback)
+        if not ov:
+            f = asyncio.futures.Future()
+            f.set_result(True)
+            return f
+        f = self._register_callback(ov, <ulonglong> self._handle, write_callback)
         return f
 
     cpdef write_lines(self, list lines):
@@ -247,27 +344,5 @@ cdef class AsyncFile:
         # else:
         #     raise
         ov = self._write(b''.join(lines))
-        f = self._register_callback(ov, <long> self._handle, write_callback)
+        f = self._register_callback(ov, <ulonglong> self._handle, write_callback)
         return f
-
-
-    # def read_ex(self, long long size=-1):
-    #     cdef long long file_size = self._lpFileSize.QuadPart
-    #     cdef long long need_size = size if size != -1 else file_size
-    #     need_size = min(file_size, need_size)
-    #
-    #     fut: asyncio.futures.Future = asyncio.futures.Future()
-    #     cdef LPOVBUFFER lpPipeInst = <LPOVBUFFER> GlobalAlloc(
-    #         GPTR, sizeof(OVBUFFER))
-    #     cdef HANDLE handle = self._handle
-    #     cdef DWORD wait
-    #     lpPipeInst.read = <char *> malloc(need_size * sizeof(char))
-    #     lpPipeInst.oOverlap.hEvent = handle
-    #     lpPipeInst.oOverlap.Offset = self._cursor
-    #     lpPipeInst.file = <void *> self
-    #     lpPipeInst.fut = <void *> fut
-    #     ReadFileEx(handle, <LPVOID> lpPipeInst.read, need_size * sizeof(char),
-    #                <LPOVERLAPPED> lpPipeInst,
-    #                <LPOVERLAPPED_COMPLETION_ROUTINE> CompletedReadRoutine)
-    #     wait = WaitForSingleObjectEx(handle, 1000, True)
-    #     return fut
