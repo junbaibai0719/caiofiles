@@ -2,6 +2,7 @@
 # distutils: language = c++
 
 from ioapi cimport GetOverlappedResult
+from errhandlingapi cimport GetLastError
 from libc.stdlib cimport free
 
 
@@ -10,9 +11,12 @@ cdef class Overlapped:
         pass
 
     def __dealloc__(self):
-        free(<void *> self._lpov)
-        free(<void *> self._read_buffer)
+        # print("free")
+        # free(<void *> self._read_buffer)
+        # print(GetLastError())
         free(<void *> self._write_buffer)
+        free(<void *> self._lpov)
+
 
     @property
     def pending(self):

@@ -95,18 +95,31 @@ cdef class AsyncFile:
     cdef HANDLE _handle
     cdef PLARGE_INTEGER _lpFileSize
     cdef LONGLONG _cursor
-    cdef uchar[:] write_buffer
+    cdef uchar[:] _write_buffer
     cdef LONGLONG _write_cursor
-    cdef uchar[:] read_buffer
+    cdef uchar[:] _read_buffer
+    cdef LONGLONG _read_buffer_read_cursor
+    cdef LONGLONG _read_buffer_readable_cursor
 
     cdef object __weakref__
 
     _register_callback: Callable
+    _fill_read_buffer_lock: asyncio.Lock
 
     def __cinit__(self):
         self._cursor = 0
         self._write_cursor = 0
-        self.write_buffer = bytearray(BUFFER_SIZE)
+        self._write_buffer = bytearray(BUFFER_SIZE)
+        self._read_buffer = bytearray(BUFFER_SIZE)
+        self._read_buffer_read_cursor = 0
+        self._read_buffer_readable_cursor = 0
+
+    # def __dealloc__(self):
+    #     free(<void*> &self._write_buffer[0])
+    #     free(<void*> &self._read_buffer[0])
+
+    def __init__(self) -> None:
+        self._fill_read_buffer_lock = asyncio.Lock()
 
     async def __aenter__(self):
         return self
@@ -141,33 +154,80 @@ cdef class AsyncFile:
         CancelIo(self._handle)
         CloseHandle(self._handle)
 
-    cdef Overlapped _read(self, long long size = -1):
-        if size >= 0xffffffff:
-            raise Exception("size too large")
+    cdef object _fill_read_buffer(self):
+        cdef longlong read_size = 0
+        if self._read_buffer_read_cursor == self._read_buffer_readable_cursor:
+            read_size = BUFFER_SIZE
         cdef LONGLONG file_size = self._lpFileSize.QuadPart
-        if size == -1:
-            size = file_size - self._cursor
+        read_size = min(read_size, file_size - self._cursor)
+        if read_size <= 0:
+            return None
+        cdef Overlapped ov = self._do_read(<uchar*> &self._read_buffer[0], read_size)
 
+        def read_callback(int trans, key, Overlapped ov):
+            # print(trans)
+            self._read_buffer_readable_cursor = trans
+            self._read_buffer_read_cursor = 0
+            return ov.getresult_char()[0:trans]
+
+        f = self._register_callback(ov, <ulonglong> self._handle, read_callback)
+        return f
+
+    async def _fill_read_buffer_async(self):
+        async with self._fill_read_buffer_lock:
+            f = self._fill_read_buffer()
+            if f:
+                await f
+                
+
+    cdef Overlapped _do_read(self, uchar *read, long long size):
         cdef LPOVERLAPPED lpov = <LPOVERLAPPED> GlobalAlloc(
             GPTR, sizeof(OVERLAPPED))
         lpov.Offset = self._cursor
         self._cursor += size
-        cdef uchar *read = <uchar *> malloc(size * sizeof(uchar))
         cdef Overlapped ov = Overlapped()
         ov._lpov = lpov
         ov._read_buffer = read
         cdef int r = ReadFile(self._handle, read, size, NULL, lpov)
         return ov
 
-    cpdef read(self, long long size = -1):
+    async def read(self, long long size = -1):
         """
 
         :param size: int
         :return: bytes
         """
-        ov = self._read(size)
-        f = self._register_callback(ov, <ulonglong> self._handle, read_callback)
-        return f
+        cdef LONGLONG file_size = self._lpFileSize.QuadPart
+        if size == -1:
+            size = file_size - self._cursor
+        if size >= 0xffffffff:
+            raise Exception("size too large")
+
+        cdef readable_size = self._read_buffer_readable_cursor - self._read_buffer_read_cursor
+
+        if self._cursor >= file_size:
+            if readable_size == 0:
+                return b''
+            size = readable_size
+        
+        if readable_size == 0:
+            await self._fill_read_buffer_async()
+        
+        readable_size = self._read_buffer_readable_cursor - self._read_buffer_read_cursor
+        cdef uchar[:] ret
+        cdef Overlapped ov
+        if size <= readable_size:
+            ret = self._read_buffer[self._read_buffer_read_cursor:self._read_buffer_read_cursor + size]
+            self._read_buffer_read_cursor += size
+            return bytes(ret)
+        else:
+            ret = bytearray(size)
+            ret[:readable_size] = self._read_buffer[self._read_buffer_read_cursor:self._read_buffer_read_cursor + readable_size]
+            self._read_buffer_read_cursor = self._read_buffer_readable_cursor
+            ov = self._do_read(&ret[readable_size], size-readable_size)
+            f = self._register_callback(ov, <ulonglong> self._handle, read_callback)
+            await f
+            return bytes(ret)
 
     # @timer.atimer
     async def readline(self):
@@ -211,7 +271,7 @@ cdef class AsyncFile:
         cdef uchar[:] buffer = <uchar[:self._write_cursor]>GlobalAlloc(
                 GPTR, self._write_cursor)
 
-        memcpy(&buffer[0], &self.write_buffer[0], self._write_cursor)
+        memcpy(&buffer[0], &self._write_buffer[0], self._write_cursor)
         self._write_cursor = 0
         return self._do_write(buffer)
 
@@ -235,7 +295,7 @@ cdef class AsyncFile:
             ov = self._flush_write_buffer()
         if size > BUFFER_SIZE:
             return self._do_write(buffer)
-        self.write_buffer[self._write_cursor:self._write_cursor + size] = buffer[:]
+        self._write_buffer[self._write_cursor:self._write_cursor + size] = buffer[:]
         # memcpy(&self.write_buffer[self._write_cursor], &buffer[0], size)
         self._write_cursor += size
         return ov

@@ -14,7 +14,7 @@ ctypedef unsigned long long ulonglong
 ctypedef long long longlong
 
 cdef enum:
-    BUFFER_SIZE = 8192
+    BUFFER_SIZE = 8192 * 8192
 
 
 cdef extern from "Python.h":
