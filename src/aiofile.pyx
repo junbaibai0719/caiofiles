@@ -206,17 +206,18 @@ cdef class AsyncFile:
         if size >= 0xffffffff:
             raise Exception("size too large")
 
-        cdef readable_size = self._read_buffer_readable_cursor - self._read_buffer_read_cursor
-
-        if self._cursor >= file_size:
-            if readable_size == 0:
-                return b''
-            size = readable_size
+        cdef longlong readable_size = self._read_buffer_readable_cursor - self._read_buffer_read_cursor
         
         if readable_size == 0:
             await self._fill_read_buffer_async()
         
         readable_size = self._read_buffer_readable_cursor - self._read_buffer_read_cursor
+
+        if self._cursor >= file_size:
+            if readable_size == 0:
+                return b''
+            size = readable_size
+
         cdef uchar[:] ret
         cdef Overlapped ov
         if size <= readable_size:
