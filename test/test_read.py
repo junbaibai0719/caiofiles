@@ -28,16 +28,12 @@ async def test_read_file():
 @atimer
 async def test_aiofiles():
     import aiofiles
-    lock = threading.Lock()
+    # lock = threading.Lock()
     data = []
     async with aiofiles.open("write.txt", "rb") as afp:
-        async def coro(fp):
-            nonlocal data
-            d = await fp.read(1024)
-            with lock:
-                data.append(d)
-
-        await asyncio.gather(*[coro(afp) for i in range(30000)])
+        while chunk := await afp.read(1024):
+        # with lock:
+            data.append(chunk)
 
     data = b"".join(data)
     with open("write.txt", "rb") as f:
@@ -120,7 +116,7 @@ def test_python_readlines():
 
 if __name__ == '__main__':
     asyncio.run(test_read_file())
-    # asyncio.run(test_aiofiles())
+    asyncio.run(test_aiofiles())
     test_python_read_file()
     # asyncio.run(test_readline())
     # asyncio.run(test_aiofiles_readline())

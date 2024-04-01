@@ -1,6 +1,6 @@
 src/*.cpp
 src/*.html
-write.txt
+write*.txt
 .vscode
 .idea
 1.exe
