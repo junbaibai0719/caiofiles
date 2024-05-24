@@ -1,8 +1,8 @@
 # cython: language_level=3, c_string_type=unicode, c_string_encoding=utf8
 # distutils: language = c++
 
-from ioapi cimport GetOverlappedResult
-from errhandlingapi cimport GetLastError
+from .ioapi cimport GetOverlappedResult
+from .errhandlingapi cimport GetLastError
 from libc.stdlib cimport free
 
 

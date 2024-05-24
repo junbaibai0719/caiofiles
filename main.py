@@ -101,10 +101,10 @@ async def test():
 
 @atimer
 async def test_read_file():
-    import aiofile
-    # fp = aiofile.open("C:\\Users\\lin\\Downloads\\MHXY-JD-3.0.393.exe")
-    fp = aiofile.open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe")
-    # fut = aiofile.read_file(b"aiofile.pxd")
+    import caiofiles
+    # fp = caiofiles.open("C:\\Users\\lin\\Downloads\\MHXY-JD-3.0.393.exe")
+    fp = caiofiles.open("C:\\Users\\lin\\Downloads\\python-3.11.1-amd64.exe")
+    # fut = caiofiles.read_file(b"caiofiles.pxd")
     with open("tmp.exe", "wb") as wp:
         while data := await fp.read(1024 * 1024 * 20):
             wp.write(data)

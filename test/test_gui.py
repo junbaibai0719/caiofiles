@@ -71,12 +71,12 @@ class MainWindow(QWidget):
 
     
     async def get_task(self):
-        import aiofile
+        import caiofiles
         while self._running:
             await self._queue.get()
             try:
                 data = []
-                async with aiofile.open("write.txt", "rb") as fp:
+                async with caiofiles.open("write.txt", "rb") as fp:
                     while chunk := await fp.read(1024):
                         data.append(chunk)
                 

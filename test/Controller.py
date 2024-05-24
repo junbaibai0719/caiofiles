@@ -2,7 +2,7 @@ import asyncio
 import functools
 import pathlib
 
-import aiofile
+import caiofiles
 import qasync
 from PySide6.QtCore import QObject, Slot
 from PySide6.QtQml import QmlElement
@@ -27,7 +27,7 @@ class Controller(QObject):
         if not self._async_reading:
             self._async_reading = True
             lines = []
-            async with aiofile.open("test.txt") as fp:
+            async with caiofiles.open("test.txt") as fp:
                 async for line in fp:
                     lines.append(line)
             print(len(lines))

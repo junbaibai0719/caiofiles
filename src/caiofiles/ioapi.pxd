@@ -1,6 +1,6 @@
 # cython: language_level=3
 # distutils: language = c++
-from winbase cimport *
+from .winbase cimport *
 
 cdef extern from "handleapi.h":
     cdef BOOL CloseHandle(

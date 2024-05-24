@@ -1,5 +1,5 @@
-src/*.cpp
-src/*.html
+src/caiofiles/*.cpp
+src/caiofiles/*.html
 write*.txt
 .vscode
 .idea

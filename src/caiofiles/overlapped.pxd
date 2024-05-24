@@ -1,15 +1,20 @@
 # cython: language_level=3
 # distutils: language = c++
 
-from overlapped cimport Overlapped
-from winbase cimport uchar
+from .winbase cimport *
 
-import re
+cdef class Overlapped:
+    cdef LPOVERLAPPED _lpov
+    cdef uchar * _read_buffer
+    cdef const uchar * _write_buffer
 
-def read_callback(trans, key, Overlapped ov):
+    cdef uchar * getresult_char(self)
+    cpdef bytes getresult(self)
+
+cpdef inline read_callback(trans, key, Overlapped ov):
     return ov.getresult_char()[0:ov._lpov.InternalHigh]
 
-def readlines_callback(trans, key, Overlapped ov):
+cpdef inline readlines_callback(trans, key, Overlapped ov):
     cdef uchar* res = ov.getresult_char()
     cdef list lines = []
     cdef unsigned long long length = ov._lpov.InternalHigh
@@ -23,5 +28,5 @@ def readlines_callback(trans, key, Overlapped ov):
             last = i + 1
     return lines
 
-def write_callback(trans, key, Overlapped ov):
+cpdef inline write_callback(trans, key, Overlapped ov):
     return True

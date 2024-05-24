@@ -14,8 +14,8 @@ from utils.timer import atimer, timer
 
 @atimer
 async def test_read_file():
-    import aiofile
-    async with aiofile.open("write.txt", "rb") as fp:
+    import caiofiles
+    async with caiofiles.open("write.txt", "rb") as fp:
         data = []
         while chunk := await fp.read(1024):
             data.append(chunk)
@@ -64,11 +64,11 @@ def test_python_read_file():
 
 @atimer
 async def test_readline():
-    import aiofile
+    import caiofiles
     lines = []
     count = 0
     read_tasks = []
-    async with aiofile.open("write.txt", "rb") as fp:
+    async with caiofiles.open("write.txt", "rb") as fp:
         async for line in fp:
             lines.append(line)
             count += 1
@@ -100,8 +100,8 @@ def test_python_readline():
 
 @atimer
 async def test_readlines():
-    import aiofile
-    fp = aiofile.open("write.txt", "rb")
+    import caiofiles
+    fp = caiofiles.open("write.txt", "rb")
     lines = await fp.readlines()
     # with open("write.txt", "rb") as fp:
     #     print(fp.readlines() == lines)

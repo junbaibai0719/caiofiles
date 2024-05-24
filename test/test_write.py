@@ -17,8 +17,8 @@ def test_python_write_file():
 
 @timer.atimer
 async def test_write_file():
-    import aiofile
-    async with aiofile.open("write1.txt", "wb") as fp:
+    import caiofiles
+    async with caiofiles.open("write1.txt", "wb") as fp:
         write_tasks = []
         for i in range(10 ** 6):
             s = f"{i}" * 100
@@ -86,9 +86,9 @@ def valid():
 
 @timer.atimer
 async def test_write_correct():
-    import aiofile
+    import caiofiles
     write_lines = []
-    async with aiofile.open("write1.txt", "wb") as fp:
+    async with caiofiles.open("write1.txt", "wb") as fp:
         for i in range(10):
             s = f"{i}" * 100
             line = f"中{i}:{s}\n".encode("gbk")
@@ -105,8 +105,8 @@ async def test_write_correct_repeat():
 
 @timer.atimer
 async def test_write_lines():
-    import aiofile
-    async with aiofile.open("write1.txt", "wb") as fp:
+    import caiofiles
+    async with caiofiles.open("write1.txt", "wb") as fp:
         lines = []
         for i in range(10 ** 6):
             s = f"{i}" * 100
@@ -134,7 +134,7 @@ def test_python_write_lines():
 if __name__ == '__main__':
     # asyncio.run(test_write_correct_repeat())
     asyncio.run(test_write_file())
-    asyncio.run(test_aiofiles_write_file())
+    # asyncio.run(test_aiofiles_write_file())
     # asyncio.run(test_caio_write_file())
     test_python_write_file()
     # asyncio.run(test_write_lines())

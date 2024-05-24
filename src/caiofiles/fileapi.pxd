@@ -1,6 +1,6 @@
 # cython: language_level=3
 
-from winbase cimport *
+from .winbase cimport *
 
 cdef extern from "fileapi.h":
     cdef HANDLE CreateFileA(

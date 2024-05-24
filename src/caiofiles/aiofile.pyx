@@ -14,13 +14,11 @@ from libc.stdlib cimport malloc, free
 from libc.stdio cimport printf
 from libc.string cimport memcpy
 
-from fileapi cimport CreateFileA, GetFileSizeEx, ReadFile, WriteFile
-from ioapi cimport CancelIo, CloseHandle
-from errhandlingapi cimport GetLastError
+from .fileapi cimport CreateFileA, GetFileSizeEx, ReadFile, WriteFile
+from .ioapi cimport CancelIo, CloseHandle
+from .errhandlingapi cimport GetLastError
 
-from overlapped cimport Overlapped
-
-from io_callback import read_callback, readlines_callback, write_callback
+from .overlapped cimport Overlapped, read_callback, readlines_callback, write_callback
 
 import time
 
