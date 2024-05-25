@@ -1,6 +1,9 @@
 src/caiofiles/*.cpp
 src/caiofiles/*.c
 src/caiofiles/*.html
+src/**/*.c
+src/**/*.cpp
+src/**/*.html
 write*.txt
 .vscode
 .idea
