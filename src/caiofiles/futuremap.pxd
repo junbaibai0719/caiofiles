@@ -3,8 +3,6 @@
 
 from libcpp.map cimport map
 
-
-
 cdef extern from "futuremap.h":
     cdef cppclass FutureMap:
         FutureMap()

@@ -3,10 +3,9 @@
 
 # import py
 import asyncio
-import concurrent.futures
 from _winapi import CloseHandle
 from asyncio import ProactorEventLoop, IocpProactor
-from typing import Callable, Union
+from typing import Callable
 
 # import cython
 cimport cython
@@ -19,8 +18,6 @@ from .ioapi cimport CancelIo, CloseHandle
 from .errhandlingapi cimport GetLastError
 
 from .overlapped cimport Overlapped, read_callback, readlines_callback, write_callback
-
-import time
 
 cdef double write_cost_sum = 0
 cdef double register_cost_sum = 0
@@ -36,12 +33,14 @@ cpdef get_error_msg(DWORD error):
     if error > 128 or error < 0:
         raise Exception("不符合范围的error")
     cdef LPVOID lpMsgBuf
-    cdef int size = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-                                  NULL,
-                                  error,
-                                  SUBLANG_NEUTRAL,
-                                  <LPTSTR> &lpMsgBuf,
-                                  1024 * 4, NULL)
+    cdef int size = FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+        NULL,
+        error,
+        SUBLANG_NEUTRAL,
+        <LPTSTR> &lpMsgBuf,
+        1024 * 4, NULL
+    )
     cdef char * msg = <char *> lpMsgBuf
     cdef bytes b = msg
     return b.decode(encoding="gbk")
@@ -86,8 +85,6 @@ cpdef open(str fn, str mode):
         fp._lpFileSize = lpFileSize
         fp.register()
         return fp
-
-
 
 cdef class AsyncFile:
     cdef HANDLE _handle
@@ -178,7 +175,6 @@ cdef class AsyncFile:
             if f:
                 await f
                 
-
     cdef Overlapped _do_read(self, long long size):
         cdef LPOVERLAPPED lpov = <LPOVERLAPPED> GlobalAlloc(
             GPTR, sizeof(OVERLAPPED))
@@ -308,7 +304,6 @@ cdef class AsyncFile:
         self._write_cursor += size
         return ov
 
-
     cpdef write(self, const uchar[:] s):
         """
         :param s: str or bytes
@@ -331,7 +326,6 @@ cdef class AsyncFile:
 
     cpdef write_lines(self, list lines):
         """
-        
         :param lines: List[bytes] 
         :return: 
         """

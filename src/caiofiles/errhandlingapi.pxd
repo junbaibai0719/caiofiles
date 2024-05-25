@@ -3,4 +3,4 @@
 from .winbase cimport *
 
 cdef extern from "errhandlingapi.h":
-    cdef DWORD GetLastError();
+    cdef DWORD GetLastError()

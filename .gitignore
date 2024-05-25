@@ -1,4 +1,5 @@
 src/caiofiles/*.cpp
+src/caiofiles/*.c
 src/caiofiles/*.html
 write*.txt
 .vscode

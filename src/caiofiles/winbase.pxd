@@ -15,9 +15,9 @@ cdef extern from *:
     ctypedef DWORD *LPDWORD
 
     ctypedef void *HANDLE
-    ctypedef void *PVOID;
+    ctypedef void *PVOID
     ctypedef unsigned long ULONG_PTR
-    ctypedef ULONG_PTR *PULONG_PTR;
+    ctypedef ULONG_PTR *PULONG_PTR
 
     ctypedef ULONG_PTR SIZE_T
 
@@ -37,14 +37,13 @@ cdef extern from *:
         LPVOID lpSecurityDescriptor
         BOOL bInheritHandle
 
-    ctypedef _SECURITY_ATTRIBUTES *LPSECURITY_ATTRIBUTES;
+    ctypedef _SECURITY_ATTRIBUTES *LPSECURITY_ATTRIBUTES
 
     ctypedef void (__stdcall *LPOVERLAPPED_COMPLETION_ROUTINE)(
             DWORD dwErrorCode,
             DWORD dwNumberOfBytesTransfered,
             LPOVERLAPPED lpOverlapped
     )
-
 
 
 cdef extern from "windows.h":

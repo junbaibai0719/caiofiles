@@ -2,7 +2,7 @@
 # distutils: language = c++
 
 from .ioapi cimport GetOverlappedResult
-from .errhandlingapi cimport GetLastError
+# from .errhandlingapi cimport GetLastError
 from libc.stdlib cimport free
 
 
@@ -15,7 +15,6 @@ cdef class Overlapped:
         free(<void *> self._write_buffer)
         free(<void *> self._lpov)
 
-
     @property
     def pending(self):
         return (<DWORD> self._lpov.Internal) == STATUS_PENDING
@@ -26,15 +25,12 @@ cdef class Overlapped:
 
     cdef uchar * getresult_char(self):
         cdef HANDLE handle = self._lpov.hEvent
-        cdef DWORD transferred = 0;
-        cdef BOOL ret;
-        ret = GetOverlappedResult(handle, self._lpov, &transferred, 1)
+        cdef DWORD transferred = 0
+        GetOverlappedResult(handle, self._lpov, &transferred, 1)
         return self._read_buffer
-
 
     cpdef bytes getresult(self):
         cdef HANDLE handle = self._lpov.hEvent
-        cdef DWORD transferred = 0;
-        cdef BOOL ret;
-        ret = GetOverlappedResult(handle, self._lpov, &transferred, 1)
+        cdef DWORD transferred = 0
+        GetOverlappedResult(handle, self._lpov, &transferred, 1)
         return self._read_buffer[0:self._lpov.InternalHigh]
