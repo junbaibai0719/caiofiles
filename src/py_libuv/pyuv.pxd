@@ -2,7 +2,7 @@
 
 cimport cython
 
-cdef extern from "fcntl.h":
+cdef extern from "winix.h":
     cdef int O_ASYNC
     cdef int O_RDONLY
     cdef int S_IRWXU

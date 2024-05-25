@@ -52,7 +52,7 @@ cdef void open_cb(uv_fs_t* req) noexcept nogil:
 def test():
     global loop
     loop = <uv_loop_t*>PyMem_RawMalloc(sizeof(uv_loop_t))
-    cdef const char* path = "/home/pi/Documents/caiofiles/main.py"
+    cdef const char* path = "./main.py"
     
     uv_loop_init(loop)
     cdef uv_fs_t *req = <uv_fs_t*>malloc(sizeof(uv_fs_t))
