@@ -61,42 +61,14 @@ async def main():
     printf("%d\n",loop.uvloop)
     await asyncio.sleep(1)
 
-cdef void on_open(uv_fs_t* req) noexcept with gil:
-    cdef:
-        uv_fs_t_plus* req_plus
-        object fut
-        char* buffer
-        AsyncFile file
-        uvloop.Loop loop
-        bytes error_str
-    # printf("on open %d\n", req)
-    # printf("result: %d\n", req.result)
-    req_plus = <uv_fs_t_plus*> req 
-    # printf("on open req plus %d fut %d req: %d %d\n", req_plus, &(req_plus.fut), &(req_plus.req), req)
-    
-    fut = <object>req_plus.fut
-    loop = <uvloop.Loop>req_plus.loop
 
-    fut: asyncio.Future
-    if req.result >= 0:
-        file = AsyncFile(loop, req.result)
-        fut.set_result(file)
-    else:
-        error_str = uv_strerror(req.result)
-        fut.set_exception(Exception(f"cannot open the file : {error_str.decode()}"))
-    # print(fut)
-
-cdef struct uv_fs_t_plus:
-    uv_fs_t req
-    PyObject* fut
-    PyObject* loop
 
 def open(str fn, str mode):
     cdef:
         uvloop.Loop loop
         uv_loop_t* uv_loop
         object fut
-        uv_fs_t_plus* req
+        uv_fs_t_wrap* req
         int flags = O_ASYNC | O_RDONLY
         int uv_mode = S_IRWXU
         int open_r = -1
@@ -104,7 +76,7 @@ def open(str fn, str mode):
     uv_loop = loop.uvloop
     # printf("%d\n",loop.uvloop)
     fut = loop._new_future()
-    req = <uv_fs_t_plus*>malloc(sizeof(uv_fs_t_plus))
+    req = <uv_fs_t_wrap*>malloc(sizeof(uv_fs_t_wrap))
 
     req.fut = <PyObject*>fut
     req.loop = <PyObject*>loop
@@ -114,6 +86,7 @@ def open(str fn, str mode):
         open_r = uv_fs_open(uv_loop, <uv_fs_t*>req, fn.encode(), flags, uv_mode, on_open)
 
     if open_r != 0:
+        free(req)
         raise Exception(uv_strerror(open_r))
         # printf("open r: %d %s\n", open_r, uv_strerror(open_r))
     return fut
