@@ -1,0 +1,1 @@
+autopxd ~/Programs/libuv/include/uv.h src/py_libuv/uv.pxd -I /usr/include/aarch64-linux-gnu/ -I /usr/include/
