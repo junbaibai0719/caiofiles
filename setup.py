@@ -18,7 +18,7 @@ setup(
     packages=find_packages("src"),
     package_dir={"": "src"},
     ext_modules=cythonize(
-        # ["src/caiofiles/aiofile.pyx", "src/caiofiles/overlapped.pyx"],
+        # ["src/caiofiles/aiofile.pyx"],
         [libuv_ext],
         annotate=True, language_level='3'
     ),

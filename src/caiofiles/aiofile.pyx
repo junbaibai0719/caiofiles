@@ -17,7 +17,8 @@ from .fileapi cimport CreateFileA, GetFileSizeEx, ReadFile, WriteFile
 from .ioapi cimport CancelIo, CloseHandle
 from .errhandlingapi cimport GetLastError
 
-from .overlapped cimport Overlapped, read_callback, readlines_callback, write_callback
+# from .overlapped cimport Overlapped, read_callback, readlines_callback, write_callback
+include "overlapped.pyx"
 
 cdef double write_cost_sum = 0
 cdef double register_cost_sum = 0

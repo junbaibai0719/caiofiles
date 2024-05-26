@@ -2,6 +2,8 @@
 
 from .winbase cimport *
 
+include "overlapped.pxd"
+
 ctypedef struct OVBUFFER:
     OVERLAPPED oOverlap
     char * read
