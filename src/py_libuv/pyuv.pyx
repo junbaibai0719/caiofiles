@@ -55,6 +55,7 @@ from uvloop cimport loop as uvloop
 include "aiofile.pyx"
 
 import asyncio
+import threading
 
 async def main():
     cdef uvloop.Loop loop = asyncio.get_event_loop()
@@ -63,7 +64,7 @@ async def main():
 
 
 
-def open(str fn, str mode):
+async def open(str fn, str mode):
     cdef:
         uvloop.Loop loop
         uv_loop_t* uv_loop
@@ -85,16 +86,19 @@ def open(str fn, str mode):
 
     # printf("req addr %d fut:%d req:%d\n", req, &(req.fut), &(req.req))
     if mode == "rb":
-        printf("start open\n")
+        # printf("start open\n")
         open_r = uv_fs_open(uv_loop, req, fn.encode(), flags, uv_mode, on_open)
-        printf("end uv_fs_open %d\n", open_r)
+        # printf("end uv_fs_open %d\n", open_r)
 
     if open_r != 0:
         free(ctx)
         free(req)
         raise Exception(uv_strerror(open_r).decode())
         # printf("open r: %d %s\n", open_r, uv_strerror(open_r))
-    return fut
+    print("thread id", threading.currentThread().native_id)
+    await asyncio.sleep(0)
+    fut.set_result(0)
+    return await fut
 
 
 # def test():

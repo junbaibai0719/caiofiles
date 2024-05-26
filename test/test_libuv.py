@@ -55,6 +55,9 @@ def test_open_file_read_bytes():
 
 
 def test_file_read_cost_8192():
+    """
+    while run this test, a Fatal Error occured, and then loop abort
+    """
     import sys
     print(sys.flags.dev_mode)
     from py_libuv import pyuv
@@ -71,7 +74,6 @@ def test_file_read_cost_8192():
         while True:
             fp = await pyuv.open("./test_read.txt", "rb")
             print(fp)
-        print(fp)
         assert isinstance(fp, pyuv.AsyncFile)
         while data:= await fp.read(8192):
             print(len(data))

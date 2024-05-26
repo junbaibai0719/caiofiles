@@ -6,6 +6,7 @@ from libc.stdlib cimport free, malloc
 from libc.stdio cimport printf
 
 import asyncio
+import threading
 from .exceptions import LibUVError, LibUVReadError, LibUVOpenError
 
 cdef void on_open(uv_fs_t* req) noexcept with gil:
@@ -16,23 +17,25 @@ cdef void on_open(uv_fs_t* req) noexcept with gil:
         AsyncFile file
         uvloop.Loop loop
         bytes error_str
-    printf("on open %d\n", req)
-    printf("result: %d\n", req.result)
-    ctx = <on_open_ctx*> req.data 
+    print("thread id", threading.currentThread().native_id)
+    # printf("on open %d\n", req)
+    # printf("result: %d\n", req.result)
+    # ctx = <on_open_ctx*> req.data 
     
-    fut = <object>ctx.fut
-    loop = <uvloop.Loop>ctx.loop
+    # fut = <object>ctx.fut
+    # loop = <uvloop.Loop>ctx.loop
 
     fut: asyncio.Future
-    printf("1111111111111111\n")
+    # printf("1111111111111111\n")
     if req.result >= 0:
-        file = AsyncFile(loop, req.result)
-        fut.set_result(file)
+        pass
+        # file = AsyncFile(loop, req.result)
+        # fut.set_result(file)
     else:
         error_str = uv_strerror(req.result)
-        fut.set_exception(LibUVOpenError(f"cannot open the file : {error_str.decode()}"))
-    free(ctx)    
-    free(req)
+        # fut.set_exception(LibUVOpenError(f"cannot open the file : {error_str.decode()}"))
+    # free(req.data)    
+    # free(req)
     # print(fut)
 
 
@@ -70,6 +73,9 @@ cdef class AsyncFile:
         self._uv_loop = loop.uvloop
         self._loop = loop
         self.fd = fd
+    
+    def fileno(self)->int:
+        return self.fd
 
     def read(self, int i=-1):
         cdef:
