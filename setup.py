@@ -6,7 +6,7 @@ from Cython.Build import cythonize
 libuv_ext = Extension(
     name="py_libuv.pyuv",
     sources=["src/py_libuv/pyuv.pyx"],
-    include_dirs=[r"E:\Lib\libuv_install\include"],
+    include_dirs=[r"E:\Lib\libuv_install\include", "/home/pi/Documents/uvloop/uvloop"],
     library_dirs=[r"E:\Lib\libuv_install\lib"],
     libraries=["uv"]
 )

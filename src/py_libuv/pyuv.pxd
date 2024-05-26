@@ -31,6 +31,8 @@ cdef extern from "Python.h":
     cdef enum:
         PyBUF_WRITE
 
+include "aiofile.pxd"
+
 # cdef extern from "uv.h" nogil:
 #     ctypedef cython.ulonglong uint64_t
 #     ctypedef cython.longlong int64_t
