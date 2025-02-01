@@ -18,8 +18,8 @@ setup(
     packages=find_packages("src"),
     package_dir={"": "src"},
     ext_modules=cythonize(
-        # ["src/caiofiles/aiofile.pyx"],
-        [libuv_ext],
+        ["src/caiofiles/aiofile.pyx"],
+        # [libuv_ext],
         annotate=True, language_level='3'
     ),
     zip_safe=False,

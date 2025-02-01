@@ -1,7 +1,7 @@
 # cython: language_level=3, c_string_type=unicode, c_string_encoding=utf8
 # distutils: language = c++
 
-from .ioapi cimport GetOverlappedResult
+from .ioapi cimport GetOverlappedResult, CancelIo, CloseHandle
 # from .errhandlingapi cimport GetLastError
 from libc.stdlib cimport free
 
@@ -34,3 +34,8 @@ cdef class Overlapped:
         cdef DWORD transferred = 0
         GetOverlappedResult(handle, self._lpov, &transferred, 1)
         return self._read_buffer[0:self._lpov.InternalHigh]
+
+    def cancel(self):
+        """取消重叠操作"""
+        if self._lpov:
+            CancelIo(self._lpov.hEvent)  # 取消IO操作
