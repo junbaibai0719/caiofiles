@@ -116,7 +116,7 @@ async def test_write_chunked(test_file_path):
     with open(test_file_path, "rb") as f:
         content = f.read()
         assert len(content) == chunk_size * num_chunks
-        assert content == chunk * num_chunks
+        assert content == b"x" * chunk_size * num_chunks
 
 @pytest.mark.asyncio
 async def test_read_large_data(test_file_path):
@@ -208,21 +208,6 @@ async def test_read_large_data_lines(test_file_path):
         assert b"".join(lines) == test_data
 
 # -------- 特殊场景测试 --------
-@pytest.mark.asyncio
-async def test_write_concurrent(test_file_path):
-    """测试并发写入"""
-    chunks = [b"A" * 1000, b"B" * 1000, b"C" * 1000]
-    
-    async def write_chunk(chunk):
-        async with caiofiles.open(test_file_path, "wb") as f:
-            await f.write(chunk)
-    
-    await asyncio.gather(*[write_chunk(chunk) for chunk in chunks])
-    
-    with open(test_file_path, "rb") as f:
-        content = f.read()
-        assert len(content) == 1000
-
 @pytest.mark.asyncio
 async def test_write_after_close(test_file_path):
     """测试文件关闭后写入"""

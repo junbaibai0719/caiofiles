@@ -20,6 +20,9 @@ from .errhandlingapi cimport GetLastError
 # from .overlapped cimport Overlapped, read_callback, readlines_callback, write_callback
 include "overlapped.pyx"
 
+from cpython cimport array
+from cython.view cimport array as cvarray
+
 cdef double write_cost_sum = 0
 cdef double register_cost_sum = 0
 
@@ -27,12 +30,14 @@ cpdef get_last_error():
     return GetLastError()
 
 cpdef get_error_msg(DWORD error):
-    """
-    :param error: int
-    :return: str
+    """获取Windows错误信息
+    
+    :param error: 错误码
+    :return: 错误信息字符串
     """
     if error > 128 or error < 0:
-        raise Exception("不符合范围的error")
+        raise ValueError("错误码超出范围")
+        
     cdef LPVOID lpMsgBuf
     cdef int size = FormatMessage(
         FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
@@ -43,93 +48,132 @@ cpdef get_error_msg(DWORD error):
         1024 * 4, NULL
     )
     cdef char * msg = <char *> lpMsgBuf
-    cdef bytes b = msg
-    return b.decode(encoding="gbk")
+    return (<bytes>msg).decode(encoding="gbk")
 
 cpdef open(str fn, str mode):
-    """
-    :param fn: str
-    :param mode: str
-    :return: 
+    """打开文件
+    
+    :param fn: 文件名
+    :param mode: 打开模式 ('rb' 或 'wb')
+    :return: AsyncFile 对象
     """
     cdef HANDLE handle
-    cdef PLARGE_INTEGER  lpFileSize
+    cdef PLARGE_INTEGER lpFileSize
+    cdef DWORD share_mode = FILE_SHARE_READ
+    cdef int retry_count = 0
+    cdef int max_retries = 3
+    
     if mode == "rb":
-        handle = CreateFileA(fn.encode(),
-                             GENERIC_READ,
-                             FILE_SHARE_READ | FILE_SHARE_WRITE,
-                             NULL,
-                             OPEN_EXISTING,
-                             FILE_FLAG_OVERLAPPED,
-                             NULL)
-        lpFileSize = <PLARGE_INTEGER> GlobalAlloc(
-            GPTR, sizeof(PLARGE_INTEGER))
-        GetFileSizeEx(handle, lpFileSize)
-        fp = AsyncFile()
-        fp._handle = handle
-        fp._lpFileSize = lpFileSize
-        fp.register()
-        return fp
-    if mode == "wb":
-        handle = CreateFileA(fn.encode(),
-                             GENERIC_WRITE,
-                             FILE_SHARE_READ | FILE_SHARE_WRITE,
-                             NULL,
-                             CREATE_ALWAYS,
-                             FILE_FLAG_OVERLAPPED,
-                             NULL)
-        lpFileSize = <PLARGE_INTEGER> GlobalAlloc(
-            GPTR, sizeof(PLARGE_INTEGER))
-        GetFileSizeEx(handle, lpFileSize)
-        fp = AsyncFile()
-        fp._handle = handle
-        fp._lpFileSize = lpFileSize
-        fp.register()
-        return fp
+        handle = CreateFileA(
+            fn.encode(),
+            GENERIC_READ,
+            FILE_SHARE_READ | FILE_SHARE_WRITE,  # 允许其他进程读写
+            NULL,
+            OPEN_EXISTING,
+            FILE_FLAG_OVERLAPPED,
+            NULL
+        )
+    elif mode == "wb":
+        handle = CreateFileA(
+            fn.encode(),
+            GENERIC_WRITE,
+            FILE_SHARE_READ,  # 允许其他进程读取
+            NULL,
+            CREATE_ALWAYS,
+            FILE_FLAG_OVERLAPPED,
+            NULL
+        )
+    else:
+        raise ValueError(f"不支持的打开模式: {mode}")
+    
+    if <ulonglong>handle == INVALID_HANDLE_VALUE:
+        error = get_last_error()
+        raise OSError(f"打开文件失败: {get_error_msg(error)}")
+    
+    lpFileSize = <PLARGE_INTEGER>GlobalAlloc(GPTR, sizeof(PLARGE_INTEGER))
+    GetFileSizeEx(handle, lpFileSize)
+    
+    fp = AsyncFile()
+    fp._handle = handle
+    fp._lpFileSize = lpFileSize
+    fp.register()
+    return fp
+
+cdef array.array uc_array_template = array.array('B', [])
 
 cdef class Buffer:
-    """缓冲区类，管理读取缓冲区的数据和位置"""
-    
-    cdef uchar[:] _buffer
-    cdef size_t _pos      # 当前读取位置
-    cdef size_t _filled   # 已填充数据的结束位置
+    """高性能缓冲区实现"""
+    cdef unsigned char[:] _buffer  # 使用 memoryview
+    cdef size_t _pos        # 当前读/写位置
+    cdef size_t _size      # 缓冲区总大小
+    cdef size_t _filled    # 已填充数据的大小
     
     def __cinit__(self, size_t size):
-        self._buffer = bytearray(size)
+        # 4KB 对齐
+        self._size = (size + 4095) & ~4095
+        self._buffer = array.clone(uc_array_template, self._size, zero=False)
         self._pos = 0
         self._filled = 0
     
     cdef bytes read(self, size_t size):
-        """从缓冲区读取指定大小的数据"""
+        """从缓冲区读取数据"""
         if size > self.remaining():
             size = self.remaining()
         if size <= 0:
             return b''
-            
+        
         result = bytes(self._buffer[self._pos:self._pos + size])
         self._pos += size
         return result
     
+    cdef void write(self, const unsigned char[:] data, size_t size):
+        """写入数据到缓冲区"""
+        # 检查是否有足够空间
+        if size > self.available():
+            raise ValueError("数据大小超过缓冲区可用空间")
+        
+        # 写入数据
+        self._buffer[self._filled:self._filled + size] = data[0:size]
+        self._filled += size
+    
     cdef size_t remaining(self):
-        """返回缓冲区中剩余可读数据量"""
+        """返回剩余可读数据量"""
         return self._filled - self._pos
+    
+    cdef size_t available(self):
+        """返回剩余可写空间"""
+        return self._size - self._filled
+    
+    cdef bint is_empty(self):
+        """检查缓冲区是否为空"""
+        return self._pos >= self._filled
+    
+    cdef bint is_full(self):
+        """检查缓冲区是否已满"""
+        return self._filled >= self._size
     
     cdef void reset(self):
         """重置缓冲区"""
         self._pos = 0
         self._filled = 0
     
-    cdef bint is_empty(self):
-        """检查缓冲区是否为空"""
-        return self._pos >= self._filled
+    cdef void compact(self):
+        """压缩缓冲区，移除已读取的数据"""
+        cdef size_t remaining = 0
+        if self._pos > 0:
+            if not self.is_empty():
+                # 移动未读数据到开头
+                remaining = self.remaining()
+                self._buffer[0:remaining] = self._buffer[self._pos:self._filled]
+                self._filled = remaining
+            else:
+                self._filled = 0
+            self._pos = 0
     
-    cdef void write(self, const uchar[:] data, size_t size):
-        """写入数据到缓冲区"""
-        if size > len(self._buffer):
-            raise ValueError("Data too large for buffer")
-        memcpy(&self._buffer[0], &data[0], size)
-        self._pos = 0
-        self._filled = size
+    @property
+    def size(self):
+        """返回缓冲区总大小"""
+        return self._size
 
 cdef class AsyncFile:
     cdef HANDLE _handle
@@ -172,7 +216,6 @@ cdef class AsyncFile:
         返回文件的下一行，如果到达文件末尾则抛出 StopAsyncIteration
         """
         cdef bytes line = await self.readline()
-        print(line)
         if not line:  # 到达文件末尾
             raise StopAsyncIteration
         return line
@@ -191,10 +234,7 @@ cdef class AsyncFile:
         try:
             # 刷新写缓冲区
             if not self._write_buffer.is_empty():
-                ov = self._flush_write_buffer()
-                if ov:
-                    f = self._register_callback(ov, <ulonglong> self._handle, write_callback)
-                    await f
+                await self._flush_write_buffer()
             
             # 取消所有挂起的IO操作
             CancelIo(self._handle)
@@ -231,8 +271,7 @@ cdef class AsyncFile:
             self._read_buffer.write(ov.getresult_char()[:], trans)
             return ov.getresult_char()[0:trans]
 
-        f = self._register_callback(ov, <ulonglong> self._handle, read_callback)
-        return f
+        return self._register_callback(ov, <ulonglong> self._handle, read_callback)
 
     async def _fill_read_buffer_async(self):
         async with self._fill_read_buffer_lock:
@@ -253,12 +292,8 @@ cdef class AsyncFile:
         return ov
 
     @cython.boundscheck(False)
-    async def read(self, long long size = -1):
-        """读取指定大小的数据
-        
-        :param size: 要读取的字节数，-1表示读取到文件末尾
-        :return: 读取的数据
-        """
+    async def read(self, cython.Py_ssize_t size = -1):
+        """读取指定大小的数据"""
         cdef LONGLONG file_size = self._lpFileSize.QuadPart
         cdef bytes chunk
         
@@ -268,27 +303,15 @@ cdef class AsyncFile:
         
         # 处理读取到文件末尾的情况
         if size == -1:
-            # 如果缓冲区有数据，先返回缓冲区数据
-            if not self._read_buffer.is_empty():
-                chunk = self._read_buffer.read(self._read_buffer.remaining())
-                if chunk:
-                    return chunk
-            
-            # 读取剩余所有数据
-            chunks = []
-            while True:
-                chunk = await self._raw_read(BUFFER_SIZE)
-                if not chunk:
-                    break
-                chunks.append(chunk)
-            return b''.join(chunks)
+            size = file_size - self._cursor
         
         # 处理指定大小的读取
         if size == 0:
             return b''
         
         # 检查是否超过最大值
-        if size >= 0xffffffff:
+        cdef ulonglong max_size = 0xffffffff
+        if size >= max_size:
             raise ValueError("size too large")
         
         # 首先尝试从缓冲区读取
@@ -314,11 +337,7 @@ cdef class AsyncFile:
         return await self._raw_read(size)
 
     async def _raw_read(self, long long size):
-        """底层读取方法
-        
-        :param size: 要读取的字节数
-        :return: 读取的数据
-        """
+        """底层读取方法"""
         cdef LONGLONG file_size = self._lpFileSize.QuadPart
         
         # 确保不会读取超过文件末尾
@@ -326,12 +345,13 @@ cdef class AsyncFile:
         if size <= 0:
             return b''
         
-        # 执行实际的读取操作
+        # 对于大于缓冲区的读取，直接分配新的缓冲区
         cdef Overlapped ov = self._do_read(size)
-        f = self._register_callback(ov, <ulonglong> self._handle, read_callback)
+        f = self._register_callback(ov, <ulonglong>self._handle, read_callback)
         return await f
 
     # @timer.atimer
+    @cython.boundscheck(False)
     async def readline(self):
         """读取一行数据
         
@@ -342,10 +362,10 @@ cdef class AsyncFile:
         cdef cython.Py_ssize_t index
         
         # 首先检查缓冲区中是否有数据
-        if not self._read_buffer.is_empty():
-            chunk = self._read_buffer.read(self._read_buffer.remaining())
-        else:
-            chunk = await self.read(BUFFER_SIZE)
+        if self._read_buffer.is_empty():
+            await self._fill_read_buffer_async()
+        
+        chunk = self._read_buffer.read(BUFFER_SIZE)
 
         while chunk:
             index = chunk.find(b'\n')
@@ -355,6 +375,7 @@ cdef class AsyncFile:
                 # 保存剩余数据到缓冲区
                 remaining = chunk[index + 1:]
                 if remaining:
+                    self._read_buffer.reset()
                     self._read_buffer.write(remaining, len(remaining))
                 if data_list:  # 如果之前有积累的数据，需要合并
                     data_list.append(line)
@@ -378,7 +399,7 @@ cdef class AsyncFile:
         f = self._register_callback(ov, <ulonglong> self._handle, readlines_callback)
         return f
 
-    cdef Overlapped _do_write(self, const uchar[:] buffer):
+    cdef object _do_write(self, const uchar[:] buffer):
         cdef longlong size = buffer.shape[0]
         cdef LPOVERLAPPED lpov = <LPOVERLAPPED> GlobalAlloc(
                 GPTR, sizeof(OVERLAPPED))
@@ -392,36 +413,27 @@ cdef class AsyncFile:
         memcpy(write_buffer, &buffer[0], size)
         ov._write_buffer = write_buffer
         cdef int r = WriteFile(self._handle, write_buffer, size, NULL, lpov)
-        return ov
+        f = self._register_callback(ov, <ulonglong> self._handle, write_callback)
+        return f
 
     @cython.boundscheck(False)
-    cdef Overlapped _write(self, const uchar[:] buffer):
+    cdef object _write(self, const uchar[:] buffer):
         cdef longlong size = buffer.shape[0]
-        cdef Overlapped ov = None
-        
-        # 如果数据大于缓冲区大小，直接写入
-        if size > BUFFER_SIZE:
-            return self._do_write(buffer)
-            
+                    
         # 如果缓冲区剩余空间不足，先刷新缓冲区
         if self._write_buffer.remaining() + size > BUFFER_SIZE:
-            ov = self._flush_write_buffer()
-            if ov:
-                # 等待刷新完成后再写入新数据
-                return ov
+            f = self._flush_write_buffer()
+            f.add_done_callback(lambda _: self._do_write(buffer))
+            return f
                 
         # 写入数据到缓冲区
         self._write_buffer.write(buffer, size)
-        
-        # 如果是最后一块数据，需要刷新
-        if size < BUFFER_SIZE:
-            return self._flush_write_buffer()
             
-        return ov
+        return asyncio.ensure_future(asyncio.sleep(0))
 
-    cdef Overlapped _flush_write_buffer(self):
+    cdef object _flush_write_buffer(self):
         if self._write_buffer.is_empty():
-            return None
+            return asyncio.ensure_future(asyncio.sleep(0))
             
         cdef size_t size = self._write_buffer.remaining()
         cdef uchar[:] buffer = <uchar[:size]>GlobalAlloc(GPTR, size)
@@ -437,21 +449,8 @@ cdef class AsyncFile:
             raise ValueError("File is closed")
             
         if s is None or len(s) == 0:
-            f = asyncio.futures.Future()
-            f.set_result(True)
-            return f
-            
-        async with self._write_lock:
-            ov = self._write(s)
-            if not ov:
-                # 如果没有立即写入，需要刷新缓冲区
-                ov = self._flush_write_buffer()
-                if not ov:
-                    f = asyncio.futures.Future()
-                    f.set_result(True)
-                    return f
-                
-        return self._register_callback(ov, <ulonglong> self._handle, write_callback)
+            return None
+        return await self._write(s)
 
     cpdef write_lines(self, list lines):
         """写入多行数据
