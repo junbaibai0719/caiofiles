@@ -24,3 +24,10 @@ cdef extern from "Python.h":
     cdef int PyBUF_READ
     str PyUnicode_FromWideChar(wchar_t *w, int size)
     object PyMemoryView_FromMemory(char *memory, ssize_t size, int flags)
+
+
+cdef extern from *:
+    """
+    const unsigned char LF[] = "\\n";
+    """
+    cdef const unsigned char* LF

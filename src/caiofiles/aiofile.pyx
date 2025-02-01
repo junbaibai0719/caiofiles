@@ -117,14 +117,14 @@ cdef class Buffer:
     
     @cython.boundscheck(False)
     @cython.initializedcheck(False)
-    cdef bytes read(self, size_t size):
+    cdef const unsigned char[:] read(self, size_t size):
         """从缓冲区读取数据"""
         if size > self.remaining():
             size = self.remaining()
         if size <= 0:
-            return b''
+            return array.clone(uc_array_template, 0, zero=False)
         
-        result = bytes(self._buffer[self._pos:self._pos + size])
+        cdef const unsigned char[:] result = self._buffer[self._pos:self._pos + size]
         self._pos += size
         return result
     
@@ -317,7 +317,7 @@ cdef class AsyncFile:
                     # 不为空就需要移动
                     self._read_buffer.compact()
                     await self._fill_read_buffer_async()
-            return self._read_buffer.read(size)
+            return bytes(self._read_buffer.read(size))
             
         # 大块直接读取
         return await self._raw_read(size)
@@ -338,40 +338,52 @@ cdef class AsyncFile:
 
     # @timer.atimer
     @cython.boundscheck(False)
-    async def readline(self):
-        """读取一行数据
-        
-        :return: bytes line
-        """
-        cdef list data_list = []
-        cdef bytes chunk
-        cdef cython.Py_ssize_t index
+    @cython.wraparound(False)
+    async def readline(self) -> bytes:
+        """使用内存视图优化的行读取实现"""
+
+        cdef:
+            list data_list = []
+            const unsigned char[:] chunk
+            Py_ssize_t index = -1
+            Py_ssize_t i
+            size_t chunk_size = BUFFER_SIZE
+            const unsigned char[:] remaining
+            cdef const unsigned char[:] line
         
         # 首先检查缓冲区中是否有数据
         if self._read_buffer.is_empty():
             await self._fill_read_buffer_async()
         
-        chunk = self._read_buffer.read(BUFFER_SIZE)
-
-        while chunk:
-            index = chunk.find(b'\n')
+        chunk = self._read_buffer.read(self._read_buffer.remaining())
+        while chunk.shape[0] > 0:
+            # 使用内存视图处理数据
+            
+            # 手动查找换行符
+            for i in range(chunk.shape[0]):
+                if chunk[i] == LF[0]:
+                    index = i
+                    break
+            else:
+                index = -1
             if index != -1:
-                # 找到换行符，只返回到换行符为止的数据
-                line = chunk[:index + 1]
+                # 找到换行符
+                line = chunk[:index + 1].copy()
                 # 保存剩余数据到缓冲区
                 remaining = chunk[index + 1:]
-                if remaining:
+                if remaining.shape[0] > 0:
                     self._read_buffer.reset()
-                    self._read_buffer.write(remaining, len(remaining))
-                if data_list:  # 如果之前有积累的数据，需要合并
+                    self._read_buffer.write(remaining, remaining.shape[0])
+                if data_list:
                     data_list.append(line)
                     return b''.join(data_list)
-                return line
+                return bytes(line)
             else:
                 data_list.append(chunk)
-                chunk = await self.read(BUFFER_SIZE)
-
-        # 如果没有找到换行符，返回所有读取的数据（可能是文件的最后一行，没有换行符）
+                await self._fill_read_buffer_async()
+                chunk = self._read_buffer.read(chunk_size)
+        
+        # 如果没有找到换行符，返回所有数据
         if data_list:
             return b''.join(data_list)
         return b''

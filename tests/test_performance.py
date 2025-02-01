@@ -64,7 +64,8 @@ _test_results = {
     'read': {
         'small': {},
         'continuous': {},
-        'large': {}
+        'large': {},
+        'lines': {}  # 添加行读取测试结果
     }
 }
 
@@ -395,6 +396,67 @@ def test_continuous_small_read(test_dir, size_kb):
     print(f"caiofiles vs aiofiles: {aio_time/caio_time:.2f}x", file=sys.stderr)
     print(f"caiofiles vs Python: {sync_time/caio_time:.2f}x", file=sys.stderr)
 
+# -------- readline 性能测试 --------
+@pytest.mark.parametrize("line_count", [1000, 10000, 100000])
+def test_readline_performance(test_dir, line_count):
+    """测试逐行读取性能"""
+    # 准备测试文件
+    test_file = test_dir / f"test_lines_{line_count}.txt"
+    line = b"x" * 100 + b"\n"  # 101字节的行
+    test_data = line * line_count
+    
+    with open(test_file, "wb") as f:
+        f.write(test_data)
+    
+    async def caio_read_lines():
+        lines = []
+        async with caiofiles.open(str(test_file), "rb") as f:
+            async for line in f:
+                lines.append(line)
+        return b''.join(lines)
+    
+    async def aio_read_lines():
+        lines = []
+        async with aiofiles.open(str(test_file), "rb") as f:
+            async for line in f:
+                lines.append(line)
+        return b''.join(lines)
+    
+    def sync_read_lines():
+        lines = []
+        with open(test_file, "rb") as f:
+            for line in f:
+                lines.append(line)
+        return b''.join(lines)
+    
+    # 测试 caiofiles readline
+    start_time = time.perf_counter()
+    content = asyncio.run(caio_read_lines())
+    caio_time = time.perf_counter() - start_time
+    assert len(content) == len(test_data)
+    
+    # 测试 aiofiles readline
+    start_time = time.perf_counter()
+    content = asyncio.run(aio_read_lines())
+    aio_time = time.perf_counter() - start_time
+    assert len(content) == len(test_data)
+    
+    # 测试同步 readline
+    start_time = time.perf_counter()
+    content = sync_read_lines()
+    sync_time = time.perf_counter() - start_time
+    assert len(content) == len(test_data)
+    
+    # 存储结果
+    store_test_result('read', 'lines', line_count, caio_time, aio_time, sync_time)
+    
+    print(f"\n读取 {line_count} 行(每行 101 字节)性能对比:")
+    print(f"caiofiles: {caio_time:.3f}秒", file=sys.stderr)
+    print(f"aiofiles: {aio_time:.3f}秒", file=sys.stderr)
+    print(f"原生Python: {sync_time:.3f}秒", file=sys.stderr)
+    print(f"caiofiles vs aiofiles: {aio_time/caio_time:.2f}x", file=sys.stderr)
+    print(f"caiofiles vs Python: {sync_time/caio_time:.2f}x", file=sys.stderr)
+
 def plot_performance_results(results, title, save_path):
     """生成性能对比图表
     
@@ -501,4 +563,11 @@ def generate_performance_charts(results):
         results['read']['large'],
         '大文件读取性能',
         charts_dir / 'large_read_performance.png'
+    )
+
+    # 添加行读取性能图表
+    plot_performance_results(
+        results['read']['lines'],
+        '逐行读取性能',
+        charts_dir / 'readline_performance.png'
     )
