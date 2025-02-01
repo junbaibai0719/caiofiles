@@ -115,6 +115,8 @@ cdef class Buffer:
         self._pos = 0
         self._filled = 0
     
+    @cython.boundscheck(False)
+    @cython.initializedcheck(False)
     cdef bytes read(self, size_t size):
         """从缓冲区读取数据"""
         if size > self.remaining():
@@ -126,6 +128,8 @@ cdef class Buffer:
         self._pos += size
         return result
     
+    @cython.boundscheck(False)
+    @cython.initializedcheck(False)
     cdef void write(self, const unsigned char[:] data, size_t size):
         """写入数据到缓冲区"""
         # 检查是否有足够空间
@@ -157,6 +161,8 @@ cdef class Buffer:
         self._pos = 0
         self._filled = 0
     
+    @cython.boundscheck(False)
+    @cython.initializedcheck(False)
     cdef void compact(self):
         """压缩缓冲区，移除已读取的数据"""
         cdef size_t remaining = 0
@@ -268,6 +274,7 @@ cdef class AsyncFile:
 
         @cython.boundscheck(False)
         def read_callback(int trans, key, Overlapped ov):
+            self._read_buffer.compact()
             self._read_buffer.write(ov.getresult_char()[:], trans)
             return ov.getresult_char()[0:trans]
 
@@ -278,6 +285,8 @@ cdef class AsyncFile:
             f = self._fill_read_buffer()
             if f:
                 await f
+            else:
+                await asyncio.sleep(0)
                 
     cdef Overlapped _do_read(self, long long size):
         cdef LPOVERLAPPED lpov = <LPOVERLAPPED> GlobalAlloc(
@@ -293,47 +302,24 @@ cdef class AsyncFile:
 
     @cython.boundscheck(False)
     async def read(self, cython.Py_ssize_t size = -1):
-        """读取指定大小的数据"""
-        cdef LONGLONG file_size = self._lpFileSize.QuadPart
-        cdef bytes chunk
-        
-        # 处理无效的size参数
-        if size < -1:
-            raise ValueError("size cannot be negative")
-        
-        # 处理读取到文件末尾的情况
+        """优化小块读取性能"""
         if size == -1:
-            size = file_size - self._cursor
-        
-        # 处理指定大小的读取
-        if size == 0:
+            size = self._lpFileSize.QuadPart - self._cursor
+        elif size <= 0:
             return b''
-        
-        # 检查是否超过最大值
-        cdef ulonglong max_size = 0xffffffff
-        if size >= max_size:
-            raise ValueError("size too large")
-        
-        # 首先尝试从缓冲区读取
-        if not self._read_buffer.is_empty():
-            if self._read_buffer.remaining() >= size:
-                # 缓冲区有足够数据
-                return self._read_buffer.read(size)
             
-            # 缓冲区数据不足，先读取缓冲区中的所有数据
-            chunks = []
-            if self._read_buffer.remaining() > 0:
-                chunks.append(self._read_buffer.read(self._read_buffer.remaining()))
-                size -= len(chunks[0])
+        # 小块读取优化
+        if size <= BUFFER_SIZE:  # 8KB以下
+            if self._read_buffer.remaining() <= size:
+                if self._read_buffer.is_empty():
+                    await self._fill_read_buffer_async()
+                else:
+                    # 不为空就需要移动
+                    self._read_buffer.compact()
+                    await self._fill_read_buffer_async()
+            return self._read_buffer.read(size)
             
-            # 读取剩余所需数据
-            chunk = await self._raw_read(size)
-            if chunk:
-                chunks.append(chunk)
-            
-            return b''.join(chunks)
-        
-        # 缓冲区为空，直接读取
+        # 大块直接读取
         return await self._raw_read(size)
 
     async def _raw_read(self, long long size):
@@ -444,13 +430,26 @@ cdef class AsyncFile:
         return self._do_write(buffer)
 
     async def write(self, const uchar[:] s):
-        """写入数据到文件"""
+        """优化小块写入性能"""
         if self._handle == NULL:
             raise ValueError("File is closed")
             
         if s is None or len(s) == 0:
             return None
-        return await self._write(s)
+            
+        cdef size_t size = s.shape[0]
+        
+        # 小块写入优化
+        if size <= BUFFER_SIZE:  # 8KB以下使用缓冲
+            async with self._write_lock:
+                if self._write_buffer.available() < size:
+                    await self._flush_write_buffer()
+                self._write_buffer.write(s, size)
+                # 立即返回，不等待刷新
+                return None
+                
+        # 大块直接写入
+        return await self._do_write(s)
 
     cpdef write_lines(self, list lines):
         """写入多行数据
